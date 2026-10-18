@@ -9,6 +9,7 @@ import { useFocusTrap } from "./useFocusTrap";
 import useLockBodyScroll from "./useLockBodyScroll";
 import { useMaintenanceStatus } from "@/hooks/useMaintenanceStatus";
 import { MaintenanceBanner } from "./MaintenanceBanner";
+import { SplitAppProvider } from "@/context/SplitAppContext";
 
 const MODAL_SELECTORS = [
   "[role='dialog'][aria-modal='true']",
@@ -148,16 +149,18 @@ export function SplitApp() {
   }, [isModalOpen]);
 
   return (
-    <div ref={rootRef}>
-      <MaintenanceBanner
-        status={maintenanceStatus}
-        message={maintenanceMessage}
-        className="mx-auto mb-6 w-full max-w-4xl"
-      />
-      <SplitAppLegacy
-        onLoadingFlagsChange={onLoadingFlagsChange}
-        isWriteDisabled={isWriteDisabled}
-      />
-    </div>
+    <SplitAppProvider>
+      <div ref={rootRef}>
+        <MaintenanceBanner
+          status={maintenanceStatus}
+          message={maintenanceMessage}
+          className="mx-auto mb-6 w-full max-w-4xl"
+        />
+        <SplitAppLegacy
+          onLoadingFlagsChange={onLoadingFlagsChange}
+          isWriteDisabled={isWriteDisabled}
+        />
+      </div>
+    </SplitAppProvider>
   );
 }

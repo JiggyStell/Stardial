@@ -14,6 +14,7 @@ import { getIdempotencyStats } from "@/lib/api";
 import type { WalletState } from "@/lib/wallet";
 import { SummaryCardSkeleton, Skeleton } from "../Skeleton";
 import { ProjectCard } from "../ProjectCard";
+import { EmptyState } from "../EmptyState";
 
 export interface AllowlistActionResult {
   action: "allow" | "disallow";
@@ -72,6 +73,17 @@ interface DashboardViewProps {
    * link (#1331).
    */
   getExplorerUrl: (hash: string, network: string | null) => string | null;
+  /**
+   * Optional handler for the "Connect Wallet" primary action rendered by the
+   * wallet-disconnected empty state (#594). Omitted -> the empty state renders
+   * informationally without a primary button.
+   */
+  onConnectWallet?: () => void;
+  /**
+   * Optional handler for the "Refresh Projects" primary action rendered by the
+   * no-projects empty state (#594). Omitted -> informational only.
+   */
+  onRefreshProjects?: () => void;
 }
 
 export function DashboardView({
@@ -116,6 +128,8 @@ export function DashboardView({
   onConfirmRecovery,
   lastRecoveryTxHash,
   getExplorerUrl,
+  onConnectWallet,
+  onRefreshProjects,
 }: DashboardViewProps) {
   // ── Idempotency stats polling ────────────────────────────────────────────
   const [idempotencyStats, setIdempotencyStats] =
@@ -142,6 +156,22 @@ export function DashboardView({
 
   return (
     <div className="space-y-10 animate-in fade-in duration-700">
+      {!wallet.connected && (
+        <EmptyState
+          variant="wallet-disconnected"
+          primaryActionLabel={onConnectWallet ? "Connect Wallet" : undefined}
+          onPrimaryAction={onConnectWallet}
+        />
+      )}
+
+      {wallet.connected && !isLoadingDashboard && dashboardData.length === 0 && (
+        <EmptyState
+          variant="no-projects"
+          primaryActionLabel={onRefreshProjects ? "Refresh Projects" : undefined}
+          onPrimaryAction={onRefreshProjects}
+        />
+      )}
+
       <div className="grid gap-6 md:grid-cols-3">
         {isLoadingDashboard ? (
           Array(3)

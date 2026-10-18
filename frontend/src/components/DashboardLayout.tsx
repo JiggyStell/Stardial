@@ -1,11 +1,12 @@
 "use client";
 
-import { useState, type ReactNode } from "react";
+import { type ReactNode } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { clsx } from "clsx";
 import Image from "next/image";
 import { MobileDrawer } from "./MobileDrawer";
+import { useAppShell } from "@/context/AppShellContext";
 
 // ---------------------------------------------------------------------------
 // Nav item definition
@@ -215,15 +216,22 @@ export interface DashboardLayoutProps {
   navItems?: NavItem[];
   /** Page-level header content (title, actions, etc.) */
   header?: ReactNode;
+  /** Optional wallet control rendered at the end of the top bar */
+  walletButton?: ReactNode;
 }
 
 export function DashboardLayout({
   children,
   navItems,
   header,
+  walletButton,
 }: DashboardLayoutProps) {
-  const [collapsed, setCollapsed] = useState(false);
-  const [mobileDrawerOpen, setMobileDrawerOpen] = useState(false);
+  const {
+    sidebarCollapsed: collapsed,
+    toggleSidebar,
+    isMobileDrawerOpen: mobileDrawerOpen,
+    setMobileDrawerOpen,
+  } = useAppShell();
 
   return (
     <div className="flex h-screen overflow-hidden bg-[var(--brand-surface)]">
@@ -232,7 +240,7 @@ export function DashboardLayout({
         <Sidebar
           navItems={navItems}
           collapsed={collapsed}
-          onToggle={() => setCollapsed((c) => !c)}
+          onToggle={toggleSidebar}
         />
       </div>
 
@@ -278,6 +286,10 @@ export function DashboardLayout({
             <span className="text-sm font-medium text-[var(--brand-muted)]">
               Dashboard
             </span>
+          )}
+
+          {walletButton && (
+            <div className="ml-auto flex items-center">{walletButton}</div>
           )}
         </header>
 
