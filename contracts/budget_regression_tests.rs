@@ -26,7 +26,7 @@
 
 extern crate std;
 
-use crate::{Collaborator, SplitNairaContract, SplitNairaContractClient};
+use crate::{Collaborator, StardialContract, StardialContractClient};
 use soroban_sdk::{testutils::Address as _, token, Address, Env, String, Symbol, Vec};
 use std::println;
 use std::string::ToString;
@@ -105,7 +105,7 @@ fn collaborator_list(env: &Env, count: u32, bps_each: u32) -> Vec<Collaborator> 
 }
 
 struct FundedProject<'a> {
-    client: SplitNairaContractClient<'a>,
+    client: StardialContractClient<'a>,
     token: Address,
     funder: Address,
     project_id: Symbol,
@@ -116,8 +116,8 @@ struct FundedProject<'a> {
 /// realistic state.
 fn funded_project<'a>(env: &'a Env, name: &str, count: u32, deposit: i128) -> FundedProject<'a> {
     env.mock_all_auths();
-    let contract_id = env.register_contract(None, SplitNairaContract);
-    let client = SplitNairaContractClient::new(env, &contract_id);
+    let contract_id = env.register_contract(None, StardialContract);
+    let client = StardialContractClient::new(env, &contract_id);
 
     let token_admin = Address::generate(env);
     let token = env.register_stellar_asset_contract(token_admin);
@@ -154,8 +154,8 @@ fn funded_project<'a>(env: &'a Env, name: &str, count: u32, deposit: i128) -> Fu
 fn create_project_stays_within_budget() {
     let env = Env::default();
     env.mock_all_auths();
-    let contract_id = env.register_contract(None, SplitNairaContract);
-    let client = SplitNairaContractClient::new(&env, &contract_id);
+    let contract_id = env.register_contract(None, StardialContract);
+    let client = StardialContractClient::new(&env, &contract_id);
 
     let token_admin = Address::generate(&env);
     let token = env.register_stellar_asset_contract(token_admin);

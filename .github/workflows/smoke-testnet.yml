@@ -7,7 +7,7 @@ on:
   workflow_dispatch:
     inputs:
       contract_id:
-        description: "Deployed SplitNaira contract ID (C...)"
+        description: "Deployed Stardial contract ID (C...)"
         required: true
         type: string
       deposit_amount:

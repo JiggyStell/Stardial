@@ -1,6 +1,25 @@
-# SplitNaira Frontend
+# Stardial Frontend
 
-Next.js app scaffold for the SplitNaira web experience.
+The browser-based experience for Stardial, a Stellar wallet designed to bring
+USDC and XLM payments to feature phones through USSD and SMS. The web frontend
+is the companion for users and operators who have browser access; it does not
+replace the phone-based flows.
+
+## Product direction
+
+Stardial's target experience lets a user check wallet activity, manage account
+settings, and work with local cash agents. Soroban policies are intended to
+limit relay-key spending on-chain, while the browser provides a richer surface
+for account management and support. The interface must never imply that an
+AI-generated intent has been sent until the user has explicitly confirmed it.
+
+**Status:** early design and Testnet development. Treat phone-number wallet
+onboarding, USSD/SMS sessions, Cash Code escrow, and the agent PWA as planned
+unless a corresponding flow is implemented and wired to the API. The current
+application is a Next.js web app; its deployed API and contract configuration
+must match the selected Stellar network.
+
+## Development
 
 ## Scripts
 - `npm ci`
@@ -9,8 +28,6 @@ Next.js app scaffold for the SplitNaira web experience.
 - `npm run start`
 - `npm run test`
 - `npm run check:i18n` - fails if any locale's message keys don't match `en.json`
-<!-- 
-This fix addresses GitHub Issue #292 (Security: Cross-Site Scripting (XSS) in Split Description Field) by implementing comprehensive XSS prevention across the entire application using a 3-layer defense strategy. -->
 ## Notes
 - Dependencies are pinned to exact versions in `package.json` and `package-lock.json`.
 - Always install with `npm ci` locally and in CI to guarantee the same dependency graph.
@@ -36,7 +53,18 @@ This fix addresses GitHub Issue #292 (Security: Cross-Site Scripting (XSS) in Sp
 - `src/i18n` - Routing, navigation helpers, and request config for locales
 - `src/components` - Reusable UI components
 - `src/lib` - Stellar/Soroban helpers and client utilities
+- `src/features` - Product feature modules
 - `messages` - Translation dictionaries by locale
+
+## Integration boundaries
+
+- Stellar network, Soroban RPC, Horizon, API base URL, and contract ID are
+   supplied through the `NEXT_PUBLIC_*` variables below.
+- Never put relay secrets, PIN verifiers, phone-hash peppers, or other server
+   credentials in frontend environment variables. `NEXT_PUBLIC_*` values are
+   visible to every browser user.
+- The frontend can display transaction status, but the contract is the source
+   of truth for spending policy and settlement.
 
 ## Deployment
 

@@ -56,7 +56,7 @@ const app = buildApp();
 // response body, that's a leak. Deliberately shaped like real config values
 // (a full Postgres DSN with embedded credentials, an RPC URL with an
 // API-key-looking path segment) so the redaction test is meaningful.
-const FIXTURE_DATABASE_URL = "postgresql://dbuser:sup3rSecretPW@db.internal.example:5432/splitnaira";
+const FIXTURE_DATABASE_URL = "postgresql://dbuser:sup3rSecretPW@db.internal.example:5432/stardial";
 const FIXTURE_RPC_URL = "https://rpc.example.com/v1/apikey_abc123SECRET";
 
 function mockDb(query: () => Promise<unknown>) {

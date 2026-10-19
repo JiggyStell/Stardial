@@ -1,7 +1,7 @@
 # CI/CD Compliance - Wave 5
 
 ## Objective
-Deliver production-grade CI/CD compliance improvements for SplitNaira.
+Deliver production-grade CI/CD compliance improvements for Stardial.
 
 ## Implementation Plan
 

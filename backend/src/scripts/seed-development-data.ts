@@ -13,7 +13,7 @@
  *   - Every id (uuid, tx hash) is derived from a fixed label with SHA-256,
  *     so re-running the seed produces the same rows instead of new ones.
  *
- * What "projects" and "participants" mean here: SplitNaira keeps projects on
+ * What "projects" and "participants" mean here: Stardial keeps projects on
  * chain (Soroban) and has no local projects table (see
  * docs/foreign-key-integrity-audit.md). A seeded project is therefore a
  * project id that the database rows point at, and a participant is a wallet
@@ -159,7 +159,7 @@ export interface DevelopmentSeed {
 /** Deterministic RFC 4122 v4-shaped uuid derived from a label. */
 export function seedUuid(label: string): string {
   const bytes = createHash("sha256")
-    .update(`splitnaira-dev-seed:${label}`)
+    .update(`stardial-dev-seed:${label}`)
     .digest()
     .subarray(0, 16);
   bytes[6] = (bytes[6] & 0x0f) | 0x40;
@@ -176,7 +176,7 @@ export function seedUuid(label: string): string {
 
 /** Deterministic 64-character hex transaction hash derived from a label. */
 export function seedTxHash(label: string): string {
-  return createHash("sha256").update(`splitnaira-dev-seed-tx:${label}`).digest("hex");
+  return createHash("sha256").update(`stardial-dev-seed-tx:${label}`).digest("hex");
 }
 
 function at(offsetHours: number): Date {
@@ -433,7 +433,7 @@ function buildNotifications(
     SEED_WALLETS.dormant,
     "system",
     "system:seed-welcome",
-    "Welcome to SplitNaira",
+    "Welcome to Stardial",
     "This account is inactive sample data.",
     null,
     null,

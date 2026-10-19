@@ -71,7 +71,7 @@ const COPY: Record<EmptyStateVariant, { defaultTitle: string; defaultDescription
   },
   "wallet-disconnected": {
     defaultTitle: "Connect your wallet to view projects",
-    defaultDescription: "SplitNaira reads your project list from your connected Stellar account.",
+    defaultDescription: "Stardial reads your project list from your connected Stellar account.",
   },
   "loading-failure": {
     defaultTitle: "Could not load projects",

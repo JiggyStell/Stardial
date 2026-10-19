@@ -3,36 +3,36 @@ version: '3.8'
 services:
   postgres:
     image: postgres:16-alpine
-    container_name: splitnaira-postgres
+    container_name: stardial-postgres
     environment:
-      POSTGRES_USER: ${DB_USER:-splitnaira}
-      POSTGRES_PASSWORD: ${DB_PASSWORD:-splitnaira}
-      POSTGRES_DB: ${DB_NAME:-splitnaira}
+      POSTGRES_USER: ${DB_USER:-stardial}
+      POSTGRES_PASSWORD: ${DB_PASSWORD:-stardial}
+      POSTGRES_DB: ${DB_NAME:-stardial}
     ports:
       - "${DB_PORT:-5432}:5432"
     volumes:
       - postgres_data:/var/lib/postgresql/data
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U ${DB_USER:-splitnaira}"]
+      test: ["CMD-SHELL", "pg_isready -U ${DB_USER:-stardial}"]
       interval: 10s
       timeout: 5s
       retries: 5
       start_period: 10s
     networks:
-      - splitnaira
+      - stardial
 
   backend:
     build:
       context: ./backend
       dockerfile: Dockerfile
-    container_name: splitnaira-backend
+    container_name: stardial-backend
     depends_on:
       postgres:
         condition: service_healthy
     environment:
       NODE_ENV: ${NODE_ENV:-production}
       PORT: ${PORT:-3001}
-      DATABASE_URL: postgresql://${DB_USER:-splitnaira}:${DB_PASSWORD:-splitnaira}@postgres:5432/${DB_NAME:-splitnaira}
+      DATABASE_URL: postgresql://${DB_USER:-stardial}:${DB_PASSWORD:-stardial}@postgres:5432/${DB_NAME:-stardial}
       CORS_ORIGIN: ${CORS_ORIGIN:-http://localhost:3000}
       LOG_LEVEL: ${LOG_LEVEL:-info}
       LOG_FORMAT: ${LOG_FORMAT:-pretty}
@@ -50,7 +50,7 @@ services:
       retries: 3
       start_period: 10s
     networks:
-      - splitnaira
+      - stardial
     restart: unless-stopped
 
   frontend:
@@ -63,7 +63,7 @@ services:
         NEXT_PUBLIC_SOROBAN_RPC_URL: ${NEXT_PUBLIC_SOROBAN_RPC_URL:-https://soroban-testnet.stellar.org}
         NEXT_PUBLIC_HORIZON_URL: ${NEXT_PUBLIC_HORIZON_URL:-https://horizon-testnet.stellar.org}
         NEXT_PUBLIC_CONTRACT_ID: ${NEXT_PUBLIC_CONTRACT_ID:-}
-    container_name: splitnaira-frontend
+    container_name: stardial-frontend
     depends_on:
       backend:
         condition: service_healthy
@@ -82,7 +82,7 @@ services:
       retries: 3
       start_period: 15s
     networks:
-      - splitnaira
+      - stardial
     restart: unless-stopped
 
 volumes:
@@ -90,5 +90,5 @@ volumes:
     driver: local
 
 networks:
-  splitnaira:
+  stardial:
     driver: bridge

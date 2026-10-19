@@ -33,17 +33,17 @@ describe("GET /metrics", () => {
 
     expect(res.status).toBe(200);
     expect(res.headers["content-type"]).toMatch(/text\/plain/);
-    expect(res.text).toContain("splitnaira_validation_failures_total 0");
-    expect(res.text).toContain("splitnaira_process_uptime_seconds");
-    expect(res.text).toContain("splitnaira_http_requests_inflight");
-    expect(res.text).toContain('splitnaira_http_requests_total{method="GET",route="/ping",status="200"} 1');
-    expect(res.text).toContain('splitnaira_http_request_duration_seconds_count{method="GET",route="/ping"} 1');
-    expect(res.text).toContain("# TYPE splitnaira_event_listener_ledger_lag gauge");
-    expect(res.text).toContain("# TYPE splitnaira_event_listener_last_processed_ledger gauge");
+    expect(res.text).toContain("stardial_validation_failures_total 0");
+    expect(res.text).toContain("stardial_process_uptime_seconds");
+    expect(res.text).toContain("stardial_http_requests_inflight");
+    expect(res.text).toContain('stardial_http_requests_total{method="GET",route="/ping",status="200"} 1');
+    expect(res.text).toContain('stardial_http_request_duration_seconds_count{method="GET",route="/ping"} 1');
+    expect(res.text).toContain("# TYPE stardial_event_listener_ledger_lag gauge");
+    expect(res.text).toContain("# TYPE stardial_event_listener_last_processed_ledger gauge");
 
     // Issue #1165: idempotency conflict/replay counters
-    expect(res.text).toContain("splitnaira_idempotency_conflicts_total 0");
-    expect(res.text).toContain("splitnaira_idempotency_replays_total 0");
+    expect(res.text).toContain("stardial_idempotency_conflicts_total 0");
+    expect(res.text).toContain("stardial_idempotency_replays_total 0");
   });
 
   it("exposes bounded RPC retry budget series (Issue #1089)", async () => {
@@ -52,12 +52,12 @@ describe("GET /metrics", () => {
 
     const res = await request(app).get("/metrics");
 
-    expect(res.text).toContain("# TYPE splitnaira_rpc_retry_budget_max_retries gauge");
-    expect(res.text).toContain("splitnaira_rpc_retry_budget_max_retries 5");
-    expect(res.text).toContain('splitnaira_rpc_retry_budget_sequences_total{operation="getAccount",endpoint="rpc"} 2');
-    expect(res.text).toContain('splitnaira_rpc_retry_budget_allowed_total{operation="getAccount",endpoint="rpc"} 6');
-    expect(res.text).toContain('splitnaira_rpc_retry_budget_used_total{operation="getAccount",endpoint="rpc"} 4');
-    expect(res.text).toContain('splitnaira_rpc_retry_budget_exhausted_total{operation="getAccount",endpoint="rpc"} 1');
+    expect(res.text).toContain("# TYPE stardial_rpc_retry_budget_max_retries gauge");
+    expect(res.text).toContain("stardial_rpc_retry_budget_max_retries 5");
+    expect(res.text).toContain('stardial_rpc_retry_budget_sequences_total{operation="getAccount",endpoint="rpc"} 2');
+    expect(res.text).toContain('stardial_rpc_retry_budget_allowed_total{operation="getAccount",endpoint="rpc"} 6');
+    expect(res.text).toContain('stardial_rpc_retry_budget_used_total{operation="getAccount",endpoint="rpc"} 4');
+    expect(res.text).toContain('stardial_rpc_retry_budget_exhausted_total{operation="getAccount",endpoint="rpc"} 1');
   });
 });
 
@@ -88,23 +88,23 @@ describe("split lifecycle operation metrics", () => {
     const res = await request(lifecycleApp).get("/metrics").expect(200);
     const lifecycleLines = res.text
       .split("\n")
-      .filter((line) => line.startsWith("splitnaira_split_lifecycle_operations_total{"));
+      .filter((line) => line.startsWith("stardial_split_lifecycle_operations_total{"));
 
-    expect(res.text).toContain("# TYPE splitnaira_split_lifecycle_operations_total counter");
+    expect(res.text).toContain("# TYPE stardial_split_lifecycle_operations_total counter");
     expect(res.text).toContain(
       "success means unsigned transaction preparation succeeded, not on-chain confirmation.",
     );
     expect(lifecycleLines).toContain(
-      'splitnaira_split_lifecycle_operations_total{operation="creation",outcome="success"} 1',
+      'stardial_split_lifecycle_operations_total{operation="creation",outcome="success"} 1',
     );
     expect(lifecycleLines).toContain(
-      'splitnaira_split_lifecycle_operations_total{operation="funding",outcome="success"} 1',
+      'stardial_split_lifecycle_operations_total{operation="funding",outcome="success"} 1',
     );
     expect(lifecycleLines).toContain(
-      'splitnaira_split_lifecycle_operations_total{operation="settlement",outcome="failure"} 1',
+      'stardial_split_lifecycle_operations_total{operation="settlement",outcome="failure"} 1',
     );
     expect(lifecycleLines).toContain(
-      'splitnaira_split_lifecycle_operations_total{operation="creation",outcome="failure"} 1',
+      'stardial_split_lifecycle_operations_total{operation="creation",outcome="failure"} 1',
     );
     expect(lifecycleLines.join("\n")).not.toContain("project-private-123");
     expect(lifecycleLines).toHaveLength(6);
@@ -164,15 +164,15 @@ describe("request payload size telemetry by route group (Issue #1090)", () => {
     const smallBytes = Buffer.byteLength(JSON.stringify(small));
     const mediumBytes = Buffer.byteLength(JSON.stringify(medium));
 
-    expect(res.text).toContain("# TYPE splitnaira_http_request_payload_bytes histogram");
-    expect(res.text).toContain('splitnaira_http_request_payload_bytes_bucket{route_group="splits",le="256"} 1');
-    expect(res.text).toContain('splitnaira_http_request_payload_bytes_bucket{route_group="splits",le="1024"} 2');
-    expect(res.text).toContain('splitnaira_http_request_payload_bytes_bucket{route_group="splits",le="+Inf"} 2');
+    expect(res.text).toContain("# TYPE stardial_http_request_payload_bytes histogram");
+    expect(res.text).toContain('stardial_http_request_payload_bytes_bucket{route_group="splits",le="256"} 1');
+    expect(res.text).toContain('stardial_http_request_payload_bytes_bucket{route_group="splits",le="1024"} 2');
+    expect(res.text).toContain('stardial_http_request_payload_bytes_bucket{route_group="splits",le="+Inf"} 2');
     expect(res.text).toContain(
-      `splitnaira_http_request_payload_bytes_sum{route_group="splits"} ${smallBytes + mediumBytes}`,
+      `stardial_http_request_payload_bytes_sum{route_group="splits"} ${smallBytes + mediumBytes}`,
     );
-    expect(res.text).toContain('splitnaira_http_request_payload_bytes_count{route_group="splits"} 2');
-    expect(res.text).toContain('splitnaira_http_request_payload_bytes_count{route_group="splits_admin"} 1');
+    expect(res.text).toContain('stardial_http_request_payload_bytes_count{route_group="splits"} 2');
+    expect(res.text).toContain('stardial_http_request_payload_bytes_count{route_group="splits_admin"} 1');
   });
 
   it("counts oversized bodies rejected by express.json as 413 by route group", async () => {
@@ -182,11 +182,11 @@ describe("request payload size telemetry by route group (Issue #1090)", () => {
       .expect(413);
 
     const res = await request(app).get("/metrics");
-    expect(res.text).toContain("# TYPE splitnaira_http_request_payload_rejected_total counter");
-    expect(res.text).toContain('splitnaira_http_request_payload_rejected_total{route_group="splits"} 1');
+    expect(res.text).toContain("# TYPE stardial_http_request_payload_rejected_total counter");
+    expect(res.text).toContain('stardial_http_request_payload_rejected_total{route_group="splits"} 1');
     // The rejected request's declared size still lands in the top bucket.
-    expect(res.text).toContain('splitnaira_http_request_payload_bytes_bucket{route_group="splits",le="1024"} 0');
-    expect(res.text).toContain('splitnaira_http_request_payload_bytes_count{route_group="splits"} 1');
+    expect(res.text).toContain('stardial_http_request_payload_bytes_bucket{route_group="splits",le="1024"} 0');
+    expect(res.text).toContain('stardial_http_request_payload_bytes_count{route_group="splits"} 1');
   });
 
   it("collapses unknown paths into the `other` group and skips bodiless requests", async () => {
@@ -194,10 +194,10 @@ describe("request payload size telemetry by route group (Issue #1090)", () => {
     await request(app).get("/splits").expect(200);
 
     const res = await request(app).get("/metrics");
-    expect(res.text).toContain('splitnaira_http_request_payload_bytes_count{route_group="other"} 1');
+    expect(res.text).toContain('stardial_http_request_payload_bytes_count{route_group="other"} 1');
     expect(res.text).not.toContain('route_group="/wp-login.php"');
     // The GET without a body (and the /metrics scrape itself) record nothing.
-    expect(metricLine(res.text, 'splitnaira_http_request_payload_bytes_count{route_group="splits"}')).toBeUndefined();
-    expect(metricLine(res.text, 'splitnaira_http_request_payload_bytes_count{route_group="metrics"}')).toBeUndefined();
+    expect(metricLine(res.text, 'stardial_http_request_payload_bytes_count{route_group="splits"}')).toBeUndefined();
+    expect(metricLine(res.text, 'stardial_http_request_payload_bytes_count{route_group="metrics"}')).toBeUndefined();
   });
 });

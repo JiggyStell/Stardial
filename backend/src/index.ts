@@ -146,7 +146,7 @@ app.use("/api/ledger", readLimiter);
 app.use("/events", sseConnectionLimiter);
 
 app.get("/", (_req, res) => {
-  res.json({ name: "SplitNaira API", status: "ok", version: "0.1.0" });
+  res.json({ name: "Stardial API", status: "ok", version: "0.1.0" });
 });
 
 app.use("/health", healthRouter);
@@ -177,7 +177,7 @@ app.get("/api/openapi.json", async (_req, res, next) => {
 
 const swaggerOptions = {
   customCss: ".swagger-ui .topbar { display: none }",
-  customSiteTitle: "SplitNaira API Documentation",
+  customSiteTitle: "Stardial API Documentation",
   swaggerOptions: {
     url: "/api/openapi.json",
     displayOperationId: true,

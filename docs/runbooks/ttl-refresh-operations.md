@@ -2,7 +2,7 @@
 
 ## Overview
 
-This runbook covers Time-To-Live (TTL) refresh operations for the SplitNaira smart contract. Soroban contracts use TTL to manage storage lifecycle, and inactive projects may need manual TTL extension to prevent storage expiration.
+This runbook covers Time-To-Live (TTL) refresh operations for the Stardial smart contract. Soroban contracts use TTL to manage storage lifecycle, and inactive projects may need manual TTL extension to prevent storage expiration.
 
 ## Background
 
@@ -15,7 +15,7 @@ Time-To-Live (TTL) is Soroban's mechanism for managing contract storage lifecycl
 - **Manual Extension**: Inactive projects may need operator intervention
 - **Storage Eviction**: Expired entries are removed from the ledger
 
-### SplitNaira TTL Configuration
+### Stardial TTL Configuration
 
 ```rust
 // From contracts/lib.rs
@@ -405,7 +405,7 @@ stellar account fund GXXXXXXX...
 - [Contract Release and Upgrade Runbook](./contract-release-and-upgrade-runbook.md)
 - [Observability Runbook](./observability.md)
 - [Reliability Runbook](./reliability.md)
-- [SplitNaira Contract Documentation](../contracts/README.md)
+- [Stardial Contract Documentation](../contracts/README.md)
 
 ## Changelog
 

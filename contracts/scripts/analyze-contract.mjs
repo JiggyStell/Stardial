@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 /**
- * Lightweight static analysis for the SplitNaira Soroban contract.
+ * Lightweight static analysis for the Stardial Soroban contract.
  * Reports public function count, error codes, and event types without
  * requiring a live Soroban node.
  *

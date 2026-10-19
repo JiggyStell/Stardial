@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 /**
- * SplitNaira — post-deploy contract smoke test (issue #361)
+ * Stardial — post-deploy contract smoke test (issue #361)
  *
  * Exercises the core contract lifecycle on testnet:
  *   1. create_project  — register a 2-collaborator split project
@@ -21,7 +21,7 @@
  *
  * Required env vars:
  *   STELLAR_SECRET_KEY   Funded testnet secret key (never commit)
- *   CONTRACT_ID          Deployed SplitNaira contract ID
+ *   CONTRACT_ID          Deployed Stardial contract ID
  *
  * Optional env vars:
  *   STELLAR_RPC_URL      Default: https://soroban-testnet.stellar.org

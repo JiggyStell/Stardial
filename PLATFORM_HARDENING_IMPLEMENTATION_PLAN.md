@@ -12,7 +12,7 @@ This fix addresses GitHub Issue #292 (Security: Cross-Site Scripting (XSS) in Sp
 <!-- This report confirms the successful implementation of production-safe rendering and API sanitization to eliminate XSS vulnerabilities in the Split Naira platform. -->
 ## Objective
 
-Deliver a high-impact backend workstream under **Platform Hardening** to accelerate deployment readiness for SplitNaira by implementing production-grade improvements that ensure the backend handles failures gracefully without data corruption.
+Deliver a high-impact backend workstream under **Platform Hardening** to accelerate deployment readiness for Stardial by implementing production-grade improvements that ensure the backend handles failures gracefully without data corruption.
 
 ---
 
@@ -277,15 +277,15 @@ cd backend && npm test -- transaction-safety.test.ts
 
 ```bash
 # Health check
-curl https://api.splitnaira.com/health
+curl https://api.stardial.com/health
 
 # Validation error check
-curl -X POST https://api.splitnaira.com/users/register -d '{}' \
+curl -X POST https://api.stardial.com/users/register -d '{}' \
   -H "Content-Type: application/json"
 # Should return 400 with structured error
 
 # Rate limiting check (optional)
-for i in {1..300}; do curl https://api.splitnaira.com/health; done
+for i in {1..300}; do curl https://api.stardial.com/health; done
 # Should eventually see 429 (Too Many Requests)
 ```
 
@@ -294,11 +294,11 @@ for i in {1..300}; do curl https://api.splitnaira.com/health; done
 **Fast Rollback (< 5 minutes)**:
 ```bash
 # Revert to previous image
-kubectl set image deployment/backend backend=splitnaira/backend:PREVIOUS_TAG
+kubectl set image deployment/backend backend=stardial/backend:PREVIOUS_TAG
 kubectl rollout status deployment/backend
 
 # Verify
-curl https://api.splitnaira.com/health
+curl https://api.stardial.com/health
 ```
 
 **Full Rollback**:

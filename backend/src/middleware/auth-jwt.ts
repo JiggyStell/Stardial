@@ -23,7 +23,7 @@ declare global {
 
 const BEARER_PREFIX = "bearer ";
 
-// SplitNaira authenticates Stellar account/contract addresses in JWTs.
+// Stardial authenticates Stellar account/contract addresses in JWTs.
 const STELLAR_ADDRESS_REGEX = /^[GC][A-Z2-7]{55}$/;
 
 export async function authJwtMiddleware(req: Request, res: Response, next: NextFunction) {

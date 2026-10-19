@@ -2,7 +2,7 @@
 
 ## Overview
 
-Wave 5 release-operations work improves deploy readiness for the SplitNaira backend: atomic user registration, structured logging on critical paths, validation middleware repair, payments-admin route hardening, and operational runbook material for safe rollout and rollback.
+Wave 5 release-operations work improves deploy readiness for the Stardial backend: atomic user registration, structured logging on critical paths, validation middleware repair, payments-admin route hardening, and operational runbook material for safe rollout and rollback.
 
 ## Implementation plan
 
@@ -93,7 +93,7 @@ Production deployments now require `PAYMENTS_ADMIN_API_KEY` for `/splits/admin/*
 
 ```bash
 export CI=true NODE_ENV=test \
-  DATABASE_URL=postgresql://splitnaira:splitnaira@localhost:5432/splitnaira_ci \
+  DATABASE_URL=postgresql://stardial:stardial@localhost:5432/stardial_ci \
   HORIZON_URL=https://horizon-testnet.stellar.org \
   SOROBAN_RPC_URL=https://soroban-testnet.stellar.org \
   SOROBAN_NETWORK_PASSPHRASE="Test SDF Network ; September 2015" \

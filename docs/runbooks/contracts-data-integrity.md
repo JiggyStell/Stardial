@@ -17,7 +17,7 @@ cd contracts && cargo test --locked && cargo fmt --all -- --check
 cd .. && npm run verify:data-integrity
 ```
 
-`verify:data-integrity` regenerates `contracts/interface/splitnaira.contract-interface.json` and `*/generated/contract-types.ts`, then fails if git would change.
+`verify:data-integrity` regenerates `contracts/interface/stardial.contract-interface.json` and `*/generated/contract-types.ts`, then fails if git would change.
 
 ## Release steps
 

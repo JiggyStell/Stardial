@@ -1,12 +1,12 @@
 # Contract Execution Cost Benchmarks & Scalability Guide
 
-This document defines the resource cost models, benchmark measurement suite, and regression detection procedures for SplitNaira smart contracts on Soroban.
+This document defines the resource cost models, benchmark measurement suite, and regression detection procedures for Stardial smart contracts on Soroban.
 
 ---
 
 ## 1. Overview
 
-SplitNaira smart contracts execute royalty splits with support for up to:
+Stardial smart contracts execute royalty splits with support for up to:
 
 - **50 Collaborators** (Default capacity, `DEFAULT_MAX_COLLABORATORS`)
 - **200 Collaborators** (Configurable hard cap, `MAX_MAX_COLLABORATORS`)

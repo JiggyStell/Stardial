@@ -31,7 +31,7 @@
 //!   `require_auth` hides in a read path.
 
 use crate::{
-    errors::SplitError, Collaborator, SplitNairaContract, SplitNairaContractClient,
+    errors::SplitError, Collaborator, StardialContract, StardialContractClient,
     DEFAULT_MAX_COLLABORATORS,
 };
 use soroban_sdk::{
@@ -43,9 +43,9 @@ use soroban_sdk::{
 // Shared helpers
 // -----------------------------------------------------------------------------
 
-fn make_client(env: &Env) -> SplitNairaContractClient<'_> {
-    let contract_id = env.register_contract(None, SplitNairaContract);
-    SplitNairaContractClient::new(env, &contract_id)
+fn make_client(env: &Env) -> StardialContractClient<'_> {
+    let contract_id = env.register_contract(None, StardialContract);
+    StardialContractClient::new(env, &contract_id)
 }
 
 fn two_collabs(env: &Env) -> Vec<Collaborator> {

@@ -1,6 +1,6 @@
 # Frontend Component Testing Contributor Guide
 
-This guide outlines the standards and procedures for contributing component unit and integration tests to the SplitNaira frontend application (`apps/web`).
+This guide outlines the standards and procedures for contributing component unit and integration tests to the Stardial frontend application (`apps/web`).
 
 ## Testing Stack & Tools
 * **Test Runner:** Jest configured with `ts-jest` for TypeScript execution.

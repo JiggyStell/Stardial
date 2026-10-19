@@ -3,7 +3,7 @@
 ## Implementation Plan
 
 ### Overview
-This PR addresses the ops workstream under API Evolution to accelerate deployment readiness for SplitNaira. The implementation focuses on auditing current implementation gaps, implementing production-grade improvements, adding tests and operational documentation, and ensuring changes are deploy-safe and rollback-aware.
+This PR addresses the ops workstream under API Evolution to accelerate deployment readiness for Stardial. The implementation focuses on auditing current implementation gaps, implementing production-grade improvements, adding tests and operational documentation, and ensuring changes are deploy-safe and rollback-aware.
 
 ### Audit Findings
 

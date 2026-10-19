@@ -1,6 +1,6 @@
 # Production Secret Rotation Runbook
 
-This runbook establishes standard operating procedures for rotating security-sensitive credentials and cryptographic keys in SplitNaira's production environment. Follow the documented sequences to guarantee zero downtime, prevent service disruption, and maintain audit compliance.
+This runbook establishes standard operating procedures for rotating security-sensitive credentials and cryptographic keys in Stardial's production environment. Follow the documented sequences to guarantee zero downtime, prevent service disruption, and maintain audit compliance.
 
 ---
 
@@ -36,7 +36,7 @@ This runbook establishes standard operating procedures for rotating security-sen
 
 ## 🔑 2. JWT Secret Rotation Procedure
 
-SplitNaira signs user authentication tokens and email verification links using symmetric keys configured via `JWT_SECRET`, `JWT_REFRESH_SECRET`, and `EMAIL_TOKEN_SECRET`.
+Stardial signs user authentication tokens and email verification links using symmetric keys configured via `JWT_SECRET`, `JWT_REFRESH_SECRET`, and `EMAIL_TOKEN_SECRET`.
 
 ### A. Prerequisites & Parameters
 - **Access Token TTL**: Configured via `JWT_EXPIRES_IN` (default: `24h`).
@@ -70,17 +70,17 @@ NEW_EMAIL_TOKEN_SECRET=$(openssl rand -hex 64)
 3. Trigger a rolling zero-downtime deployment:
    ```bash
    # If running on Kubernetes
-   kubectl rollout restart deployment/splitnaira-backend -n production
-   kubectl rollout status deployment/splitnaira-backend -n production
+   kubectl rollout restart deployment/stardial-backend -n production
+   kubectl rollout status deployment/stardial-backend -n production
    ```
    *Note: In Phase 1, newly issued tokens are signed using `NEW_JWT_SECRET`. Active tokens issued prior to rotation are validated against `JWT_SECRET_PREVIOUS`.*
 
 #### Step 3: Phase 1 Verification
 1. **Issue new token**: Authenticate via auth login endpoint:
    ```bash
-   curl -s -X POST https://api.splitnaira.com/v1/auth/login \
+   curl -s -X POST https://api.stardial.com/v1/auth/login \
      -H "Content-Type: application/json" \
-     -d '{"email":"smoke-test@splitnaira.com","password":"<TEST_PASSWORD>"}'
+     -d '{"email":"smoke-test@stardial.com","password":"<TEST_PASSWORD>"}'
    ```
    *Verify response contains a valid token signed with the new key.*
 2. **Verify authenticated call with new token**:
@@ -88,7 +88,7 @@ NEW_EMAIL_TOKEN_SECRET=$(openssl rand -hex 64)
    curl -s -o /dev/null -w "%{http_code}\n" \
      -H "Authorization: Bearer <NEW_TOKEN>" \
      -H "Content-Type: application/json" \
-     https://api.splitnaira.com/v1/users/me
+     https://api.stardial.com/v1/users/me
    ```
    *Expected code: `200`.*
 3. **Verify backward-compatibility**:
@@ -96,7 +96,7 @@ NEW_EMAIL_TOKEN_SECRET=$(openssl rand -hex 64)
    curl -s -o /dev/null -w "%{http_code}\n" \
      -H "Authorization: Bearer <PREVIOUS_TOKEN>" \
      -H "Content-Type: application/json" \
-     https://api.splitnaira.com/v1/users/me
+     https://api.stardial.com/v1/users/me
    ```
    *Expected code: `200`.*
 
@@ -105,13 +105,13 @@ Once the 24-hour expiration window elapsed:
 1. Remove `JWT_SECRET_PREVIOUS` from the secret store.
 2. Trigger a final rolling deployment:
    ```bash
-   kubectl rollout restart deployment/splitnaira-backend -n production
+   kubectl rollout restart deployment/stardial-backend -n production
    ```
 3. Confirm obsolete tokens are rejected:
    ```bash
    curl -s -o /dev/null -w "%{http_code}\n" \
      -H "Authorization: Bearer <PREVIOUS_TOKEN>" \
-     https://api.splitnaira.com/v1/users/me
+     https://api.stardial.com/v1/users/me
    ```
    *Expected code: `401`.*
 
@@ -120,7 +120,7 @@ If verification fails or authentication rejection rates spike (`> 0.1%`):
 1. Immediately restore `JWT_SECRET=<OLD_JWT_SECRET>` in the secret store.
 2. Trigger an immediate rollout undo:
    ```bash
-   kubectl rollout undo deployment/splitnaira-backend -n production
+   kubectl rollout undo deployment/stardial-backend -n production
    ```
 3. Confirm login and token verification succeed with the rolled-back key.
 
@@ -150,7 +150,7 @@ If rotating due to suspected key leakage or during active settlement:
    ```
 2. Confirm admin write routes return `503`:
    ```bash
-   curl -s -i -X POST https://api.splitnaira.com/splits/admin/freeze \
+   curl -s -i -X POST https://api.stardial.com/splits/admin/freeze \
      -H "x-admin-api-key: <CURRENT_KEY>"
    ```
    *Expect `503 payments_admin_writes_disabled`.*
@@ -160,8 +160,8 @@ If rotating due to suspected key leakage or during active settlement:
 2. Update internal clients and administrative scripts with the new key.
 3. Perform a zero-downtime rolling restart of backend services:
    ```bash
-   kubectl rollout restart deployment/splitnaira-backend -n production
-   kubectl rollout status deployment/splitnaira-backend -n production
+   kubectl rollout restart deployment/stardial-backend -n production
+   kubectl rollout status deployment/stardial-backend -n production
    ```
 
 #### Step 4: Verification
@@ -169,21 +169,21 @@ If rotating due to suspected key leakage or during active settlement:
    ```bash
    curl -s -o /dev/null -w "%{http_code}\n" \
      -H "x-admin-api-key: <NEW_PAYMENTS_ADMIN_KEY>" \
-     https://api.splitnaira.com/splits/admin/status
+     https://api.stardial.com/splits/admin/status
    ```
    *Expected code: `200`.*
 2. **Negative check with old key (Revocation check)**:
    ```bash
    curl -s -o /dev/null -w "%{http_code}\n" \
      -H "x-admin-api-key: <OLD_PAYMENTS_ADMIN_KEY>" \
-     https://api.splitnaira.com/splits/admin/status
+     https://api.stardial.com/splits/admin/status
    ```
    *Expected code: `401`.*
 3. **Audit Log Verification**:
    Inspect backend application logs:
    ```bash
    # Filter for PaymentsAdminGuard log entries
-   kubectl logs -l app=splitnaira-backend -n production --tail=100 | grep -E "ADMIN_ACCESS_GRANTED|ADMIN_ACCESS_DENIED"
+   kubectl logs -l app=stardial-backend -n production --tail=100 | grep -E "ADMIN_ACCESS_GRANTED|ADMIN_ACCESS_DENIED"
    ```
    *Verify `ADMIN_ACCESS_GRANTED` for the new key and absence of unexpected denials.*
 4. **Re-enable Writes (if frozen in Step 2)**:
@@ -198,7 +198,7 @@ If external clients or automated services cannot authenticate:
    ```bash
    curl -s -o /dev/null -w "%{http_code}\n" \
      -H "x-admin-api-key: <OLD_PAYMENTS_ADMIN_KEY>" \
-     https://api.splitnaira.com/splits/admin/status
+     https://api.stardial.com/splits/admin/status
    ```
    *Expected code: `200`.*
 
@@ -226,7 +226,7 @@ The operator account submits automated transactions (such as project creation re
    - Update `SOROBAN_OPERATOR_SECRET_KEY` in Render / Vault.
    - Roll out the new configuration:
      ```bash
-     kubectl rollout restart deployment/splitnaira-backend -n production
+     kubectl rollout restart deployment/stardial-backend -n production
      ```
 4. **Verification**:
    - Execute a canary contract read or low-value test transaction:
@@ -249,15 +249,15 @@ The smart contract admin key holds administrative authorization over deployed So
 #### Rotation Steps:
 1. **Generate New Admin Keypair**:
    ```bash
-   stellar keys generate --global splitnaira-contract-admin-new --network mainnet
-   NEW_ADMIN_PUB=$(stellar keys address splitnaira-contract-admin-new)
+   stellar keys generate --global stardial-contract-admin-new --network mainnet
+   NEW_ADMIN_PUB=$(stellar keys address stardial-contract-admin-new)
    ```
 2. **Transfer Admin Role on Smart Contract**:
    Execute the contract administration transfer function using the current admin key:
    ```bash
    stellar contract invoke \
      --id $CONTRACT_ID \
-     --source splitnaira-contract-admin-old \
+     --source stardial-contract-admin-old \
      --network mainnet \
      -- \
      set_admin --new_admin $NEW_ADMIN_PUB
@@ -269,7 +269,7 @@ The smart contract admin key holds administrative authorization over deployed So
    ```
    *Verify the returned admin address matches `$NEW_ADMIN_PUB`.*
 4. **Store Secret Securely**:
-   Store the secret key for `splitnaira-contract-admin-new` in an offline hardware wallet or enterprise KMS. Wipe ephemeral instances.
+   Store the secret key for `stardial-contract-admin-new` in an offline hardware wallet or enterprise KMS. Wipe ephemeral instances.
 
 ### C. Stellar Issuer & Distributor Secrets (`STELLAR_ISSUER_SECRET`, `STELLAR_DISTRIBUTOR_SECRET`)
 1. **Provision New Accounts**: Generate new keypairs and establish required multi-signature signing thresholds.
@@ -282,24 +282,24 @@ Zero-downtime database credential rotation requires dual-user role staging in Po
 
 1. **Create New Database User in Postgres**:
    ```sql
-   CREATE USER splitnaira_backend_v2 WITH PASSWORD 'STRONGLY_GENERATED_PASSWORD';
-   GRANT splitnaira_app_role TO splitnaira_backend_v2;
-   GRANT ALL PRIVILEGES ON ALL TABLES IN SCHEMA public TO splitnaira_backend_v2;
-   GRANT ALL PRIVILEGES ON ALL SEQUENCES IN SCHEMA public TO splitnaira_backend_v2;
+   CREATE USER stardial_backend_v2 WITH PASSWORD 'STRONGLY_GENERATED_PASSWORD';
+   GRANT stardial_app_role TO stardial_backend_v2;
+   GRANT ALL PRIVILEGES ON ALL TABLES IN SCHEMA public TO stardial_backend_v2;
+   GRANT ALL PRIVILEGES ON ALL SEQUENCES IN SCHEMA public TO stardial_backend_v2;
    ```
 2. **Update Application Secret**:
-   - Update `DATABASE_URL` in the hosting environment to use `splitnaira_backend_v2`.
+   - Update `DATABASE_URL` in the hosting environment to use `stardial_backend_v2`.
 3. **Rolling Deploy & Connection Drain**:
    - Restart backend instances rolling one by one.
    - Monitor connection pool migration in PostgreSQL:
      ```sql
-     SELECT usename, count(*) FROM pg_stat_activity WHERE datname = 'splitnaira' GROUP BY usename;
+     SELECT usename, count(*) FROM pg_stat_activity WHERE datname = 'stardial' GROUP BY usename;
      ```
 4. **Drop Old User**:
-   Once all connections from `splitnaira_backend_v1` drop to 0:
+   Once all connections from `stardial_backend_v1` drop to 0:
    ```sql
-   REVOKE ALL PRIVILEGES ON ALL TABLES IN SCHEMA public FROM splitnaira_backend_v1;
-   DROP USER splitnaira_backend_v1;
+   REVOKE ALL PRIVILEGES ON ALL TABLES IN SCHEMA public FROM stardial_backend_v1;
+   DROP USER stardial_backend_v1;
    ```
 
 ### E. RPC Providers & Infrastructure (`SOROBAN_RPC_URL`, `HORIZON_URL`, `SENTRY_DSN`, `RENDER_BACKEND_DEPLOY_HOOK_URL`)
@@ -322,8 +322,8 @@ Initiate an emergency rollback immediately if any of the following occur post-ro
 
 | Issue Encountered | Immediate Rollback Step | Verification Check |
 | :--- | :--- | :--- |
-| **JWT Login / Session Failures** | Revert `JWT_SECRET` to previous value in vault and redeploy. | `curl -I https://api.splitnaira.com/v1/users/me` with previous token |
-| **Admin Route 401s** | Restore previous `PAYMENTS_ADMIN_API_KEY` in vault and redeploy. | `curl -H "x-admin-api-key: <OLD_KEY>" https://api.splitnaira.com/splits/admin/status` |
+| **JWT Login / Session Failures** | Revert `JWT_SECRET` to previous value in vault and redeploy. | `curl -I https://api.stardial.com/v1/users/me` with previous token |
+| **Admin Route 401s** | Restore previous `PAYMENTS_ADMIN_API_KEY` in vault and redeploy. | `curl -H "x-admin-api-key: <OLD_KEY>" https://api.stardial.com/splits/admin/status` |
 | **Admin Payout Outages** | Toggle `PAYMENTS_ADMIN_WRITE_ENABLED=false` to halt mutations safely. | Admin routes return `503 payments_admin_writes_disabled` |
 | **DB Connection Errors** | Point `DATABASE_URL` back to previous database credentials. | `SELECT count(*) FROM pg_stat_activity` & `/health` |
 | **Operator Tx Failures** | Point `SOROBAN_OPERATOR_SECRET_KEY` back to funded previous key. | Submit low-gas canary call |
@@ -331,16 +331,16 @@ Initiate an emergency rollback immediately if any of the following occur post-ro
 ### C. Fast Deployment Rollback Command Reference
 ```bash
 # Rollback Kubernetes Deployment
-kubectl rollout undo deployment/splitnaira-backend -n production
+kubectl rollout undo deployment/stardial-backend -n production
 
 # If deploying via PM2 / Bare-Metal
 git checkout <PREVIOUS_STABLE_TAG>
 npm ci
 npm run build
-pm2 restart splitnaira-backend
+pm2 restart stardial-backend
 
 # Verify health status
-curl -s https://api.splitnaira.com/health | jq .
+curl -s https://api.stardial.com/health | jq .
 ```
 
 ---

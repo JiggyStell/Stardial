@@ -2,7 +2,7 @@
 
 ## Purpose
 
-This document defines the process for identifying, quarantining, tracking, and restoring flaky tests in SplitNaira.
+This document defines the process for identifying, quarantining, tracking, and restoring flaky tests in Stardial.
 
 A flaky test is a test that produces inconsistent results without a corresponding change to the code under test. Flaky tests can reduce confidence in CI results and make genuine regressions harder to identify.
 
@@ -10,7 +10,7 @@ The quarantine process is intended to isolate known flaky tests without silently
 
 ## Scope
 
-This policy applies to automated tests executed by SplitNaira CI, including:
+This policy applies to automated tests executed by Stardial CI, including:
 
 * Backend tests
 * Frontend tests

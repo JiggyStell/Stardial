@@ -1,7 +1,7 @@
 # Personal Data Inventory & Purpose Map (Issue #1532)
 
 ## Overview
-This document maps all personal data elements processed by SplitNaira across the backend, database, and telemetry pipelines, establishing processing purposes, legal bases under GDPR/NDPR, retention policies, and data scrubbing controls.
+This document maps all personal data elements processed by Stardial across the backend, database, and telemetry pipelines, establishing processing purposes, legal bases under GDPR/NDPR, retention policies, and data scrubbing controls.
 
 ## Personal Data Inventory
 

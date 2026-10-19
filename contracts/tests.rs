@@ -45,7 +45,7 @@ fn make_collaborators(env: &Env, addresses: Vec<Address>, bps: Vec<u32>) -> Vec<
 
 fn deposit_to_project(
     env: &Env,
-    client: &SplitNairaContractClient,
+    client: &StardialContractClient,
     token: &Address,
     project_id: &Symbol,
     from: &Address,
@@ -131,8 +131,8 @@ fn seed_bucketed_projects(
 #[test]
 fn test_create_project_success() {
     let (env, _admin, token) = create_test_env();
-    let contract_id = env.register_contract(None, SplitNairaContract);
-    let client = SplitNairaContractClient::new(&env, &contract_id);
+    let contract_id = env.register_contract(None, StardialContract);
+    let client = StardialContractClient::new(&env, &contract_id);
 
     let owner = Address::generate(&env);
     let alice = Address::generate(&env);
@@ -167,8 +167,8 @@ fn test_create_project_success() {
 #[test]
 fn test_create_project_fails_invalid_split() {
     let (env, _admin, token) = create_test_env();
-    let contract_id = env.register_contract(None, SplitNairaContract);
-    let client = SplitNairaContractClient::new(&env, &contract_id);
+    let contract_id = env.register_contract(None, StardialContract);
+    let client = StardialContractClient::new(&env, &contract_id);
 
     let owner = Address::generate(&env);
     let alice = Address::generate(&env);
@@ -196,8 +196,8 @@ fn test_create_project_fails_invalid_split() {
 #[test]
 fn test_create_project_fails_too_few_collaborators() {
     let (env, _admin, token) = create_test_env();
-    let contract_id = env.register_contract(None, SplitNairaContract);
-    let client = SplitNairaContractClient::new(&env, &contract_id);
+    let contract_id = env.register_contract(None, StardialContract);
+    let client = StardialContractClient::new(&env, &contract_id);
 
     let owner = Address::generate(&env);
     let alice = Address::generate(&env);
@@ -224,8 +224,8 @@ fn test_create_project_fails_too_few_collaborators() {
 #[test]
 fn test_create_project_fails_duplicate_id() {
     let (env, _admin, token) = create_test_env();
-    let contract_id = env.register_contract(None, SplitNairaContract);
-    let client = SplitNairaContractClient::new(&env, &contract_id);
+    let contract_id = env.register_contract(None, StardialContract);
+    let client = StardialContractClient::new(&env, &contract_id);
 
     let owner = Address::generate(&env);
     let alice = Address::generate(&env);
@@ -265,8 +265,8 @@ fn test_create_project_duplicate_preserves_original_data() {
     // existing project in any way, even when the attacker/caller submits
     // different data (title, type, collaborators) under the same id.
     let (env, _admin, token) = create_test_env();
-    let contract_id = env.register_contract(None, SplitNairaContract);
-    let client = SplitNairaContractClient::new(&env, &contract_id);
+    let contract_id = env.register_contract(None, StardialContract);
+    let client = StardialContractClient::new(&env, &contract_id);
 
     let owner = Address::generate(&env);
     let alice = Address::generate(&env);
@@ -344,8 +344,8 @@ fn test_create_project_fails_duplicate_id_different_caller() {
     // second caller is - a different address can't "steal" or overwrite
     // an existing project_id it doesn't own.
     let (env, _admin, token) = create_test_env();
-    let contract_id = env.register_contract(None, SplitNairaContract);
-    let client = SplitNairaContractClient::new(&env, &contract_id);
+    let contract_id = env.register_contract(None, StardialContract);
+    let client = StardialContractClient::new(&env, &contract_id);
 
     let original_owner = Address::generate(&env);
     let alice = Address::generate(&env);
@@ -402,8 +402,8 @@ fn test_create_project_fails_duplicate_id_different_caller() {
 #[test]
 fn test_create_project_fails_duplicate_collaborator_address() {
     let (env, _admin, token) = create_test_env();
-    let contract_id = env.register_contract(None, SplitNairaContract);
-    let client = SplitNairaContractClient::new(&env, &contract_id);
+    let contract_id = env.register_contract(None, StardialContract);
+    let client = StardialContractClient::new(&env, &contract_id);
 
     let owner = Address::generate(&env);
     let alice = Address::generate(&env);
@@ -433,8 +433,8 @@ fn test_create_project_allows_any_token_when_allowlist_is_empty() {
     let token_b_admin = Address::generate(&env);
     let token_b = env.register_stellar_asset_contract(token_b_admin);
 
-    let contract_id = env.register_contract(None, SplitNairaContract);
-    let client = SplitNairaContractClient::new(&env, &contract_id);
+    let contract_id = env.register_contract(None, StardialContract);
+    let client = StardialContractClient::new(&env, &contract_id);
 
     let owner = Address::generate(&env);
     let alice = Address::generate(&env);
@@ -463,8 +463,8 @@ fn test_create_project_fails_when_token_not_allowlisted() {
     let token_b_admin = Address::generate(&env);
     let token_b = env.register_stellar_asset_contract(token_b_admin);
 
-    let contract_id = env.register_contract(None, SplitNairaContract);
-    let client = SplitNairaContractClient::new(&env, &contract_id);
+    let contract_id = env.register_contract(None, StardialContract);
+    let client = StardialContractClient::new(&env, &contract_id);
 
     let contract_admin = Address::generate(&env);
     client.set_admin(&contract_admin);
@@ -494,8 +494,8 @@ fn test_create_project_fails_when_token_not_allowlisted() {
 #[test]
 fn test_create_project_succeeds_when_token_is_allowlisted() {
     let (env, _admin, token) = create_test_env();
-    let contract_id = env.register_contract(None, SplitNairaContract);
-    let client = SplitNairaContractClient::new(&env, &contract_id);
+    let contract_id = env.register_contract(None, StardialContract);
+    let client = StardialContractClient::new(&env, &contract_id);
 
     let contract_admin = Address::generate(&env);
     client.set_admin(&contract_admin);
@@ -525,8 +525,8 @@ fn test_create_project_succeeds_when_token_is_allowlisted() {
 #[test]
 fn test_allowlist_management_requires_admin() {
     let (env, _admin, token) = create_test_env();
-    let contract_id = env.register_contract(None, SplitNairaContract);
-    let client = SplitNairaContractClient::new(&env, &contract_id);
+    let contract_id = env.register_contract(None, StardialContract);
+    let client = StardialContractClient::new(&env, &contract_id);
 
     let admin = Address::generate(&env);
     let unauthorized = Address::generate(&env);
@@ -552,8 +552,8 @@ fn test_allowlist_turns_off_after_last_token_is_removed() {
     let token_b_admin = Address::generate(&env);
     let token_b = env.register_stellar_asset_contract(token_b_admin);
 
-    let contract_id = env.register_contract(None, SplitNairaContract);
-    let client = SplitNairaContractClient::new(&env, &contract_id);
+    let contract_id = env.register_contract(None, StardialContract);
+    let client = StardialContractClient::new(&env, &contract_id);
 
     let contract_admin = Address::generate(&env);
     client.set_admin(&contract_admin);
@@ -593,8 +593,8 @@ fn test_get_allowed_tokens_returns_paginated_allowlist() {
     let token_c_admin = Address::generate(&env);
     let token_c = env.register_stellar_asset_contract(token_c_admin);
 
-    let contract_id = env.register_contract(None, SplitNairaContract);
-    let client = SplitNairaContractClient::new(&env, &contract_id);
+    let contract_id = env.register_contract(None, StardialContract);
+    let client = StardialContractClient::new(&env, &contract_id);
 
     let admin = Address::generate(&env);
     client.set_admin(&admin);
@@ -622,8 +622,8 @@ fn test_get_allowed_tokens_returns_paginated_allowlist() {
 #[test]
 fn test_create_project_too_many_collaborators() {
     let (env, _admin, token) = create_test_env();
-    let contract_id = env.register_contract(None, SplitNairaContract);
-    let client = SplitNairaContractClient::new(&env, &contract_id);
+    let contract_id = env.register_contract(None, StardialContract);
+    let client = StardialContractClient::new(&env, &contract_id);
 
     let owner = Address::generate(&env);
 
@@ -658,8 +658,8 @@ fn test_create_project_too_many_collaborators() {
 #[test]
 fn test_update_collaborators_success_before_lock() {
     let (env, _admin, token) = create_test_env();
-    let contract_id = env.register_contract(None, SplitNairaContract);
-    let client = SplitNairaContractClient::new(&env, &contract_id);
+    let contract_id = env.register_contract(None, StardialContract);
+    let client = StardialContractClient::new(&env, &contract_id);
 
     let owner = Address::generate(&env);
     let alice = Address::generate(&env);
@@ -718,8 +718,8 @@ fn test_update_collaborators_success_before_lock() {
 #[test]
 fn test_update_collaborators_fails_when_locked() {
     let (env, _admin, token) = create_test_env();
-    let contract_id = env.register_contract(None, SplitNairaContract);
-    let client = SplitNairaContractClient::new(&env, &contract_id);
+    let contract_id = env.register_contract(None, StardialContract);
+    let client = StardialContractClient::new(&env, &contract_id);
 
     let owner = Address::generate(&env);
     let alice = Address::generate(&env);
@@ -759,8 +759,8 @@ fn test_update_collaborators_fails_when_locked() {
 #[test]
 fn test_update_collaborators_emits_event() {
     let (env, _admin, token) = create_test_env();
-    let contract_id = env.register_contract(None, SplitNairaContract);
-    let client = SplitNairaContractClient::new(&env, &contract_id);
+    let contract_id = env.register_contract(None, StardialContract);
+    let client = StardialContractClient::new(&env, &contract_id);
 
     let owner = Address::generate(&env);
     let alice = Address::generate(&env);
@@ -807,8 +807,8 @@ fn test_update_collaborators_emits_event() {
 #[test]
 fn test_update_collaborators_fails_duplicate_collaborator() {
     let (env, _admin, token) = create_test_env();
-    let contract_id = env.register_contract(None, SplitNairaContract);
-    let client = SplitNairaContractClient::new(&env, &contract_id);
+    let contract_id = env.register_contract(None, StardialContract);
+    let client = StardialContractClient::new(&env, &contract_id);
 
     let owner = Address::generate(&env);
     let alice = Address::generate(&env);
@@ -843,8 +843,8 @@ fn test_update_collaborators_fails_duplicate_collaborator() {
 #[test]
 fn test_update_collaborators_fails_invalid_split() {
     let (env, _admin, token) = create_test_env();
-    let contract_id = env.register_contract(None, SplitNairaContract);
-    let client = SplitNairaContractClient::new(&env, &contract_id);
+    let contract_id = env.register_contract(None, StardialContract);
+    let client = StardialContractClient::new(&env, &contract_id);
 
     let owner = Address::generate(&env);
     let alice = Address::generate(&env);
@@ -879,8 +879,8 @@ fn test_update_collaborators_fails_invalid_split() {
 #[test]
 fn test_update_collaborators_fails_zero_share() {
     let (env, _admin, token) = create_test_env();
-    let contract_id = env.register_contract(None, SplitNairaContract);
-    let client = SplitNairaContractClient::new(&env, &contract_id);
+    let contract_id = env.register_contract(None, StardialContract);
+    let client = StardialContractClient::new(&env, &contract_id);
 
     let owner = Address::generate(&env);
     let alice = Address::generate(&env);
@@ -915,8 +915,8 @@ fn test_update_collaborators_fails_zero_share() {
 #[test]
 fn test_update_collaborators_with_pending_balance_emits_warning() {
     let (env, _admin, token) = create_test_env();
-    let contract_id = env.register_contract(None, SplitNairaContract);
-    let client = SplitNairaContractClient::new(&env, &contract_id);
+    let contract_id = env.register_contract(None, StardialContract);
+    let client = StardialContractClient::new(&env, &contract_id);
 
     let owner = Address::generate(&env);
     let funder = Address::generate(&env);
@@ -980,8 +980,8 @@ fn test_update_collaborators_with_pending_balance_emits_warning() {
 #[test]
 fn test_lock_project_success() {
     let (env, _admin, token) = create_test_env();
-    let contract_id = env.register_contract(None, SplitNairaContract);
-    let client = SplitNairaContractClient::new(&env, &contract_id);
+    let contract_id = env.register_contract(None, StardialContract);
+    let client = StardialContractClient::new(&env, &contract_id);
 
     let owner = Address::generate(&env);
     let alice = Address::generate(&env);
@@ -1016,8 +1016,8 @@ fn test_lock_project_success() {
 #[test]
 fn test_deposit_success() {
     let (env, _admin, token) = create_test_env();
-    let contract_id = env.register_contract(None, SplitNairaContract);
-    let client = SplitNairaContractClient::new(&env, &contract_id);
+    let contract_id = env.register_contract(None, StardialContract);
+    let client = StardialContractClient::new(&env, &contract_id);
 
     let owner = Address::generate(&env);
     let funder = Address::generate(&env);
@@ -1055,8 +1055,8 @@ fn test_deposit_success() {
 #[test]
 fn test_deposit_rejects_zero_amount() {
     let (env, _admin, token) = create_test_env();
-    let contract_id = env.register_contract(None, SplitNairaContract);
-    let client = SplitNairaContractClient::new(&env, &contract_id);
+    let contract_id = env.register_contract(None, StardialContract);
+    let client = StardialContractClient::new(&env, &contract_id);
 
     let owner = Address::generate(&env);
     let funder = Address::generate(&env);
@@ -1095,8 +1095,8 @@ fn test_deposit_rejects_zero_amount() {
 //     let wrong_token_admin = Address::generate(&env);
 //     let wrong_token = env.register_stellar_asset_contract(wrong_token_admin);
 //
-//     let contract_id = env.register_contract(None, SplitNairaContract);
-//     let client = SplitNairaContractClient::new(&env, &contract_id);
+//     let contract_id = env.register_contract(None, StardialContract);
+//     let client = StardialContractClient::new(&env, &contract_id);
 //
 //     let owner = Address::generate(&env);
 //     let funder = Address::generate(&env);
@@ -1137,8 +1137,8 @@ fn test_deposit_rejects_zero_amount() {
 #[test]
 fn test_multiple_sequential_deposits() {
     let (env, _admin, token) = create_test_env();
-    let contract_id = env.register_contract(None, SplitNairaContract);
-    let client = SplitNairaContractClient::new(&env, &contract_id);
+    let contract_id = env.register_contract(None, StardialContract);
+    let client = StardialContractClient::new(&env, &contract_id);
 
     let owner = Address::generate(&env);
     let funder1 = Address::generate(&env);
@@ -1193,8 +1193,8 @@ fn test_multiple_sequential_deposits() {
 #[test]
 fn test_distribute_splits_correctly() {
     let (env, _token_admin, token) = create_test_env();
-    let contract_id = env.register_contract(None, SplitNairaContract);
-    let client = SplitNairaContractClient::new(&env, &contract_id);
+    let contract_id = env.register_contract(None, StardialContract);
+    let client = StardialContractClient::new(&env, &contract_id);
 
     let owner = Address::generate(&env);
     let funder = Address::generate(&env);
@@ -1251,8 +1251,8 @@ fn test_distribute_splits_correctly() {
 #[test]
 fn test_distribute_fails_no_balance() {
     let (env, _admin, token) = create_test_env();
-    let contract_id = env.register_contract(None, SplitNairaContract);
-    let client = SplitNairaContractClient::new(&env, &contract_id);
+    let contract_id = env.register_contract(None, StardialContract);
+    let client = StardialContractClient::new(&env, &contract_id);
 
     let owner = Address::generate(&env);
     let alice = Address::generate(&env);
@@ -1284,8 +1284,8 @@ fn test_distribute_fails_no_balance() {
 #[test]
 fn test_batch_distribute_graceful_partial_failures() {
     let (env, _token_admin, token) = create_test_env();
-    let contract_id = env.register_contract(None, SplitNairaContract);
-    let client = SplitNairaContractClient::new(&env, &contract_id);
+    let contract_id = env.register_contract(None, StardialContract);
+    let client = StardialContractClient::new(&env, &contract_id);
 
     let owner = Address::generate(&env);
     let funder = Address::generate(&env);
@@ -1361,8 +1361,8 @@ fn test_batch_distribute_graceful_partial_failures() {
 #[test]
 fn test_batch_distribute_fails_when_paused() {
     let (env, _token_admin, token) = create_test_env();
-    let contract_id = env.register_contract(None, SplitNairaContract);
-    let client = SplitNairaContractClient::new(&env, &contract_id);
+    let contract_id = env.register_contract(None, StardialContract);
+    let client = StardialContractClient::new(&env, &contract_id);
 
     let owner = Address::generate(&env);
     let alice = Address::generate(&env);
@@ -1397,8 +1397,8 @@ fn test_batch_distribute_fails_when_paused() {
 #[test]
 fn test_distribution_round_increments_only_on_success() {
     let (env, _admin, token) = create_test_env();
-    let contract_id = env.register_contract(None, SplitNairaContract);
-    let client = SplitNairaContractClient::new(&env, &contract_id);
+    let contract_id = env.register_contract(None, StardialContract);
+    let client = StardialContractClient::new(&env, &contract_id);
 
     let owner = Address::generate(&env);
     let funder = Address::generate(&env);
@@ -1447,8 +1447,8 @@ fn test_distribution_round_increments_only_on_success() {
 #[test]
 fn test_multi_project_balances_are_isolated() {
     let (env, _admin, token) = create_test_env();
-    let contract_id = env.register_contract(None, SplitNairaContract);
-    let client = SplitNairaContractClient::new(&env, &contract_id);
+    let contract_id = env.register_contract(None, StardialContract);
+    let client = StardialContractClient::new(&env, &contract_id);
 
     let owner_a = Address::generate(&env);
     let owner_b = Address::generate(&env);
@@ -1535,8 +1535,8 @@ fn test_multi_project_balances_are_isolated() {
 #[test]
 fn test_list_projects_empty() {
     let (env, _admin, _token) = create_test_env();
-    let contract_id = env.register_contract(None, SplitNairaContract);
-    let client = SplitNairaContractClient::new(&env, &contract_id);
+    let contract_id = env.register_contract(None, StardialContract);
+    let client = StardialContractClient::new(&env, &contract_id);
 
     let projects = client.list_projects(&0, &10);
     assert_eq!(projects.len(), 0);
@@ -1548,8 +1548,8 @@ fn test_list_projects_empty() {
 #[test]
 fn test_list_projects_single() {
     let (env, _admin, token) = create_test_env();
-    let contract_id = env.register_contract(None, SplitNairaContract);
-    let client = SplitNairaContractClient::new(&env, &contract_id);
+    let contract_id = env.register_contract(None, StardialContract);
+    let client = StardialContractClient::new(&env, &contract_id);
 
     let owner = Address::generate(&env);
     let alice = Address::generate(&env);
@@ -1587,8 +1587,8 @@ fn test_list_projects_single() {
 #[test]
 fn test_list_projects_pagination() {
     let (env, _admin, token) = create_test_env();
-    let contract_id = env.register_contract(None, SplitNairaContract);
-    let client = SplitNairaContractClient::new(&env, &contract_id);
+    let contract_id = env.register_contract(None, StardialContract);
+    let client = StardialContractClient::new(&env, &contract_id);
 
     let owner = Address::generate(&env);
     let alice = Address::generate(&env);
@@ -1643,8 +1643,8 @@ fn test_list_projects_pagination() {
 #[test]
 fn test_basis_points_invariant_table() {
     let (env, _admin, token) = create_test_env();
-    let contract_id = env.register_contract(None, SplitNairaContract);
-    let client = SplitNairaContractClient::new(&env, &contract_id);
+    let contract_id = env.register_contract(None, StardialContract);
+    let client = StardialContractClient::new(&env, &contract_id);
 
     let owner = Address::generate(&env);
 
@@ -1740,8 +1740,8 @@ fn test_basis_points_invariant_table() {
 #[test]
 fn test_list_projects_bounds() {
     let (env, _admin, token) = create_test_env();
-    let contract_id = env.register_contract(None, SplitNairaContract);
-    let client = SplitNairaContractClient::new(&env, &contract_id);
+    let contract_id = env.register_contract(None, StardialContract);
+    let client = StardialContractClient::new(&env, &contract_id);
 
     let owner = Address::generate(&env);
     let alice = Address::generate(&env);
@@ -1781,8 +1781,8 @@ fn test_list_projects_bounds() {
 #[test]
 fn test_get_project_ids_returns_ids_in_creation_order() {
     let (env, _admin, token) = create_test_env();
-    let contract_id = env.register_contract(None, SplitNairaContract);
-    let client = SplitNairaContractClient::new(&env, &contract_id);
+    let contract_id = env.register_contract(None, StardialContract);
+    let client = StardialContractClient::new(&env, &contract_id);
 
     let owner = Address::generate(&env);
     let alice = Address::generate(&env);
@@ -1832,8 +1832,8 @@ fn test_get_project_ids_returns_ids_in_creation_order() {
 #[test]
 fn test_get_project_ids_pagination() {
     let (env, _admin, token) = create_test_env();
-    let contract_id = env.register_contract(None, SplitNairaContract);
-    let client = SplitNairaContractClient::new(&env, &contract_id);
+    let contract_id = env.register_contract(None, StardialContract);
+    let client = StardialContractClient::new(&env, &contract_id);
 
     let owner = Address::generate(&env);
     let alice = Address::generate(&env);
@@ -1882,8 +1882,8 @@ fn test_get_project_ids_pagination() {
 #[test]
 fn test_get_project_ids_empty_contract() {
     let (env, _admin, _token) = create_test_env();
-    let contract_id = env.register_contract(None, SplitNairaContract);
-    let client = SplitNairaContractClient::new(&env, &contract_id);
+    let contract_id = env.register_contract(None, StardialContract);
+    let client = StardialContractClient::new(&env, &contract_id);
 
     let ids = client.get_project_ids(&0u32, &10u32);
     assert_eq!(ids.len(), 0);
@@ -1896,8 +1896,8 @@ fn test_get_project_ids_empty_contract() {
 #[test]
 fn test_deposit_emits_deposit_received_event() {
     let (env, _admin, token) = create_test_env();
-    let contract_id = env.register_contract(None, SplitNairaContract);
-    let client = SplitNairaContractClient::new(&env, &contract_id);
+    let contract_id = env.register_contract(None, StardialContract);
+    let client = StardialContractClient::new(&env, &contract_id);
 
     let owner = Address::generate(&env);
     let funder = Address::generate(&env);
@@ -1956,8 +1956,8 @@ fn test_deposit_emits_deposit_received_event() {
 #[test]
 fn test_distribution_emits_analytics_events() {
     let (env, _admin, token) = create_test_env();
-    let contract_id = env.register_contract(None, SplitNairaContract);
-    let client = SplitNairaContractClient::new(&env, &contract_id);
+    let contract_id = env.register_contract(None, StardialContract);
+    let client = StardialContractClient::new(&env, &contract_id);
 
     let owner = Address::generate(&env);
     let alice = Address::generate(&env);
@@ -2008,8 +2008,8 @@ fn test_distribution_emits_analytics_events() {
 #[test]
 fn test_claim_emits_collaborator_claimed_event_for_analytics() {
     let (env, _admin, token) = create_test_env();
-    let contract_id = env.register_contract(None, SplitNairaContract);
-    let client = SplitNairaContractClient::new(&env, &contract_id);
+    let contract_id = env.register_contract(None, StardialContract);
+    let client = StardialContractClient::new(&env, &contract_id);
 
     let owner = Address::generate(&env);
     let alice = Address::generate(&env);
@@ -2054,8 +2054,8 @@ fn test_claim_emits_collaborator_claimed_event_for_analytics() {
 #[test]
 fn test_get_claimable_before_any_distribution() {
     let (env, _admin, token) = create_test_env();
-    let contract_id = env.register_contract(None, SplitNairaContract);
-    let client = SplitNairaContractClient::new(&env, &contract_id);
+    let contract_id = env.register_contract(None, StardialContract);
+    let client = StardialContractClient::new(&env, &contract_id);
 
     let owner = Address::generate(&env);
     let alice = Address::generate(&env);
@@ -2085,8 +2085,8 @@ fn test_get_claimable_before_any_distribution() {
 #[test]
 fn test_get_claimable_after_distribution() {
     let (env, _admin, token) = create_test_env();
-    let contract_id = env.register_contract(None, SplitNairaContract);
-    let client = SplitNairaContractClient::new(&env, &contract_id);
+    let contract_id = env.register_contract(None, StardialContract);
+    let client = StardialContractClient::new(&env, &contract_id);
 
     let owner = Address::generate(&env);
     let funder = Address::generate(&env);
@@ -2140,8 +2140,8 @@ fn test_get_claimable_after_distribution() {
 #[test]
 fn test_pause_distributions_requires_admin() {
     let (env, _admin, _token) = create_test_env();
-    let contract_id = env.register_contract(None, SplitNairaContract);
-    let client = SplitNairaContractClient::new(&env, &contract_id);
+    let contract_id = env.register_contract(None, StardialContract);
+    let client = StardialContractClient::new(&env, &contract_id);
 
     let unauthorized = Address::generate(&env);
 
@@ -2152,8 +2152,8 @@ fn test_pause_distributions_requires_admin() {
 #[test]
 fn test_pause_and_unpause_distributions() {
     let (env, _admin, _token) = create_test_env();
-    let contract_id = env.register_contract(None, SplitNairaContract);
-    let client = SplitNairaContractClient::new(&env, &contract_id);
+    let contract_id = env.register_contract(None, StardialContract);
+    let client = StardialContractClient::new(&env, &contract_id);
 
     let admin = Address::generate(&env);
     client.set_admin(&admin);
@@ -2173,8 +2173,8 @@ fn test_pause_and_unpause_distributions() {
 #[test]
 fn test_pause_and_unpause_emit_events() {
     let (env, _admin, _token) = create_test_env();
-    let contract_id = env.register_contract(None, SplitNairaContract);
-    let client = SplitNairaContractClient::new(&env, &contract_id);
+    let contract_id = env.register_contract(None, StardialContract);
+    let client = StardialContractClient::new(&env, &contract_id);
 
     let admin = Address::generate(&env);
     client.set_admin(&admin);
@@ -2213,8 +2213,8 @@ fn test_pause_and_unpause_emit_events() {
 #[test]
 fn test_distribute_fails_when_paused() {
     let (env, _admin, token) = create_test_env();
-    let contract_id = env.register_contract(None, SplitNairaContract);
-    let client = SplitNairaContractClient::new(&env, &contract_id);
+    let contract_id = env.register_contract(None, StardialContract);
+    let client = StardialContractClient::new(&env, &contract_id);
 
     let admin = Address::generate(&env);
     client.set_admin(&admin);
@@ -2270,8 +2270,8 @@ fn test_distribute_fails_when_paused() {
 #[test]
 fn test_get_claimable_accumulates_across_rounds() {
     let (env, _admin, token) = create_test_env();
-    let contract_id = env.register_contract(None, SplitNairaContract);
-    let client = SplitNairaContractClient::new(&env, &contract_id);
+    let contract_id = env.register_contract(None, StardialContract);
+    let client = StardialContractClient::new(&env, &contract_id);
 
     let owner = Address::generate(&env);
     let funder = Address::generate(&env);
@@ -2307,8 +2307,8 @@ fn test_get_claimable_accumulates_across_rounds() {
 #[test]
 fn test_get_claimable_fails_for_missing_project() {
     let (env, _admin, _token) = create_test_env();
-    let contract_id = env.register_contract(None, SplitNairaContract);
-    let client = SplitNairaContractClient::new(&env, &contract_id);
+    let contract_id = env.register_contract(None, StardialContract);
+    let client = StardialContractClient::new(&env, &contract_id);
 
     let random = Address::generate(&env);
     let result = client.try_get_claimable(&Symbol::new(&env, "ghost"), &random);
@@ -2322,8 +2322,8 @@ fn test_get_claimable_fails_for_missing_project() {
 #[test]
 fn test_update_project_metadata_success() {
     let (env, _admin, token) = create_test_env();
-    let contract_id = env.register_contract(None, SplitNairaContract);
-    let client = SplitNairaContractClient::new(&env, &contract_id);
+    let contract_id = env.register_contract(None, StardialContract);
+    let client = StardialContractClient::new(&env, &contract_id);
 
     let owner = Address::generate(&env);
     let alice = Address::generate(&env);
@@ -2359,8 +2359,8 @@ fn test_update_project_metadata_success() {
 #[test]
 fn test_update_project_metadata_fails_when_locked() {
     let (env, _admin, token) = create_test_env();
-    let contract_id = env.register_contract(None, SplitNairaContract);
-    let client = SplitNairaContractClient::new(&env, &contract_id);
+    let contract_id = env.register_contract(None, StardialContract);
+    let client = StardialContractClient::new(&env, &contract_id);
 
     let owner = Address::generate(&env);
     let alice = Address::generate(&env);
@@ -2394,8 +2394,8 @@ fn test_update_project_metadata_fails_when_locked() {
 #[test]
 fn test_update_project_metadata_fails_when_unauthorized() {
     let (env, _admin, token) = create_test_env();
-    let contract_id = env.register_contract(None, SplitNairaContract);
-    let client = SplitNairaContractClient::new(&env, &contract_id);
+    let contract_id = env.register_contract(None, StardialContract);
+    let client = StardialContractClient::new(&env, &contract_id);
 
     let owner = Address::generate(&env);
     let not_owner = Address::generate(&env);
@@ -2429,8 +2429,8 @@ fn test_update_project_metadata_fails_when_unauthorized() {
 #[test]
 fn test_update_project_metadata_emits_event() {
     let (env, _admin, token) = create_test_env();
-    let contract_id = env.register_contract(None, SplitNairaContract);
-    let client = SplitNairaContractClient::new(&env, &contract_id);
+    let contract_id = env.register_contract(None, StardialContract);
+    let client = StardialContractClient::new(&env, &contract_id);
 
     let owner = Address::generate(&env);
     let alice = Address::generate(&env);
@@ -2470,8 +2470,8 @@ fn test_update_project_metadata_emits_event() {
 #[test]
 fn test_upgrade_regression_pagination_views_remain_aligned_after_project_mutations() {
     let (env, _admin, token) = create_test_env();
-    let contract_id = env.register_contract(None, SplitNairaContract);
-    let client = SplitNairaContractClient::new(&env, &contract_id);
+    let contract_id = env.register_contract(None, StardialContract);
+    let client = StardialContractClient::new(&env, &contract_id);
 
     let owner = Address::generate(&env);
     let funder = Address::generate(&env);
@@ -2559,8 +2559,8 @@ fn test_upgrade_regression_pagination_views_remain_aligned_after_project_mutatio
 #[test]
 fn test_upgrade_regression_metadata_updates_only_mutate_metadata_fields() {
     let (env, _admin, token) = create_test_env();
-    let contract_id = env.register_contract(None, SplitNairaContract);
-    let client = SplitNairaContractClient::new(&env, &contract_id);
+    let contract_id = env.register_contract(None, StardialContract);
+    let client = StardialContractClient::new(&env, &contract_id);
 
     let owner = Address::generate(&env);
     let funder = Address::generate(&env);
@@ -2642,8 +2642,8 @@ fn test_upgrade_regression_metadata_updates_only_mutate_metadata_fields() {
 #[test]
 fn test_upgrade_regression_distribution_preserves_rounding_and_accounting_invariants() {
     let (env, _token_admin, token) = create_test_env();
-    let contract_id = env.register_contract(None, SplitNairaContract);
-    let client = SplitNairaContractClient::new(&env, &contract_id);
+    let contract_id = env.register_contract(None, StardialContract);
+    let client = StardialContractClient::new(&env, &contract_id);
 
     let owner = Address::generate(&env);
     let funder = Address::generate(&env);
@@ -2708,8 +2708,8 @@ fn test_upgrade_regression_distribution_preserves_rounding_and_accounting_invari
 #[test]
 fn test_project_exists_returns_true_for_existing_project() {
     let (env, _admin, token) = create_test_env();
-    let contract_id = env.register_contract(None, SplitNairaContract);
-    let client = SplitNairaContractClient::new(&env, &contract_id);
+    let contract_id = env.register_contract(None, StardialContract);
+    let client = StardialContractClient::new(&env, &contract_id);
 
     let owner = Address::generate(&env);
     let alice = Address::generate(&env);
@@ -2736,8 +2736,8 @@ fn test_project_exists_returns_true_for_existing_project() {
 #[test]
 fn test_project_exists_returns_false_for_missing_project() {
     let (env, _admin, _token) = create_test_env();
-    let contract_id = env.register_contract(None, SplitNairaContract);
-    let client = SplitNairaContractClient::new(&env, &contract_id);
+    let contract_id = env.register_contract(None, StardialContract);
+    let client = StardialContractClient::new(&env, &contract_id);
 
     assert!(!client.project_exists(&Symbol::new(&env, "does_not_exist")));
 }
@@ -2745,8 +2745,8 @@ fn test_project_exists_returns_false_for_missing_project() {
 #[test]
 fn test_refresh_project_storage_succeeds_for_existing_project() {
     let (env, _admin, token) = create_test_env();
-    let contract_id = env.register_contract(None, SplitNairaContract);
-    let client = SplitNairaContractClient::new(&env, &contract_id);
+    let contract_id = env.register_contract(None, StardialContract);
+    let client = StardialContractClient::new(&env, &contract_id);
 
     let owner = Address::generate(&env);
     let funder = Address::generate(&env);
@@ -2783,8 +2783,8 @@ fn test_refresh_project_storage_succeeds_for_existing_project() {
 #[test]
 fn test_refresh_project_storage_fails_for_missing_project() {
     let (env, _admin, _token) = create_test_env();
-    let contract_id = env.register_contract(None, SplitNairaContract);
-    let client = SplitNairaContractClient::new(&env, &contract_id);
+    let contract_id = env.register_contract(None, StardialContract);
+    let client = StardialContractClient::new(&env, &contract_id);
 
     let result = client.try_refresh_project_storage(&Symbol::new(&env, "missing_refresh"));
     assert_eq!(result, Err(Ok(SplitError::NotFound)));
@@ -2797,8 +2797,8 @@ fn test_refresh_project_storage_fails_for_missing_project() {
 #[test]
 fn test_withdraw_unallocated_success_and_project_balance_unchanged() {
     let (env, _token_admin, token) = create_test_env();
-    let contract_id = env.register_contract(None, SplitNairaContract);
-    let client = SplitNairaContractClient::new(&env, &contract_id);
+    let contract_id = env.register_contract(None, StardialContract);
+    let client = StardialContractClient::new(&env, &contract_id);
 
     let contract_admin = Address::generate(&env);
     client.set_admin(&contract_admin);
@@ -2853,8 +2853,8 @@ fn test_withdraw_unallocated_success_and_project_balance_unchanged() {
 #[test]
 fn test_unallocated_balance_remains_correct_after_claim() {
     let (env, _token_admin, token) = create_test_env();
-    let contract_id = env.register_contract(None, SplitNairaContract);
-    let client = SplitNairaContractClient::new(&env, &contract_id);
+    let contract_id = env.register_contract(None, StardialContract);
+    let client = StardialContractClient::new(&env, &contract_id);
 
     let owner = Address::generate(&env);
     let funder = Address::generate(&env);
@@ -2897,8 +2897,8 @@ fn test_unallocated_balance_remains_correct_after_claim() {
 #[test]
 fn test_withdraw_unallocated_fails_when_amount_exceeds_available() {
     let (env, _token_admin, token) = create_test_env();
-    let contract_id = env.register_contract(None, SplitNairaContract);
-    let client = SplitNairaContractClient::new(&env, &contract_id);
+    let contract_id = env.register_contract(None, StardialContract);
+    let client = StardialContractClient::new(&env, &contract_id);
 
     let contract_admin = Address::generate(&env);
     client.set_admin(&contract_admin);
@@ -2919,8 +2919,8 @@ fn test_withdraw_unallocated_fails_when_amount_exceeds_available() {
 #[test]
 fn test_withdraw_unallocated_fails_when_unauthorized() {
     let (env, _token_admin, token) = create_test_env();
-    let contract_id = env.register_contract(None, SplitNairaContract);
-    let client = SplitNairaContractClient::new(&env, &contract_id);
+    let contract_id = env.register_contract(None, StardialContract);
+    let client = StardialContractClient::new(&env, &contract_id);
 
     let contract_admin = Address::generate(&env);
     let unauthorized = Address::generate(&env);
@@ -2935,8 +2935,8 @@ fn test_withdraw_unallocated_fails_when_unauthorized() {
 #[test]
 fn test_withdraw_unallocated_fails_with_invalid_amount() {
     let (env, _token_admin, token) = create_test_env();
-    let contract_id = env.register_contract(None, SplitNairaContract);
-    let client = SplitNairaContractClient::new(&env, &contract_id);
+    let contract_id = env.register_contract(None, StardialContract);
+    let client = StardialContractClient::new(&env, &contract_id);
 
     let contract_admin = Address::generate(&env);
     let recovery_to = Address::generate(&env);
@@ -2949,8 +2949,8 @@ fn test_withdraw_unallocated_fails_with_invalid_amount() {
 #[test]
 fn test_withdraw_unallocated_fails_when_recipient_is_contract() {
     let (env, _token_admin, token) = create_test_env();
-    let contract_id = env.register_contract(None, SplitNairaContract);
-    let client = SplitNairaContractClient::new(&env, &contract_id);
+    let contract_id = env.register_contract(None, StardialContract);
+    let client = StardialContractClient::new(&env, &contract_id);
 
     let contract_admin = Address::generate(&env);
     client.set_admin(&contract_admin);
@@ -2986,8 +2986,8 @@ fn test_withdraw_unallocated_fails_when_recipient_is_contract() {
 #[test]
 fn test_lifecycle_pre_lock_edit_lock_post_lock_reject() {
     let (env, _admin, token) = create_test_env();
-    let contract_id = env.register_contract(None, SplitNairaContract);
-    let client = SplitNairaContractClient::new(&env, &contract_id);
+    let contract_id = env.register_contract(None, StardialContract);
+    let client = StardialContractClient::new(&env, &contract_id);
 
     let owner = Address::generate(&env);
     let alice = Address::generate(&env);
@@ -3068,8 +3068,8 @@ fn test_lifecycle_pre_lock_edit_lock_post_lock_reject() {
 #[test]
 fn test_non_owner_cannot_lock_project() {
     let (env, _admin, token) = create_test_env();
-    let contract_id = env.register_contract(None, SplitNairaContract);
-    let client = SplitNairaContractClient::new(&env, &contract_id);
+    let contract_id = env.register_contract(None, StardialContract);
+    let client = StardialContractClient::new(&env, &contract_id);
 
     let owner = Address::generate(&env);
     let not_owner = Address::generate(&env);
@@ -3104,8 +3104,8 @@ fn test_non_owner_cannot_lock_project() {
 #[test]
 fn test_non_owner_cannot_update_collaborators() {
     let (env, _admin, token) = create_test_env();
-    let contract_id = env.register_contract(None, SplitNairaContract);
-    let client = SplitNairaContractClient::new(&env, &contract_id);
+    let contract_id = env.register_contract(None, StardialContract);
+    let client = StardialContractClient::new(&env, &contract_id);
 
     let owner = Address::generate(&env);
     let not_owner = Address::generate(&env);
@@ -3159,8 +3159,8 @@ fn test_admin_rotation_pause_allowlist_and_recovery_preserve_project_invariants(
     let (env, _token_admin, token_allowed) = create_test_env();
     let blocked_token_admin = Address::generate(&env);
     let token_blocked = env.register_stellar_asset_contract(blocked_token_admin);
-    let contract_id = env.register_contract(None, SplitNairaContract);
-    let client = SplitNairaContractClient::new(&env, &contract_id);
+    let contract_id = env.register_contract(None, StardialContract);
+    let client = StardialContractClient::new(&env, &contract_id);
 
     let admin_a = Address::generate(&env);
     let admin_b = Address::generate(&env);
@@ -3264,8 +3264,8 @@ fn test_admin_rotation_pause_allowlist_and_recovery_preserve_project_invariants(
 #[test]
 fn test_transfer_ownership_success() {
     let (env, _admin, token) = create_test_env();
-    let contract_id = env.register_contract(None, SplitNairaContract);
-    let client = SplitNairaContractClient::new(&env, &contract_id);
+    let contract_id = env.register_contract(None, StardialContract);
+    let client = StardialContractClient::new(&env, &contract_id);
 
     let owner = Address::generate(&env);
     let new_owner = Address::generate(&env);
@@ -3304,8 +3304,8 @@ fn test_transfer_ownership_success() {
 #[test]
 fn test_transfer_ownership_fails_for_non_owner() {
     let (env, _admin, token) = create_test_env();
-    let contract_id = env.register_contract(None, SplitNairaContract);
-    let client = SplitNairaContractClient::new(&env, &contract_id);
+    let contract_id = env.register_contract(None, StardialContract);
+    let client = StardialContractClient::new(&env, &contract_id);
 
     let owner = Address::generate(&env);
     let attacker = Address::generate(&env);
@@ -3339,8 +3339,8 @@ fn test_transfer_ownership_fails_for_non_owner() {
 #[test]
 fn test_transfer_ownership_fails_for_missing_project() {
     let (env, _admin, _token) = create_test_env();
-    let contract_id = env.register_contract(None, SplitNairaContract);
-    let client = SplitNairaContractClient::new(&env, &contract_id);
+    let contract_id = env.register_contract(None, StardialContract);
+    let client = StardialContractClient::new(&env, &contract_id);
 
     let owner = Address::generate(&env);
     let new_owner = Address::generate(&env);
@@ -3356,8 +3356,8 @@ fn test_transfer_ownership_fails_for_missing_project() {
 #[test]
 fn test_transfer_ownership_works_on_locked_project() {
     let (env, _admin, token) = create_test_env();
-    let contract_id = env.register_contract(None, SplitNairaContract);
-    let client = SplitNairaContractClient::new(&env, &contract_id);
+    let contract_id = env.register_contract(None, StardialContract);
+    let client = StardialContractClient::new(&env, &contract_id);
 
     let owner = Address::generate(&env);
     let new_owner = Address::generate(&env);
@@ -3393,8 +3393,8 @@ fn test_transfer_ownership_works_on_locked_project() {
 #[test]
 fn test_new_owner_can_exercise_owner_gated_actions() {
     let (env, _admin, token) = create_test_env();
-    let contract_id = env.register_contract(None, SplitNairaContract);
-    let client = SplitNairaContractClient::new(&env, &contract_id);
+    let contract_id = env.register_contract(None, StardialContract);
+    let client = StardialContractClient::new(&env, &contract_id);
 
     let owner = Address::generate(&env);
     let new_owner = Address::generate(&env);
@@ -3461,8 +3461,8 @@ fn test_new_owner_can_exercise_owner_gated_actions() {
 #[test]
 fn test_transfer_ownership_emits_event() {
     let (env, _admin, token) = create_test_env();
-    let contract_id = env.register_contract(None, SplitNairaContract);
-    let client = SplitNairaContractClient::new(&env, &contract_id);
+    let contract_id = env.register_contract(None, StardialContract);
+    let client = StardialContractClient::new(&env, &contract_id);
 
     let owner = Address::generate(&env);
     let new_owner = Address::generate(&env);
@@ -3520,8 +3520,8 @@ fn test_sequential_distribute_accumulates_total_distributed() {
     // that two sequential distribute() calls never lose a write to
     // total_distributed. A lost-write bug would produce 500 not 1500.
     let (env, token_admin, token) = create_test_env();
-    let contract_id = env.register_contract(None, SplitNairaContract);
-    let client = SplitNairaContractClient::new(&env, &contract_id);
+    let contract_id = env.register_contract(None, StardialContract);
+    let client = StardialContractClient::new(&env, &contract_id);
 
     let alice = Address::generate(&env);
     let bob = Address::generate(&env);
@@ -3575,8 +3575,8 @@ fn test_sequential_distribute_accumulates_total_distributed() {
 // #[test]
 // fn test_create_project_rejects_title_too_long() {
 //     let (env, token_admin, token) = create_test_env();
-//     let contract_id = env.register_contract(None, SplitNairaContract);
-//     let client = SplitNairaContractClient::new(&env, &contract_id);
+//     let contract_id = env.register_contract(None, StardialContract);
+//     let client = StardialContractClient::new(&env, &contract_id);
 //     let alice = Address::generate(&env);
 //     let bob   = Address::generate(&env);
 //     let collaborators = make_collaborators(
@@ -3600,8 +3600,8 @@ fn test_sequential_distribute_accumulates_total_distributed() {
 #[test]
 fn test_create_project_accepts_title_at_limit() {
     let (env, token_admin, token) = create_test_env();
-    let contract_id = env.register_contract(None, SplitNairaContract);
-    let client = SplitNairaContractClient::new(&env, &contract_id);
+    let contract_id = env.register_contract(None, StardialContract);
+    let client = StardialContractClient::new(&env, &contract_id);
     let alice = Address::generate(&env);
     let bob = Address::generate(&env);
     let collaborators = make_collaborators(
@@ -3624,8 +3624,8 @@ fn test_create_project_accepts_title_at_limit() {
 // #[test]
 // fn test_update_metadata_rejects_title_too_long() {
 //     let (env, token_admin, token) = create_test_env();
-//     let contract_id = env.register_contract(None, SplitNairaContract);
-//     let client = SplitNairaContractClient::new(&env, &contract_id);
+//     let contract_id = env.register_contract(None, StardialContract);
+//     let client = StardialContractClient::new(&env, &contract_id);
 //     let alice = Address::generate(&env);
 //     let bob   = Address::generate(&env);
 //     let collaborators = make_collaborators(
@@ -3655,8 +3655,8 @@ fn test_create_project_accepts_title_at_limit() {
 // #[test]
 // fn test_collaborator_rejects_alias_too_long() {
 //     let (env, token_admin, token) = create_test_env();
-//     let contract_id = env.register_contract(None, SplitNairaContract);
-//     let client = SplitNairaContractClient::new(&env, &contract_id);
+//     let contract_id = env.register_contract(None, StardialContract);
+//     let client = StardialContractClient::new(&env, &contract_id);
 //     let alice = Address::generate(&env);
 //     let bob   = Address::generate(&env);
 //     // 101 character alias — one over the limit
@@ -3686,8 +3686,8 @@ fn test_create_project_accepts_title_at_limit() {
 #[test]
 fn test_collaborator_accepts_alias_at_limit() {
     let (env, token_admin, token) = create_test_env();
-    let contract_id = env.register_contract(None, SplitNairaContract);
-    let client = SplitNairaContractClient::new(&env, &contract_id);
+    let contract_id = env.register_contract(None, StardialContract);
+    let client = StardialContractClient::new(&env, &contract_id);
     let alice = Address::generate(&env);
     let bob = Address::generate(&env);
     // Exactly 100 characters — must succeed
@@ -3720,8 +3720,8 @@ fn test_collaborator_accepts_alias_at_limit() {
 #[test]
 fn test_claim_transfers_proportional_share() {
     let (env, _admin, token) = create_test_env();
-    let contract_id = env.register_contract(None, SplitNairaContract);
-    let client = SplitNairaContractClient::new(&env, &contract_id);
+    let contract_id = env.register_contract(None, StardialContract);
+    let client = StardialContractClient::new(&env, &contract_id);
 
     let owner = Address::generate(&env);
     let alice = Address::generate(&env);
@@ -3760,8 +3760,8 @@ fn test_claim_transfers_proportional_share() {
 #[test]
 fn test_claim_reduces_project_balance() {
     let (env, _admin, token) = create_test_env();
-    let contract_id = env.register_contract(None, SplitNairaContract);
-    let client = SplitNairaContractClient::new(&env, &contract_id);
+    let contract_id = env.register_contract(None, StardialContract);
+    let client = StardialContractClient::new(&env, &contract_id);
 
     let owner = Address::generate(&env);
     let alice = Address::generate(&env);
@@ -3796,8 +3796,8 @@ fn test_claim_reduces_project_balance() {
 #[test]
 fn test_claim_increments_total_distributed() {
     let (env, _admin, token) = create_test_env();
-    let contract_id = env.register_contract(None, SplitNairaContract);
-    let client = SplitNairaContractClient::new(&env, &contract_id);
+    let contract_id = env.register_contract(None, StardialContract);
+    let client = StardialContractClient::new(&env, &contract_id);
 
     let owner = Address::generate(&env);
     let alice = Address::generate(&env);
@@ -3830,8 +3830,8 @@ fn test_claim_increments_total_distributed() {
 #[test]
 fn test_claim_updates_claimed_ledger() {
     let (env, _admin, token) = create_test_env();
-    let contract_id = env.register_contract(None, SplitNairaContract);
-    let client = SplitNairaContractClient::new(&env, &contract_id);
+    let contract_id = env.register_contract(None, StardialContract);
+    let client = StardialContractClient::new(&env, &contract_id);
 
     let owner = Address::generate(&env);
     let alice = Address::generate(&env);
@@ -3864,8 +3864,8 @@ fn test_claim_updates_claimed_ledger() {
 #[test]
 fn test_claim_returns_zero_when_no_balance() {
     let (env, _admin, token) = create_test_env();
-    let contract_id = env.register_contract(None, SplitNairaContract);
-    let client = SplitNairaContractClient::new(&env, &contract_id);
+    let contract_id = env.register_contract(None, StardialContract);
+    let client = StardialContractClient::new(&env, &contract_id);
 
     let owner = Address::generate(&env);
     let alice = Address::generate(&env);
@@ -3897,8 +3897,8 @@ fn test_claim_returns_zero_when_no_balance() {
 #[should_panic]
 fn test_claim_fails_for_non_collaborator() {
     let (env, _admin, token) = create_test_env();
-    let contract_id = env.register_contract(None, SplitNairaContract);
-    let client = SplitNairaContractClient::new(&env, &contract_id);
+    let contract_id = env.register_contract(None, StardialContract);
+    let client = StardialContractClient::new(&env, &contract_id);
 
     let owner = Address::generate(&env);
     let alice = Address::generate(&env);
@@ -3928,8 +3928,8 @@ fn test_claim_fails_for_non_collaborator() {
 #[should_panic]
 fn test_claim_fails_when_distributions_paused() {
     let (env, admin, token) = create_test_env();
-    let contract_id = env.register_contract(None, SplitNairaContract);
-    let client = SplitNairaContractClient::new(&env, &contract_id);
+    let contract_id = env.register_contract(None, StardialContract);
+    let client = StardialContractClient::new(&env, &contract_id);
 
     client.set_admin(&admin);
     client.pause_distributions(&admin);
@@ -3959,8 +3959,8 @@ fn test_claim_fails_when_distributions_paused() {
 #[test]
 fn test_claim_emits_collaborator_claimed_event() {
     let (env, _admin, token) = create_test_env();
-    let contract_id = env.register_contract(None, SplitNairaContract);
-    let client = SplitNairaContractClient::new(&env, &contract_id);
+    let contract_id = env.register_contract(None, StardialContract);
+    let client = StardialContractClient::new(&env, &contract_id);
 
     let owner = Address::generate(&env);
     let alice = Address::generate(&env);
@@ -3997,8 +3997,8 @@ fn test_get_allowed_tokens_pagination_skips_after_disallow() {
     // limitation by verifying the recommended safe usage pattern:
     // fetch all tokens in one call using get_allowed_token_count.
     let (env, _token_admin, _token) = create_test_env();
-    let contract_id = env.register_contract(None, SplitNairaContract);
-    let client = SplitNairaContractClient::new(&env, &contract_id);
+    let contract_id = env.register_contract(None, StardialContract);
+    let client = StardialContractClient::new(&env, &contract_id);
 
     // Set up admin
     let admin = Address::generate(&env);
@@ -4044,8 +4044,8 @@ fn test_get_allowed_tokens_pagination_skips_after_disallow() {
 #[test]
 fn test_claim_does_not_increment_distribution_round() {
     let (env, _admin, token) = create_test_env();
-    let contract_id = env.register_contract(None, SplitNairaContract);
-    let client = SplitNairaContractClient::new(&env, &contract_id);
+    let contract_id = env.register_contract(None, StardialContract);
+    let client = StardialContractClient::new(&env, &contract_id);
 
     let owner = Address::generate(&env);
     let alice = Address::generate(&env);
@@ -4083,8 +4083,8 @@ fn test_claim_does_not_increment_distribution_round() {
 #[test]
 fn test_get_claimable_last_claim_amount_resets_per_claim() {
     let (env, _admin, token) = create_test_env();
-    let contract_id = env.register_contract(None, SplitNairaContract);
-    let client = SplitNairaContractClient::new(&env, &contract_id);
+    let contract_id = env.register_contract(None, StardialContract);
+    let client = StardialContractClient::new(&env, &contract_id);
 
     let owner = Address::generate(&env);
     let alice = Address::generate(&env);
@@ -4126,8 +4126,8 @@ fn test_get_claimable_last_claim_amount_resets_per_claim() {
 #[test]
 fn test_create_project_does_not_write_flat_project_ids() {
     let (env, _admin, token) = create_test_env();
-    let contract_id = env.register_contract(None, SplitNairaContract);
-    let client = SplitNairaContractClient::new(&env, &contract_id);
+    let contract_id = env.register_contract(None, StardialContract);
+    let client = StardialContractClient::new(&env, &contract_id);
 
     let owner = Address::generate(&env);
     let alice = Address::generate(&env);
@@ -4173,8 +4173,8 @@ fn test_list_projects_200_plus_via_buckets() {
     env.mock_all_auths();
     let token_admin = Address::generate(&env);
     let token = env.register_stellar_asset_contract(token_admin.clone());
-    let contract_id = env.register_contract(None, SplitNairaContract);
-    let client = SplitNairaContractClient::new(&env, &contract_id);
+    let contract_id = env.register_contract(None, StardialContract);
+    let client = StardialContractClient::new(&env, &contract_id);
 
     let owner = Address::generate(&env);
     let alice = Address::generate(&env);
@@ -4217,8 +4217,8 @@ fn test_list_projects_200_plus_via_buckets() {
 #[test]
 fn test_migrate_flat_to_buckets() {
     let (env, _admin, token) = create_test_env();
-    let contract_id = env.register_contract(None, SplitNairaContract);
-    let client = SplitNairaContractClient::new(&env, &contract_id);
+    let contract_id = env.register_contract(None, StardialContract);
+    let client = StardialContractClient::new(&env, &contract_id);
     let admin = Address::generate(&env);
     client.set_admin(&admin);
 
@@ -4283,8 +4283,8 @@ fn test_migrate_flat_to_buckets() {
 #[test]
 fn test_unallocated_balance_clamps_when_accounted_inflated() {
     let (env, _token_admin, token) = create_test_env();
-    let contract_id = env.register_contract(None, SplitNairaContract);
-    let client = SplitNairaContractClient::new(&env, &contract_id);
+    let contract_id = env.register_contract(None, StardialContract);
+    let client = StardialContractClient::new(&env, &contract_id);
 
     let owner = Address::generate(&env);
     let alice = Address::generate(&env);
@@ -4332,8 +4332,8 @@ fn test_unallocated_balance_clamps_when_accounted_inflated() {
 #[test]
 fn test_batch_distribute_fails_when_paused_batch() {
     let (env, _token_admin, token) = create_test_env();
-    let contract_id = env.register_contract(None, SplitNairaContract);
-    let client = SplitNairaContractClient::new(&env, &contract_id);
+    let contract_id = env.register_contract(None, StardialContract);
+    let client = StardialContractClient::new(&env, &contract_id);
 
     let owner = Address::generate(&env);
     let funder = Address::generate(&env);
@@ -4374,8 +4374,8 @@ fn test_batch_distribute_fails_when_paused_batch() {
 #[test]
 fn test_max_collaborators_defaults_to_50() {
     let (env, _admin, _token) = create_test_env();
-    let contract_id = env.register_contract(None, SplitNairaContract);
-    let client = SplitNairaContractClient::new(&env, &contract_id);
+    let contract_id = env.register_contract(None, StardialContract);
+    let client = StardialContractClient::new(&env, &contract_id);
 
     // With no override configured, the effective cap is the historical default.
     assert_eq!(client.get_max_collaborators(), 50);
@@ -4384,8 +4384,8 @@ fn test_max_collaborators_defaults_to_50() {
 #[test]
 fn test_set_max_collaborators_updates_effective_cap() {
     let (env, _admin, _token) = create_test_env();
-    let contract_id = env.register_contract(None, SplitNairaContract);
-    let client = SplitNairaContractClient::new(&env, &contract_id);
+    let contract_id = env.register_contract(None, StardialContract);
+    let client = StardialContractClient::new(&env, &contract_id);
 
     let admin = Address::generate(&env);
     client.set_admin(&admin);
@@ -4401,8 +4401,8 @@ fn test_set_max_collaborators_updates_effective_cap() {
 #[test]
 fn test_set_max_collaborators_requires_admin() {
     let (env, _admin, _token) = create_test_env();
-    let contract_id = env.register_contract(None, SplitNairaContract);
-    let client = SplitNairaContractClient::new(&env, &contract_id);
+    let contract_id = env.register_contract(None, StardialContract);
+    let client = StardialContractClient::new(&env, &contract_id);
 
     // No admin configured yet.
     let stranger = Address::generate(&env);
@@ -4424,8 +4424,8 @@ fn test_set_max_collaborators_requires_admin() {
 #[test]
 fn test_set_max_collaborators_rejects_out_of_range() {
     let (env, _admin, _token) = create_test_env();
-    let contract_id = env.register_contract(None, SplitNairaContract);
-    let client = SplitNairaContractClient::new(&env, &contract_id);
+    let contract_id = env.register_contract(None, StardialContract);
+    let client = StardialContractClient::new(&env, &contract_id);
 
     let admin = Address::generate(&env);
     client.set_admin(&admin);
@@ -4451,8 +4451,8 @@ fn test_set_max_collaborators_rejects_out_of_range() {
 #[test]
 fn test_lowered_cap_is_enforced_on_create_project() {
     let (env, _admin, token) = create_test_env();
-    let contract_id = env.register_contract(None, SplitNairaContract);
-    let client = SplitNairaContractClient::new(&env, &contract_id);
+    let contract_id = env.register_contract(None, StardialContract);
+    let client = StardialContractClient::new(&env, &contract_id);
 
     let admin = Address::generate(&env);
     client.set_admin(&admin);
@@ -4504,8 +4504,8 @@ fn test_lowered_cap_is_enforced_on_create_project() {
 #[test]
 fn test_update_collaborators_after_partial_payout() {
     let (env, _token_admin, token) = create_test_env();
-    let contract_id = env.register_contract(None, SplitNairaContract);
-    let client = SplitNairaContractClient::new(&env, &contract_id);
+    let contract_id = env.register_contract(None, StardialContract);
+    let client = StardialContractClient::new(&env, &contract_id);
 
     let owner = Address::generate(&env);
     let funder = Address::generate(&env);
@@ -4582,8 +4582,8 @@ fn test_update_collaborators_after_partial_payout() {
 #[test]
 fn test_update_collaborators_after_full_payout() {
     let (env, _token_admin, token) = create_test_env();
-    let contract_id = env.register_contract(None, SplitNairaContract);
-    let client = SplitNairaContractClient::new(&env, &contract_id);
+    let contract_id = env.register_contract(None, StardialContract);
+    let client = StardialContractClient::new(&env, &contract_id);
 
     let owner = Address::generate(&env);
     let funder = Address::generate(&env);
@@ -4664,8 +4664,8 @@ fn test_update_collaborators_after_full_payout() {
 #[test]
 fn test_update_collaborators_preserves_claimed_ledger() {
     let (env, _token_admin, token) = create_test_env();
-    let contract_id = env.register_contract(None, SplitNairaContract);
-    let client = SplitNairaContractClient::new(&env, &contract_id);
+    let contract_id = env.register_contract(None, StardialContract);
+    let client = StardialContractClient::new(&env, &contract_id);
 
     let owner = Address::generate(&env);
     let funder = Address::generate(&env);
@@ -4741,8 +4741,8 @@ fn test_update_collaborators_preserves_claimed_ledger() {
 #[test]
 fn test_update_collaborators_after_payout_requires_owner_auth() {
     let (env, _token_admin, token) = create_test_env();
-    let contract_id = env.register_contract(None, SplitNairaContract);
-    let client = SplitNairaContractClient::new(&env, &contract_id);
+    let contract_id = env.register_contract(None, StardialContract);
+    let client = StardialContractClient::new(&env, &contract_id);
 
     let owner = Address::generate(&env);
     let funder = Address::generate(&env);
@@ -4830,8 +4830,8 @@ fn make_equal_collaborators(env: &Env, n: usize) -> Vec<Collaborator> {
 #[test]
 fn test_create_project_fails_zero_collaborators() {
     let (env, _admin, token) = create_test_env();
-    let contract_id = env.register_contract(None, SplitNairaContract);
-    let client = SplitNairaContractClient::new(&env, &contract_id);
+    let contract_id = env.register_contract(None, StardialContract);
+    let client = StardialContractClient::new(&env, &contract_id);
 
     let owner = Address::generate(&env);
     let empty: Vec<Collaborator> = Vec::new(&env);
@@ -4852,8 +4852,8 @@ fn test_create_project_fails_zero_collaborators() {
 #[test]
 fn test_create_project_succeeds_at_exactly_maximum_collaborators() {
     let (env, _admin, token) = create_test_env();
-    let contract_id = env.register_contract(None, SplitNairaContract);
-    let client = SplitNairaContractClient::new(&env, &contract_id);
+    let contract_id = env.register_contract(None, StardialContract);
+    let client = StardialContractClient::new(&env, &contract_id);
 
     let owner = Address::generate(&env);
 
@@ -4878,8 +4878,8 @@ fn test_create_project_succeeds_at_exactly_maximum_collaborators() {
 #[test]
 fn test_create_project_fails_at_maximum_plus_one_collaborators() {
     let (env, _admin, token) = create_test_env();
-    let contract_id = env.register_contract(None, SplitNairaContract);
-    let client = SplitNairaContractClient::new(&env, &contract_id);
+    let contract_id = env.register_contract(None, StardialContract);
+    let client = StardialContractClient::new(&env, &contract_id);
 
     let owner = Address::generate(&env);
 
@@ -4909,8 +4909,8 @@ fn test_create_project_fails_at_maximum_plus_one_collaborators() {
 #[test]
 fn test_update_collaborators_succeeds_at_exactly_maximum() {
     let (env, _admin, token) = create_test_env();
-    let contract_id = env.register_contract(None, SplitNairaContract);
-    let client = SplitNairaContractClient::new(&env, &contract_id);
+    let contract_id = env.register_contract(None, StardialContract);
+    let client = StardialContractClient::new(&env, &contract_id);
 
     let owner = Address::generate(&env);
 
@@ -4938,8 +4938,8 @@ fn test_update_collaborators_succeeds_at_exactly_maximum() {
 #[test]
 fn test_update_collaborators_fails_at_maximum_plus_one() {
     let (env, _admin, token) = create_test_env();
-    let contract_id = env.register_contract(None, SplitNairaContract);
-    let client = SplitNairaContractClient::new(&env, &contract_id);
+    let contract_id = env.register_contract(None, StardialContract);
+    let client = StardialContractClient::new(&env, &contract_id);
 
     let owner = Address::generate(&env);
 
@@ -4984,8 +4984,8 @@ fn test_toomany_collaborators_error_code_is_stable() {
 #[test]
 fn test_collaborator_alias_at_maximum_length() {
     let (env, _admin, token) = create_test_env();
-    let contract_id = env.register_contract(None, SplitNairaContract);
-    let client = SplitNairaContractClient::new(&env, &contract_id);
+    let contract_id = env.register_contract(None, StardialContract);
+    let client = StardialContractClient::new(&env, &contract_id);
 
     let owner = Address::generate(&env);
     let alice = Address::generate(&env);
@@ -5026,8 +5026,8 @@ fn test_collaborator_alias_at_maximum_length() {
 #[test]
 fn test_update_collaborators_with_maximum_length_aliases() {
     let (env, _admin, token) = create_test_env();
-    let contract_id = env.register_contract(None, SplitNairaContract);
-    let client = SplitNairaContractClient::new(&env, &contract_id);
+    let contract_id = env.register_contract(None, StardialContract);
+    let client = StardialContractClient::new(&env, &contract_id);
 
     let owner = Address::generate(&env);
     let alice = Address::generate(&env);
@@ -5075,8 +5075,8 @@ fn test_update_collaborators_with_maximum_length_aliases() {
 #[test]
 fn test_pause_unpause_transition_state_consistency() {
     let (env, _admin, _token) = create_test_env();
-    let contract_id = env.register_contract(None, SplitNairaContract);
-    let client = SplitNairaContractClient::new(&env, &contract_id);
+    let contract_id = env.register_contract(None, StardialContract);
+    let client = StardialContractClient::new(&env, &contract_id);
 
     let admin = Address::generate(&env);
     client.set_admin(&admin);
@@ -5099,8 +5099,8 @@ fn test_pause_unpause_transition_state_consistency() {
 #[test]
 fn test_pause_unpause_idempotency() {
     let (env, _admin, _token) = create_test_env();
-    let contract_id = env.register_contract(None, SplitNairaContract);
-    let client = SplitNairaContractClient::new(&env, &contract_id);
+    let contract_id = env.register_contract(None, StardialContract);
+    let client = StardialContractClient::new(&env, &contract_id);
 
     let admin = Address::generate(&env);
     client.set_admin(&admin);
@@ -5121,8 +5121,8 @@ fn test_pause_unpause_idempotency() {
 #[test]
 fn test_pause_unpause_admin_transition_requires_authorization() {
     let (env, _admin, _token) = create_test_env();
-    let contract_id = env.register_contract(None, SplitNairaContract);
-    let client = SplitNairaContractClient::new(&env, &contract_id);
+    let contract_id = env.register_contract(None, StardialContract);
+    let client = StardialContractClient::new(&env, &contract_id);
 
     let admin = Address::generate(&env);
     client.set_admin(&admin);
@@ -5143,8 +5143,8 @@ fn test_pause_unpause_admin_transition_requires_authorization() {
 #[test]
 fn test_withdraw_unallocated_emits_event_snapshot() {
     let (env, _admin, token) = create_test_env();
-    let contract_id = env.register_contract(None, SplitNairaContract);
-    let client = SplitNairaContractClient::new(&env, &contract_id);
+    let contract_id = env.register_contract(None, StardialContract);
+    let client = StardialContractClient::new(&env, &contract_id);
 
     let admin = Address::generate(&env);
     client.set_admin(&admin);
@@ -5176,8 +5176,8 @@ fn test_withdraw_unallocated_emits_event_snapshot() {
 #[test]
 fn test_withdraw_unallocated_correct_balance_after_event() {
     let (env, _admin, token) = create_test_env();
-    let contract_id = env.register_contract(None, SplitNairaContract);
-    let client = SplitNairaContractClient::new(&env, &contract_id);
+    let contract_id = env.register_contract(None, StardialContract);
+    let client = StardialContractClient::new(&env, &contract_id);
 
     let admin = Address::generate(&env);
     client.set_admin(&admin);
@@ -5210,8 +5210,8 @@ fn test_withdraw_unallocated_correct_balance_after_event() {
 #[test]
 fn test_allowlist_add_token_extends_ttl() {
     let (env, _admin, token) = create_test_env();
-    let contract_id = env.register_contract(None, SplitNairaContract);
-    let client = SplitNairaContractClient::new(&env, &contract_id);
+    let contract_id = env.register_contract(None, StardialContract);
+    let client = StardialContractClient::new(&env, &contract_id);
 
     let admin = Address::generate(&env);
     client.set_admin(&admin);
@@ -5229,8 +5229,8 @@ fn test_allowlist_add_token_extends_ttl() {
 #[test]
 fn test_allowlist_get_tokens_maintains_ttl() {
     let (env, _admin, token) = create_test_env();
-    let contract_id = env.register_contract(None, SplitNairaContract);
-    let client = SplitNairaContractClient::new(&env, &contract_id);
+    let contract_id = env.register_contract(None, StardialContract);
+    let client = StardialContractClient::new(&env, &contract_id);
 
     let admin = Address::generate(&env);
     client.set_admin(&admin);
@@ -5253,8 +5253,8 @@ fn test_allowlist_get_tokens_maintains_ttl() {
 #[test]
 fn test_allowlist_persistence_across_ledger_advance() {
     let (env, _admin, token) = create_test_env();
-    let contract_id = env.register_contract(None, SplitNairaContract);
-    let client = SplitNairaContractClient::new(&env, &contract_id);
+    let contract_id = env.register_contract(None, StardialContract);
+    let client = StardialContractClient::new(&env, &contract_id);
 
     let admin = Address::generate(&env);
     client.set_admin(&admin);

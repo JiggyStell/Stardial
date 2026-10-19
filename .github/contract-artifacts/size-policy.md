@@ -2,7 +2,7 @@
 
 ## Purpose
 
-This document defines the SplitNaira policy for monitoring the size of compiled Soroban contract artifacts.
+This document defines the Stardial policy for monitoring the size of compiled Soroban contract artifacts.
 
 Contract artifact size is treated as a CI quality constraint because oversized WebAssembly artifacts can increase deployment costs, complicate contract upgrades, and indicate unnecessary growth in the compiled contract.
 

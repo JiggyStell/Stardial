@@ -197,7 +197,7 @@ function standardErrorResponses(options: {
 
 // ─── Components ───────────────────────────────────────────────────────────────
 
-// SplitNaira is in active development. This repo currently contains:
+// Stardial is in active development. This repo currently contains:
 
 // - `contracts/` Soroban smart contract and tests
 // - `frontend/` Next.js + Tailwind scaffold
@@ -1883,7 +1883,7 @@ export function generateOpenApi() {
     openapi: "3.0.0",
     info: {
       version: "0.1.0",
-      title: "SplitNaira API",
+      title: "Stardial API",
       description: "Premium royalty management API on Stellar network.",
     },
     servers: [{ url: "http://localhost:3001" }],

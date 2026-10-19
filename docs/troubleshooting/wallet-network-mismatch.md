@@ -1,7 +1,7 @@
 # Troubleshooting: Wallet Network Mismatch
 
 ## Overview
-When interacting with the SplitNaira platform, users may encounter wallet network mismatch errors if their injected Web3/Stellar wallet (e.g., Freighter, Albedo) is connected to a different network cluster than the one configured in the application environment.
+When interacting with the Stardial platform, users may encounter wallet network mismatch errors if their injected Web3/Stellar wallet (e.g., Freighter, Albedo) is connected to a different network cluster than the one configured in the application environment.
 
 ---
 
@@ -22,11 +22,11 @@ Check your local or production environment variables (`.env` or deployment secre
 ### 2. Switch Wallet Network
 1. Open your Stellar wallet extension (e.g., **Freighter**).
 2. Navigate to **Settings** -> **Network**.
-3. Select the network matching the SplitNaira deployment (Testnet vs. Mainnet).
-4. Refresh the SplitNaira application interface and re-attempt connection.
+3. Select the network matching the Stardial deployment (Testnet vs. Mainnet).
+4. Refresh the Stardial application interface and re-attempt connection.
 
 ### 3. Clear Local Storage Session Cache
 If persistent cached session states retain the stale network ID:
 * Open browser Developer Tools (`F12`).
 * Go to **Application** -> **Local Storage**.
-* Clear keys prefixed with `splitnaira_wallet_` and reload the page.
+* Clear keys prefixed with `stardial_wallet_` and reload the page.

@@ -4,7 +4,7 @@ import { clearEnvCache } from "../config/env.js";
 import { closeDatabase, initDatabase, withTransaction } from "./database.js";
 
 const testEnv = {
-  DATABASE_URL: "postgres://test:test@localhost:5432/splitnaira_test",
+  DATABASE_URL: "postgres://test:test@localhost:5432/stardial_test",
   HORIZON_URL: "https://horizon-testnet.stellar.org",
   SOROBAN_RPC_URL: "https://soroban-testnet.stellar.org",
   SOROBAN_NETWORK_PASSPHRASE: "Test SDF Network ; September 2015",

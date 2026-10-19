@@ -1,6 +1,6 @@
 ---
 name: Bug Report
-about: Report a bug to help us improve SplitNaira
+about: Report a bug to help us improve Stardial
 title: "[Bug]: "
 labels: bug
 assignees: ''

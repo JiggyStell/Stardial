@@ -1,6 +1,6 @@
 ---
 name: Feature Request
-about: Suggest an idea for SplitNaira
+about: Suggest an idea for Stardial
 title: "[Feature]: "
 labels: enhancement
 assignees: ''
@@ -8,7 +8,7 @@ assignees: ''
 
 ## Area
 
-Which part of SplitNaira does this affect? (e.g. frontend, backend, contracts, CI/CD, docs)
+Which part of Stardial does this affect? (e.g. frontend, backend, contracts, CI/CD, docs)
 
 ## Problem
 

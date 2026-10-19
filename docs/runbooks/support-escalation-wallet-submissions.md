@@ -66,7 +66,7 @@ still failed — with or without a transaction hash.
 | Repeated failures for one user, none for others  | Likely that user's wallet is out of sync (stale sequence number) or has a fee-bump issue                         | Not a backend bug per se; ask the user to reconnect their wallet and retry. If it persists, escalate — could indicate an account state edge case worth a closer look.                                                                                                                                                                                                     |
 
 **Escalate to backend on-call if:** `sse_disconnects_total` or
-`splitnaira_rpc_retry_max_attempts_reached_total` show a spike correlated
+`stardial_rpc_retry_max_attempts_reached_total` show a spike correlated
 with the report timeframe (see [Observability Runbook](./observability.md))
 — that means the user's report is a symptom of a real backend/RPC problem,
 not an isolated case.

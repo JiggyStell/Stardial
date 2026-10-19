@@ -1,6 +1,6 @@
 # Implementation: Issues #1296, #1299, #1300, #1301
 
-Overlay onto the SplitNaira repo.
+Overlay onto the Stardial repo.
 
 ## #1299 Collaborator invitation cancellation
 - `backend/src/services/collaboration/invitation-registry.ts` – register / cancel / accept guards + cancel events

@@ -16,7 +16,7 @@
 //! - the claim-epoch rule (one claim per collaborator per funding epoch) holds
 //!   across the whole sequence.
 
-use crate::{errors::SplitError, Collaborator, SplitNairaContract, SplitNairaContractClient};
+use crate::{errors::SplitError, Collaborator, StardialContract, StardialContractClient};
 use soroban_sdk::{testutils::Address as _, token, vec, Address, Env, String, Symbol, Vec};
 
 const DEPOSIT: i128 = 10_000_000;
@@ -26,7 +26,7 @@ const BOB_BPS: u32 = 4_000;
 
 struct Fixture<'a> {
     env: Env,
-    client: SplitNairaContractClient<'a>,
+    client: StardialContractClient<'a>,
     admin: Address,
     owner: Address,
     funder: Address,
@@ -42,8 +42,8 @@ fn fixture<'a>(env: &'a Env, project_name: &str) -> Fixture<'a> {
     let token_admin = Address::generate(env);
     let token = env.register_stellar_asset_contract(token_admin);
 
-    let contract_id = env.register_contract(None, SplitNairaContract);
-    let client = SplitNairaContractClient::new(env, &contract_id);
+    let contract_id = env.register_contract(None, StardialContract);
+    let client = StardialContractClient::new(env, &contract_id);
 
     let admin = Address::generate(env);
     let owner = Address::generate(env);
@@ -308,8 +308,8 @@ fn batch_distribute_lifecycle_settles_multiple_projects_and_reports_no_balance_o
 
     let token_admin = Address::generate(&env);
     let token = env.register_stellar_asset_contract(token_admin);
-    let contract_id = env.register_contract(None, SplitNairaContract);
-    let client = SplitNairaContractClient::new(&env, &contract_id);
+    let contract_id = env.register_contract(None, StardialContract);
+    let client = StardialContractClient::new(&env, &contract_id);
 
     let owner = Address::generate(&env);
     let funder = Address::generate(&env);

@@ -14,7 +14,7 @@ Initiate failover when **two or more** of the following are observed within a 5-
 |---------|-----------------|
 | RPC timeout errors appear in backend logs (`RPC timeout`) | Log aggregator (Datadog / ELK) — filter on `"RPC timeout"` |
 | `GET /health/ready` returns unhealthy | Uptime monitor / load-balancer health check |
-| Payment or distribution transactions fail to confirm on-chain | `splitnaira.transaction.failed` metric spike |
+| Payment or distribution transactions fail to confirm on-chain | `stardial.transaction.failed` metric spike |
 | `soroban_rpc_error_rate` metric exceeds 10 % over 5 min | Grafana / observability dashboard |
 | Provider status page shows degraded or outage | Stellar provider status pages |
 
@@ -29,7 +29,7 @@ Do **not** failover for a single transient timeout — check the provider status
 echo $SOROBAN_RPC_URL
 
 # Or read from the deployed environment config
-kubectl get secret splitnaira-backend-env -o jsonpath='{.data.SOROBAN_RPC_URL}' | base64 -d
+kubectl get secret stardial-backend-env -o jsonpath='{.data.SOROBAN_RPC_URL}' | base64 -d
 ```
 
 ---
@@ -46,27 +46,27 @@ kubectl get secret splitnaira-backend-env -o jsonpath='{.data.SOROBAN_RPC_URL}' 
 ## Config Change and Deployment Order
 
 > **Never change `SOROBAN_RPC_URL` while a batch distribution is in flight.**  
-> Check the `splitnaira.distribution.in_progress` metric or confirm with the on-call engineer first.
+> Check the `stardial.distribution.in_progress` metric or confirm with the on-call engineer first.
 
 1. **Update the environment secret** (or `.env` file for the affected environment):
 
    ```bash
    # Example: Kubernetes secret patch
-   kubectl patch secret splitnaira-backend-env \
+   kubectl patch secret stardial-backend-env \
      -p '{"stringData":{"SOROBAN_RPC_URL":"<FALLBACK_URL>"}}'
    ```
 
 2. **Restart backend pods** to pick up the new value:
 
    ```bash
-   kubectl rollout restart deployment/splitnaira-backend
-   kubectl rollout status deployment/splitnaira-backend
+   kubectl rollout restart deployment/stardial-backend
+   kubectl rollout status deployment/stardial-backend
    ```
 
 3. **Verify the backend started cleanly** — `SOROBAN_RPC_URL` is a required env var and is validated at startup:
 
    ```bash
-   kubectl logs -l app=splitnaira-backend --tail=40 | grep -i "rpc\|startup\|error"
+   kubectl logs -l app=stardial-backend --tail=40 | grep -i "rpc\|startup\|error"
    ```
 
 ---

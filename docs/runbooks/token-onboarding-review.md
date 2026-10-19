@@ -4,7 +4,7 @@
 Backend on-call validates API and listener behavior; the release approver owns
 the final go/no-go decision.
 
-This checklist covers adding a Stellar token contract to SplitNaira's global
+This checklist covers adding a Stellar token contract to Stardial's global
 allowlist. The contract's `allow_token` entry point requires the configured
 admin signature. The backend route `POST /splits/admin/allow-token` only builds
 an unsigned XDR; it does not custody a key or add the token by itself.
@@ -36,7 +36,7 @@ an unsigned XDR; it does not custody a key or add the token by itself.
 - [ ] Create a minimal test project using the token; exercise deposit and a
   distribution/claim path with non-production funds.
 - [ ] Confirm the event listener catches up: `/ops/status` shows a healthy
-  listener and `splitnaira_event_listener_ledger_lag` is not sustained above
+  listener and `stardial_event_listener_ledger_lag` is not sustained above
   the warning threshold.
 - [ ] Capture the staging transaction hash and request IDs in the change
   record.

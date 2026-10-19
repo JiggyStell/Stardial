@@ -104,7 +104,7 @@ describe("maskWalletAddress", () => {
 
 describe("sanitizeErrorMessage", () => {
   it("redacts credential-bearing connection strings", () => {
-    const message = 'connect ECONNREFUSED to postgresql://user:secret@localhost:5432/splitnaira';
+    const message = 'connect ECONNREFUSED to postgresql://user:secret@localhost:5432/stardial';
     expect(sanitizeErrorMessage(message)).toBe(
       "connect ECONNREFUSED to [CONNECTION_STRING_REDACTED]"
     );

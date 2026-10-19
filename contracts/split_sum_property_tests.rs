@@ -4,7 +4,7 @@
 //! Each property is checked against many randomly generated allocations
 //! (member count and basis-point shares) drawn from a small seeded xorshift
 //! PRNG so runs are deterministic and need no extra crates. Override the base
-//! seed with `SPLITNAIRA_PROPTEST_SEED=<u64>` to explore new cases; every
+//! seed with `STARDIAL_PROPTEST_SEED=<u64>` to explore new cases; every
 //! assertion message includes the failing case seed for reproduction.
 //!
 //! Invariants covered:
@@ -25,7 +25,7 @@
 
 extern crate std;
 
-use crate::{errors::SplitError, Collaborator, SplitNairaContract, SplitNairaContractClient};
+use crate::{errors::SplitError, Collaborator, StardialContract, StardialContractClient};
 use soroban_sdk::{testutils::Address as _, token, Address, Env, String, Symbol, Vec};
 
 const CASES: u64 = 64;
@@ -67,7 +67,7 @@ impl Rng {
 }
 
 fn base_seed() -> u64 {
-    std::env::var("SPLITNAIRA_PROPTEST_SEED")
+    std::env::var("STARDIAL_PROPTEST_SEED")
         .ok()
         .and_then(|s| s.parse().ok())
         .unwrap_or(0x5EED_1484)
@@ -161,7 +161,7 @@ fn expected_payouts(total: i128, bps: &[u32]) -> std::vec::Vec<i128> {
 
 struct Scenario<'a> {
     env: &'a Env,
-    client: SplitNairaContractClient<'a>,
+    client: StardialContractClient<'a>,
     contract_id: Address,
     token: Address,
     owner: Address,
@@ -173,8 +173,8 @@ impl<'a> Scenario<'a> {
         env.budget().reset_unlimited();
         let token_admin = Address::generate(env);
         let token = env.register_stellar_asset_contract(token_admin);
-        let contract_id = env.register_contract(None, SplitNairaContract);
-        let client = SplitNairaContractClient::new(env, &contract_id);
+        let contract_id = env.register_contract(None, StardialContract);
+        let client = StardialContractClient::new(env, &contract_id);
         Scenario {
             env,
             client,

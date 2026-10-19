@@ -11,7 +11,7 @@
 
 ## Executive Summary
 
-This document outlines the Platform Hardening initiative for SplitNaira's backend, focused on delivering production-grade reliability improvements that accelerate deployment readiness. The work encompasses:
+This document outlines the Platform Hardening initiative for Stardial's backend, focused on delivering production-grade reliability improvements that accelerate deployment readiness. The work encompasses:
 
 - **Input validation hardening** — comprehensive schema validation across all routes
 - **Database transaction safety** — atomic operations for critical financial paths
@@ -139,14 +139,14 @@ Before deploying Platform Hardening changes:
 
 ```bash
 # Check backend is healthy
-curl https://api.splitnaira.com/health
+curl https://api.stardial.com/health
 
 # Verify error handling
-curl -X POST https://api.splitnaira.com/users/register -d '{}' -H "Content-Type: application/json"
+curl -X POST https://api.stardial.com/users/register -d '{}' -H "Content-Type: application/json"
 # Should return 400 with structured error
 
 # Check rate limiting is working
-for i in {1..300}; do curl https://api.splitnaira.com/health; done
+for i in {1..300}; do curl https://api.stardial.com/health; done
 # Should eventually see 429 (Too Many Requests)
 
 # Verify transactions work (optional)
@@ -183,13 +183,13 @@ If issues are detected post-deploy:
 2. **Restore** previous backend image
    ```bash
    # Revert to previous image in your deployment
-   kubectl set image deployment/backend backend=splitnaira/backend:PREVIOUS_TAG
+   kubectl set image deployment/backend backend=stardial/backend:PREVIOUS_TAG
    kubectl rollout status deployment/backend
    ```
 
 3. **Verify** rollback succeeded
    ```bash
-   curl https://api.splitnaira.com/health
+   curl https://api.stardial.com/health
    # Should see 200 OK within 30 seconds
    ```
 

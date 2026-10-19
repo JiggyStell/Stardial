@@ -1,10 +1,10 @@
-# Documentation Ownership Matrix — SplitNaira Hardening
+# Documentation Ownership Matrix — Stardial Hardening
 
 ## Status
 
 **Tracked follow-up**
 
-Documentation ownership by subsystem is a hardening follow-up for **SplitNaira**. The objective is to ensure that security-critical behavior, operational procedures, and contributor guidance have a clearly accountable owner across the full system.
+Documentation ownership by subsystem is a hardening follow-up for **Stardial**. The objective is to ensure that security-critical behavior, operational procedures, and contributor guidance have a clearly accountable owner across the full system.
 
 This matrix covers:
 
@@ -241,7 +241,7 @@ The documentation ownership follow-up is considered complete when:
 
 ## Tracking Item
 
-**Follow-up:** Establish and maintain a named documentation owner for each SplitNaira subsystem and complete the corresponding documentation surfaces.
+**Follow-up:** Establish and maintain a named documentation owner for each Stardial subsystem and complete the corresponding documentation surfaces.
 
 **Priority:** High
 

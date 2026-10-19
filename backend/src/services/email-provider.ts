@@ -67,12 +67,12 @@ export interface EmailProvider {
 }
 
 export const LOCALIZED_EMAIL_SUBJECTS: Record<string, { reset: string; invite: string }> = {
-  en: { reset: "Reset your SplitNaira password", invite: "You've been invited to collaborate on SplitNaira" },
-  fr: { reset: "Réinitialiser votre mot de passe SplitNaira", invite: "Vous avez été invité à collaborer sur SplitNaira" },
-  es: { reset: "Restablecer su contraseña de SplitNaira", invite: "Has sido invitado a colaborar en SplitNaira" },
-  ha: { reset: "Sake saita kalmar sirri ta SplitNaira", invite: "An gayyace ku don haɗin gwiwa akan SplitNaira" },
-  yo: { reset: "Atunse ọrọ igbaniwọle SplitNaira rẹ", invite: "A ti pè ọ lati ṣiṣẹ pọ lori SplitNaira" },
-  ig: { reset: "Tọgharia okwu mbanye SplitNaira gị", invite: "A kpọọla gị ka gị na SplitNaira rụkọọ ọrụ" },
+  en: { reset: "Reset your Stardial password", invite: "You've been invited to collaborate on Stardial" },
+  fr: { reset: "Réinitialiser votre mot de passe Stardial", invite: "Vous avez été invité à collaborer sur Stardial" },
+  es: { reset: "Restablecer su contraseña de Stardial", invite: "Has sido invitado a colaborar en Stardial" },
+  ha: { reset: "Sake saita kalmar sirri ta Stardial", invite: "An gayyace ku don haɗin gwiwa akan Stardial" },
+  yo: { reset: "Atunse ọrọ igbaniwọle Stardial rẹ", invite: "A ti pè ọ lati ṣiṣẹ pọ lori Stardial" },
+  ig: { reset: "Tọgharia okwu mbanye Stardial gị", invite: "A kpọọla gị ka gị na Stardial rụkọọ ọrụ" },
 };
 
 export function getLocalizedSubjects(locale: string = "en") {

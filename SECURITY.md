@@ -12,7 +12,7 @@ This fix addresses GitHub Issue #292 (Security: Cross-Site Scripting (XSS) in Sp
 <!-- This fix addresses GitHub Issue #292 (Security: Cross-Site Scripting (XSS) in Split Description Field) by implementing comprehensive XSS prevention across the entire application using a 3-layer defense strategy. --> -->
 ## Reporting a Vulnerability,
 
-If you discover a security vulnerability in SplitNaira, please report it responsibly:
+If you discover a security vulnerability in Stardial, please report it responsibly:
 
 1. **Do not** open a public GitHub issue for security-sensitive findings.
 2. Email the maintainers with:
@@ -27,7 +27,7 @@ We will acknowledge valid reports, work on a fix, and coordinate disclosure timi
 
 In scope:
 
-- SplitNaira application code (frontend, backend, Soroban contracts)
+- Stardial application code (frontend, backend, Soroban contracts)
 - CI/CD pipelines under `.github/workflows/`
 - Deployment configuration and secrets handling documented in `docs/`
 

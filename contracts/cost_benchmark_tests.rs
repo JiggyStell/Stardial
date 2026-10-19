@@ -18,7 +18,7 @@ use std::string::String as StdString;
 use soroban_sdk::{testutils::Address as _, token, vec, Address, Env, String, Symbol, Vec};
 
 use crate::{
-    Collaborator, SplitNairaContract, SplitNairaContractClient, DEFAULT_MAX_COLLABORATORS,
+    Collaborator, StardialContract, StardialContractClient, DEFAULT_MAX_COLLABORATORS,
 };
 
 /// Snapshot of Soroban execution budget metrics.
@@ -49,14 +49,14 @@ fn setup_benchmark_project(
     num_collaborators: u32,
     initial_deposit: i128,
 ) -> (
-    SplitNairaContractClient,
+    StardialContractClient,
     Symbol,
     Address,
     Address,
     std::vec::Vec<Address>,
 ) {
-    let contract_id = env.register_contract(None, SplitNairaContract);
-    let client = SplitNairaContractClient::new(env, &contract_id);
+    let contract_id = env.register_contract(None, StardialContract);
+    let client = StardialContractClient::new(env, &contract_id);
 
     let admin = Address::generate(env);
     let owner = Address::generate(env);

@@ -8,7 +8,7 @@ import { Client } from "pg";
 const scriptFile = fileURLToPath(import.meta.url);
 const scriptDir = dirname(scriptFile);
 const backendRoot = resolve(scriptDir, "..");
-const DEFAULT_DATABASE_URL = "postgresql://splitnaira:splitnaira@localhost:5432/splitnaira_ci";
+const DEFAULT_DATABASE_URL = "postgresql://stardial:stardial@localhost:5432/stardial_ci";
 const DATABASE_NAME_PATTERN = /^[A-Za-z_][A-Za-z0-9_$]{0,62}$/;
 const RESERVED_DATABASE_NAMES = new Set(["postgres", "template0", "template1"]);
 

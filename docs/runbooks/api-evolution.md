@@ -8,7 +8,7 @@
 
 ## Overview
 
-The frontend communicates with the SplitNaira backend exclusively through
+The frontend communicates with the Stardial backend exclusively through
 `ApiClient`. API evolution changes (new endpoints, response shape changes,
 error contract updates) must preserve backward compatibility and keep the
 onboarding and split management flows uninterrupted.

@@ -5,7 +5,7 @@ import { fileURLToPath } from "node:url";
 
 const scriptDir = dirname(fileURLToPath(import.meta.url));
 const repoRoot = resolve(scriptDir, "..");
-const interfacePath = resolve(repoRoot, "contracts/interface/splitnaira.contract-interface.json");
+const interfacePath = resolve(repoRoot, "contracts/interface/stardial.contract-interface.json");
 
 const contractInterface = JSON.parse(readFileSync(interfacePath, "utf8"));
 // Simple healthcheck script for deployment readiness verification

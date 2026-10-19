@@ -18,7 +18,7 @@
 //!   without moving funds; a fresh deposit made during the pause is claimable
 //!   only after unpause, and only the new deposit is paid out.
 
-use crate::{errors::SplitError, Collaborator, SplitNairaContract, SplitNairaContractClient};
+use crate::{errors::SplitError, Collaborator, StardialContract, StardialContractClient};
 use soroban_sdk::{testutils::Address as _, token, Address, Env, String, Symbol, Vec};
 
 const DEPOSIT: i128 = 10_000_000;
@@ -27,7 +27,7 @@ const BOB_BPS: u32 = 4_000;
 
 struct Fixture<'a> {
     env: Env,
-    client: SplitNairaContractClient<'a>,
+    client: StardialContractClient<'a>,
     admin: Address,
     owner: Address,
     token: Address,
@@ -45,8 +45,8 @@ fn fully_distributed_then_paused<'a>() -> Fixture<'a> {
     let token_admin = Address::generate(&env);
     let token = env.register_stellar_asset_contract(token_admin);
 
-    let contract_id = env.register_contract(None, SplitNairaContract);
-    let client = SplitNairaContractClient::new(&env, &contract_id);
+    let contract_id = env.register_contract(None, StardialContract);
+    let client = StardialContractClient::new(&env, &contract_id);
 
     let admin = Address::generate(&env);
     let owner = Address::generate(&env);
@@ -102,7 +102,7 @@ fn fully_distributed_then_paused<'a>() -> Fixture<'a> {
 
 fn fund_and_deposit(
     env: &Env,
-    client: &SplitNairaContractClient,
+    client: &StardialContractClient,
     token: &Address,
     project_id: &Symbol,
     from: &Address,

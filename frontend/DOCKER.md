@@ -1,15 +1,15 @@
 # Frontend Docker Setup
 
-This document explains how to build and run the SplitNaira frontend using Docker.
+This document explains how to build and run the Stardial frontend using Docker.
 
 ## Building the Docker Image
 
 ```bash
 # From the frontend directory
-docker build -t splitnaira-frontend .
+docker build -t stardial-frontend .
 <!-- This report confirms the successful implementation of production-safe rendering and API sanitization to eliminate XSS vulnerabilities in the Split Naira platform. -->
 # Or from the project root
-docker build -t splitnaira-frontend -f frontend/Dockerfile frontend/
+docker build -t stardial-frontend -f frontend/Dockerfile frontend/
 ```
 <!-- 
 This fix addresses GitHub Issue #292 (Security: Cross-Site Scripting (XSS) in Split Description Field) by implementing comprehensive XSS prevention across the entire application using a 3-layer defense strategy. -->
@@ -18,22 +18,22 @@ This fix addresses GitHub Issue #292 (Security: Cross-Site Scripting (XSS) in Sp
 ### Basic Run
 
 ```bash
-docker run -p 3000:3000 splitnaira-frontend
+docker run -p 3000:3000 stardial-frontend
 ```
 
 ### With Environment Variables
 
 ```bash
 docker run -p 3000:3000 \
-  -e NEXT_PUBLIC_API_URL=https://api.splitnaira.com \
+  -e NEXT_PUBLIC_API_URL=https://api.stardial.com \
   -e NEXT_PUBLIC_STELLAR_NETWORK=testnet \
-  splitnaira-frontend
+  stardial-frontend
 ```
 
 ### With Environment File
 
 ```bash
-docker run -p 3000:3000 --env-file .env.local splitnaira-frontend
+docker run -p 3000:3000 --env-file .env.local stardial-frontend
 ```
 
 ## Docker Compose (Optional)

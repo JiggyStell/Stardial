@@ -2,7 +2,7 @@
 
 ## Overview
 
-This document details the security hardening implemented to prevent Cross-Site Scripting (XSS) attacks in the Split Naira platform, specifically addressing [GitHub Issue #292 - Security: Cross-Site Scripting (XSS) in Split Description Field](https://github.com/Split-Naira/SplitNaira/issues/292).
+This document details the security hardening implemented to prevent Cross-Site Scripting (XSS) attacks in the Split Naira platform, specifically addressing [GitHub Issue #292 - Security: Cross-Site Scripting (XSS) in Split Description Field](https://github.com/Split-Naira/Stardial/issues/292).
 
 ## Vulnerability Details
 

@@ -5,7 +5,7 @@ REM
 REM  Resolves issues #592 #593 #594 #595 in one branch.
 REM
 REM  Usage:
-REM    1. Copy this file into the ROOT of your local SplitNaira clone.
+REM    1. Copy this file into the ROOT of your local Stardial clone.
 REM    2. Copy the "frontend\" output folder next to this file.
 REM    3. Double-click or run from a terminal: submit_pr.bat
 REM =============================================================================
@@ -17,13 +17,13 @@ set SRC=frontend\src
 
 echo.
 echo ========================================
-echo   SplitNaira -- PR branch setup
+echo   Stardial -- PR branch setup
 echo ========================================
 echo.
 
 REM 0. Sanity
 if not exist "package.json" (
-    echo ERROR: Run this from the ROOT of the SplitNaira repo.
+    echo ERROR: Run this from the ROOT of the Stardial repo.
     pause & exit /b 1
 )
 if not exist "%SRC%" (
@@ -125,7 +125,7 @@ if %errorlevel% neq 0 ( echo PUSH FAILED & pause & exit /b 1 )
 echo.
 echo ========================================
 echo   Done! Open your PR at:
-echo   https://github.com/Godsmiracle001/SplitNaira/compare/%BRANCH%
+echo   https://github.com/Godsmiracle001/Stardial/compare/%BRANCH%
 echo.
 echo   PR title:
 echo   feat(ui): resolve issues #592 #593 #594 #595

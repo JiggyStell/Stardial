@@ -3,7 +3,7 @@
 Covers issue #1250: *Audit every contract authorization path*.
 
 This document enumerates every state-changing method exposed by
-`SplitNairaContract` (`contracts/lib.rs`), records the required signer for
+`StardialContract` (`contracts/lib.rs`), records the required signer for
 each, maps the existing unauthorized-call test coverage, and documents
 findings and remediation.
 

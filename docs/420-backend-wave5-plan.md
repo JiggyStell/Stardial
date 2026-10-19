@@ -2,7 +2,7 @@
 
 Objective
 ---------
-Deliver a high-impact backend workstream for Mainnet Launch Wave 5 to accelerate deployment readiness for SplitNaira.
+Deliver a high-impact backend workstream for Mainnet Launch Wave 5 to accelerate deployment readiness for Stardial.
 
 Scope
 -----

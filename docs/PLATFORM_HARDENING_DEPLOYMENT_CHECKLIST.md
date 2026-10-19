@@ -64,11 +64,11 @@
 - [ ] **Smoke Tests Passing**
   ```bash
   # Health endpoint responds
-  curl -s https://staging-api.splitnaira.com/health | jq .
+  curl -s https://staging-api.stardial.com/health | jq .
   # Should return: {"status": "ok"}
 
   # Error handling works
-  curl -s -X POST https://staging-api.splitnaira.com/users/register \
+  curl -s -X POST https://staging-api.stardial.com/users/register \
     -d '{}' -H "Content-Type: application/json" | jq .
   # Should return 400 with structured error response
   ```
@@ -130,7 +130,7 @@
 - [ ] **Blue-Green Deployment (recommended)**
   ```bash
   # Deploy to new "green" infrastructure without cutting over
-  kubectl set image deployment/backend-green backend=splitnaira/backend:NEW_TAG
+  kubectl set image deployment/backend-green backend=stardial/backend:NEW_TAG
   kubectl rollout status deployment/backend-green
   # Takes ~2-3 minutes
 
@@ -152,14 +152,14 @@
   kubectl logs -l app=backend --tail=100 -f
 
   # Check error rates
-  watch -n 5 'curl -s https://api.splitnaira.com/health | jq .'
+  watch -n 5 'curl -s https://api.stardial.com/health | jq .'
   ```
 
 ### 3. Post-Deployment Verification (Production)
 
 - [ ] **Health Check**
   ```bash
-  curl -s https://api.splitnaira.com/health | jq .
+  curl -s https://api.stardial.com/health | jq .
   # Should return: {"status": "ok"}
   # Response time should be < 200ms
   ```
@@ -167,7 +167,7 @@
 - [ ] **Error Handling**
   ```bash
   # Verify validation errors work
-  curl -X POST https://api.splitnaira.com/users/register \
+  curl -X POST https://api.stardial.com/users/register \
     -d '{"walletAddress":"invalid"}' \
     -H "Content-Type: application/json" | jq .
   # Should return 400 with:
@@ -195,14 +195,14 @@
 - [ ] **Rate Limiting Functional**
   ```bash
   # Rapid requests should eventually return 429
-  for i in {1..200}; do curl -s https://api.splitnaira.com/health -o /dev/null -w "%{http_code}\n"; done | sort | uniq -c
+  for i in {1..200}; do curl -s https://api.stardial.com/health -o /dev/null -w "%{http_code}\n"; done | sort | uniq -c
   # Output should include some 429 responses
   ```
 
 ### 4. User-Facing Tests (Production)
 
 - [ ] **Frontend Loads** (if deployed together)
-  - [ ] https://app.splitnaira.com loads without errors
+  - [ ] https://app.stardial.com loads without errors
   - [ ] No console errors in browser dev tools
   - [ ] Wallet connection works
 
@@ -223,14 +223,14 @@
 
 ```bash
 # Immediate rollback
-kubectl set image deployment/backend backend=splitnaira/backend:PREVIOUS_TAG
+kubectl set image deployment/backend backend=stardial/backend:PREVIOUS_TAG
 kubectl rollout status deployment/backend
 
 # Wait for all pods to be ready
 kubectl wait --for=condition=ready pod -l app=backend --timeout=300s
 
 # Verify
-curl -s https://api.splitnaira.com/health
+curl -s https://api.stardial.com/health
 ```
 
 ### Decision 2: Validation Errors Increased?
@@ -278,13 +278,13 @@ psql $DATABASE_URL -c "SELECT query, mean_time FROM pg_stat_statements ORDER BY 
 ```bash
 # 1. Immediately revert image
 kubectl set image deployment/backend \
-  backend=splitnaira/backend:PREVIOUS_VERSION_TAG
+  backend=stardial/backend:PREVIOUS_VERSION_TAG
 
 # 2. Wait for rollout
 kubectl rollout status deployment/backend --timeout=5m
 
 # 3. Verify health
-curl -s https://api.splitnaira.com/health
+curl -s https://api.stardial.com/health
 
 # 4. Notify team
 # Message in Slack: "Rolled back to VERSION_TAG due to [REASON]"
@@ -321,7 +321,7 @@ psql $PROD_DATABASE_URL < prod_backup_TIMESTAMP.sql
 
 # 3. Restart with previous image
 kubectl scale deployment/backend --replicas=3
-kubectl set image deployment/backend backend=splitnaira/backend:PREVIOUS_TAG
+kubectl set image deployment/backend backend=stardial/backend:PREVIOUS_TAG
 kubectl rollout status deployment/backend
 ```
 

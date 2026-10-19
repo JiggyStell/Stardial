@@ -1,6 +1,6 @@
 # Contracts — Scale & Capacity (Wave 5)
 
-Issue: Split-Naira/SplitNaira #511 — *[Contracts] Scale & Capacity – Wave 5 execution track*
+Issue: Split-Naira/Stardial #511 — *[Contracts] Scale & Capacity – Wave 5 execution track*
 
 This track restores the contract to a deployable state and adds an operator
 lever for per-project capacity. It is split into two parts: **deployment-readiness

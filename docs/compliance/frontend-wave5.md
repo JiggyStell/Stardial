@@ -1,7 +1,7 @@
 # Frontend Compliance — Wave 5
 
 ## Objective
-Deliver production-grade frontend compliance improvements for SplitNaira.
+Deliver production-grade frontend compliance improvements for Stardial.
 
 ## Implementation Plan
 

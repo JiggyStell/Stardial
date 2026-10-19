@@ -22,7 +22,7 @@ type ContractInterfaceArtifact = {
 
 const contractInterface = JSON.parse(
   readFileSync(
-    new URL("../../../contracts/interface/splitnaira.contract-interface.json", import.meta.url),
+    new URL("../../../contracts/interface/stardial.contract-interface.json", import.meta.url),
     "utf8"
   )
 ) as ContractInterfaceArtifact;

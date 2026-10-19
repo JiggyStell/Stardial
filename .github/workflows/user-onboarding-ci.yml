@@ -50,13 +50,13 @@ jobs:
       postgres:
         image: postgres:16
         env:
-          POSTGRES_USER: splitnaira
-          POSTGRES_PASSWORD: splitnaira
-          POSTGRES_DB: splitnaira_ci
+          POSTGRES_USER: stardial
+          POSTGRES_PASSWORD: stardial
+          POSTGRES_DB: stardial_ci
         ports:
           - 5432:5432
         options: >-
-          --health-cmd "pg_isready -U splitnaira -d splitnaira_ci"
+          --health-cmd "pg_isready -U stardial -d stardial_ci"
           --health-interval 10s
           --health-timeout 5s
           --health-retries 5
@@ -64,7 +64,7 @@ jobs:
     env:
       CI: "true"
       NODE_ENV: test
-      DATABASE_URL: postgresql://splitnaira:splitnaira@localhost:5432/splitnaira_ci
+      DATABASE_URL: postgresql://stardial:stardial@localhost:5432/stardial_ci
       HORIZON_URL: https://horizon-testnet.stellar.org
       SOROBAN_RPC_URL: https://soroban-testnet.stellar.org
       SOROBAN_NETWORK_PASSPHRASE: "Test SDF Network ; September 2015"
@@ -142,7 +142,7 @@ jobs:
     env:
       CI: "true"
       NODE_ENV: test
-      DATABASE_URL: postgresql://splitnaira:splitnaira@localhost:5432/splitnaira_ci
+      DATABASE_URL: postgresql://stardial:stardial@localhost:5432/stardial_ci
       HORIZON_URL: https://horizon-testnet.stellar.org
       SOROBAN_RPC_URL: https://soroban-testnet.stellar.org
       SOROBAN_NETWORK_PASSPHRASE: "Test SDF Network ; September 2015"
@@ -179,7 +179,7 @@ jobs:
         working-directory: backend
         env:
           NODE_ENV: test
-          DATABASE_URL: postgresql://splitnaira:splitnaira@localhost:5432/splitnaira_ci
+          DATABASE_URL: postgresql://stardial:stardial@localhost:5432/stardial_ci
           HORIZON_URL: https://horizon-testnet.stellar.org
           SOROBAN_RPC_URL: https://soroban-testnet.stellar.org
           SOROBAN_NETWORK_PASSPHRASE: "Test SDF Network ; September 2015"

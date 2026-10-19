@@ -21,7 +21,7 @@ const syne = Syne({
 });
 
 export const metadata: Metadata = {
-  title: "SplitNaira",
+  title: "Stardial",
   description: "Royalty splitting for creative collaborators on Stellar.",
   icons: {
     icon: "/favicon.ico",

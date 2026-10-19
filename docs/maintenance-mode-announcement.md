@@ -1,6 +1,6 @@
 # Maintenance Mode Announcement Workflow
 
-**Purpose**: Standardise how SplitNaira announces, manages, and resolves planned and unplanned maintenance windows. This workflow provides a single GitHub Actions entry point that updates a status file, notifies stakeholders, and produces an audit trail.
+**Purpose**: Standardise how Stardial announces, manages, and resolves planned and unplanned maintenance windows. This workflow provides a single GitHub Actions entry point that updates a status file, notifies stakeholders, and produces an audit trail.
 
 **Owner**: Operations / Platform Engineering  
 **Last Updated**: August 27, 2026  
@@ -110,7 +110,7 @@ gh workflow run maintenance-mode.yml \
    ```
 3. **Verify** readiness:
    ```bash
-   curl -s https://api.splitnaira.com/health/ready | jq .
+   curl -s https://api.stardial.com/health/ready | jq .
    # Should return 200 with status "ok"
    ```
 4. **Trigger the workflow** with action `end`

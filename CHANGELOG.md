@@ -8,7 +8,7 @@ This fix addreesses GitHub Issue #292 (Security: Cross-Site Scripting (XSS) in S
 
 ## [Unreleased]
 ### Documentation
-- Added `docs/contract-interface-diff-examples.md`, which gives reviewers worked breaking/non-breaking examples for `splitnaira.contract-interface.json` diffs. It is linked from the interface release checklist.
+- Added `docs/contract-interface-diff-examples.md`, which gives reviewers worked breaking/non-breaking examples for `stardial.contract-interface.json` diffs. It is linked from the interface release checklist.
 - `docs/runbooks/stuck-payouts.md` now documents that `claim` is blocked by `pause_distributions`, including for fully distributed projects.
 
 ### Tests

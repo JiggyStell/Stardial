@@ -21,7 +21,7 @@ Use this checklist for any change that can affect the contract interface artifac
 - [ ] Regenerate contract-derived TypeScript types:
   - [ ] `npm run generate:contract-types`
 - [ ] Verify updated files are reviewed and committed:
-  - [ ] `contracts/interface/splitnaira.contract-interface.json`
+  - [ ] `contracts/interface/stardial.contract-interface.json`
   - [ ] `backend/src/generated/contract-types.ts`
   - [ ] `frontend/src/generated/contract-types.ts`
 
@@ -41,7 +41,7 @@ Use this checklist for any change that can affect the contract interface artifac
 - [ ] Build release WASM:
   - [ ] `cd contracts && cargo build --release --target wasm32v1-none`
 - [ ] Confirm artifact path:
-  - [ ] `contracts/target/wasm32v1-none/release/splitnaira_contract.wasm`
+  - [ ] `contracts/target/wasm32v1-none/release/stardial_contract.wasm`
 - [ ] Record/verify deployment metadata updates:
   - [ ] Contract ID
   - [ ] Network/passphrase

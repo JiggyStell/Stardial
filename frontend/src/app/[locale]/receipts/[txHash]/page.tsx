@@ -52,7 +52,7 @@ export default async function ReceiptPage({
     <main className="mx-auto max-w-2xl px-6 py-16 text-ink print:bg-white print:text-black">
       <header className="mb-8 flex items-start justify-between gap-4">
         <div>
-          <p className="text-sm font-semibold uppercase tracking-widest text-greenBright print:text-black">SplitNaira</p>
+          <p className="text-sm font-semibold uppercase tracking-widest text-greenBright print:text-black">Stardial</p>
           <h1 className="mt-2 text-3xl font-bold">Transaction receipt</h1>
         </div>
         <PrintReceiptButton />

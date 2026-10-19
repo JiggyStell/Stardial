@@ -1,6 +1,6 @@
 # Distribution Remainder Accounting
 
-How the SplitNaira contract handles integer rounding when it splits a project balance by basis points. This page covers what the contract guarantees, the edge cases, and what off-chain code (frontend previews, backend, indexers, reconciliation) has to match.
+How the Stardial contract handles integer rounding when it splits a project balance by basis points. This page covers what the contract guarantees, the edge cases, and what off-chain code (frontend previews, backend, indexers, reconciliation) has to match.
 
 - **Owner:** contracts workspace (`contracts/lib.rs`: `distribute`, `claim`)
 - **Related:** [contracts/README.md](../contracts/README.md), [split_calculation_helpers.md](split_calculation_helpers.md), [contract-events.md](contract-events.md)

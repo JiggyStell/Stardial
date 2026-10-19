@@ -1,6 +1,6 @@
-# SplitNaira — End-to-End Deployment Runbook
+# Stardial — End-to-End Deployment Runbook
 
-This is the single authoritative guide for deploying SplitNaira from source to a running environment. It covers testnet, staging, and production in order. A new operator should be able to complete a full release without asking maintainers.
+This is the single authoritative guide for deploying Stardial from source to a running environment. It covers testnet, staging, and production in order. A new operator should be able to complete a full release without asking maintainers.
 
 **Related docs:**
 - [Contract Release & Upgrade Runbook](./contract-release-and-upgrade-runbook.md)
@@ -65,9 +65,9 @@ See [docs/secrets.md](./secrets.md) for authoritative secret handling, rotation 
 | Variable | Description | Example |
 |---|---|---|
 | `PORT` | HTTP port the API listens on | `3001` |
-| `CORS_ORIGIN` | Comma-separated allowed origins | `https://app.splitnaira.com` |
+| `CORS_ORIGIN` | Comma-separated allowed origins | `https://app.stardial.com` |
 | `LOG_LEVEL` | Winston log level | `info` |
-| `DATABASE_URL` | PostgreSQL connection string | `postgresql://user:pass@host:5432/splitnaira` |
+| `DATABASE_URL` | PostgreSQL connection string | `postgresql://user:pass@host:5432/stardial` |
 | `HORIZON_URL` | Stellar Horizon endpoint | `https://horizon-testnet.stellar.org` |
 | `SOROBAN_RPC_URL` | Soroban RPC endpoint | `https://soroban-testnet.stellar.org` |
 | `SOROBAN_NETWORK_PASSPHRASE` | Network passphrase | `Test SDF Network ; September 2015` |
@@ -82,7 +82,7 @@ See [docs/secrets.md](./secrets.md) for authoritative secret handling, rotation 
 | `NEXT_PUBLIC_SOROBAN_RPC_URL` | Soroban RPC endpoint | `https://soroban-testnet.stellar.org` |
 | `NEXT_PUBLIC_CONTRACT_ID` | Deployed Soroban contract ID | `C...` |
 | `NEXT_PUBLIC_HORIZON_URL` | Stellar Horizon endpoint | `https://horizon-testnet.stellar.org` |
-| `NEXT_PUBLIC_API_BASE_URL` | Backend API base URL | `https://api.splitnaira.com` |
+| `NEXT_PUBLIC_API_BASE_URL` | Backend API base URL | `https://api.stardial.com` |
 
 ### Network passphrases
 
@@ -110,7 +110,7 @@ cargo build --release --target wasm32v1-none --locked
 Verify the artifact exists:
 
 ```
-contracts/target/wasm32v1-none/release/splitnaira_contract.wasm
+contracts/target/wasm32v1-none/release/stardial_contract.wasm
 ```
 
 ### Step 2 — Regenerate contract interface (if ABI changed)
@@ -122,7 +122,7 @@ npm run generate:contract-interface
 npm run generate:contract-types
 ```
 
-Review diffs in `contracts/interface/splitnaira.contract-interface.json` and `backend/src/generated/contract-types.ts` / `frontend/src/generated/contract-types.ts`. Commit any changes before deploying.
+Review diffs in `contracts/interface/stardial.contract-interface.json` and `backend/src/generated/contract-types.ts` / `frontend/src/generated/contract-types.ts`. Commit any changes before deploying.
 
 ### Step 3 — Deploy contract to testnet
 
@@ -139,7 +139,7 @@ stellar keys fund deployer --network testnet
 # Deploy
 cd contracts
 stellar contract deploy \
-  --wasm target/wasm32v1-none/release/splitnaira_contract.wasm \
+  --wasm target/wasm32v1-none/release/stardial_contract.wasm \
   --source deployer \
   --network testnet
 ```
@@ -288,14 +288,14 @@ See [docs/backend-deploy.md](./backend-deploy.md) for full CI/CD details.
 
 ```bash
 cd frontend
-docker build -t splitnaira-frontend .
+docker build -t stardial-frontend .
 docker run -p 3000:3000 \
   -e NEXT_PUBLIC_STELLAR_NETWORK=testnet \
   -e NEXT_PUBLIC_SOROBAN_RPC_URL=https://soroban-testnet.stellar.org \
   -e NEXT_PUBLIC_CONTRACT_ID=<contract ID> \
   -e NEXT_PUBLIC_HORIZON_URL=https://horizon-testnet.stellar.org \
-  -e NEXT_PUBLIC_API_BASE_URL=https://api-staging.splitnaira.com \
-  splitnaira-frontend
+  -e NEXT_PUBLIC_API_BASE_URL=https://api-staging.stardial.com \
+  stardial-frontend
 ```
 
 See [frontend/DOCKER.md](../frontend/DOCKER.md) for full Docker options.
@@ -334,7 +334,7 @@ stellar keys fund deployer --network mainnet  # only works on testnet; fund manu
 
 cd contracts
 stellar contract deploy \
-  --wasm target/wasm32v1-none/release/splitnaira_contract.wasm \
+  --wasm target/wasm32v1-none/release/stardial_contract.wasm \
   --source deployer \
   --network mainnet
 ```
@@ -353,7 +353,7 @@ SOROBAN_RPC_URL=https://soroban-mainnet.stellar.org
 SOROBAN_NETWORK_PASSPHRASE=Public Global Stellar Network ; September 2015
 HORIZON_URL=https://horizon.stellar.org
 CONTRACT_ID=<mainnet contract ID>
-CORS_ORIGIN=https://app.splitnaira.com
+CORS_ORIGIN=https://app.stardial.com
 LOG_LEVEL=info
 ```
 
@@ -364,7 +364,7 @@ NEXT_PUBLIC_STELLAR_NETWORK=mainnet
 NEXT_PUBLIC_SOROBAN_RPC_URL=https://soroban-mainnet.stellar.org
 NEXT_PUBLIC_CONTRACT_ID=<mainnet contract ID>
 NEXT_PUBLIC_HORIZON_URL=https://horizon.stellar.org
-NEXT_PUBLIC_API_BASE_URL=https://api.splitnaira.com
+NEXT_PUBLIC_API_BASE_URL=https://api.stardial.com
 ```
 
 ### Step 3 — DB migrations
@@ -392,10 +392,10 @@ Push to `main` or trigger the GitHub Actions workflow:
 
 ```bash
 cd frontend
-docker build -t splitnaira-frontend:prod .
+docker build -t stardial-frontend:prod .
 # Push to your container registry and deploy via your hosting platform
-docker tag splitnaira-frontend:prod <registry>/splitnaira-frontend:prod
-docker push <registry>/splitnaira-frontend:prod
+docker tag stardial-frontend:prod <registry>/stardial-frontend:prod
+docker push <registry>/stardial-frontend:prod
 ```
 
 Or trigger your frontend CD pipeline if configured.
@@ -417,7 +417,7 @@ curl -s https://<backend-url>/health | jq .
 # Expected: { "status": "ok" }
 
 curl -s https://<backend-url>/ | jq .
-# Expected: { "name": "SplitNaira API", "status": "ok", "version": "0.1.0" }
+# Expected: { "name": "Stardial API", "status": "ok", "version": "0.1.0" }
 ```
 
 ### Database connectivity
@@ -491,7 +491,7 @@ If using another platform, redeploy the previous Docker image tag or Git SHA.
 Redeploy the previous Docker image tag:
 
 ```bash
-docker pull <registry>/splitnaira-frontend:<previous-tag>
+docker pull <registry>/stardial-frontend:<previous-tag>
 # Restart your container or update your hosting platform to use the previous tag
 ```
 

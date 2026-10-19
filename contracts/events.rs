@@ -643,7 +643,7 @@ mod event_snapshot_tests {
     //! Each test drives the real contract path that emits an event, then
     //! asserts the published topic/data schema so indexers can rely on it.
 
-    use crate::{Collaborator, SplitNairaContract, SplitNairaContractClient};
+    use crate::{Collaborator, StardialContract, StardialContractClient};
     use soroban_sdk::{
         testutils::{Address as _, Events},
         token, vec, Address, Env, FromVal, String, Symbol, TryFromVal, Val, Vec,
@@ -657,7 +657,7 @@ mod event_snapshot_tests {
     /// A registered contract with one freshly created project.
     struct Fixture<'a> {
         env: &'a Env,
-        client: SplitNairaContractClient<'a>,
+        client: StardialContractClient<'a>,
         contract_id: Address,
         token: Address,
         owner: Address,
@@ -670,8 +670,8 @@ mod event_snapshot_tests {
         let token_admin = Address::generate(env);
         let token = env.register_stellar_asset_contract(token_admin);
 
-        let contract_id = env.register_contract(None, SplitNairaContract);
-        let client = SplitNairaContractClient::new(env, &contract_id);
+        let contract_id = env.register_contract(None, StardialContract);
+        let client = StardialContractClient::new(env, &contract_id);
 
         let owner = Address::generate(env);
         let alice = Address::generate(env);

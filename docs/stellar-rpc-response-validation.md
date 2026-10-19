@@ -1,6 +1,6 @@
 # Stellar RPC Response Validation
 
-SplitNaira validates every response it receives from Soroban RPC before using
+Stardial validates every response it receives from Soroban RPC before using
 it (issue #1494). A malformed, incomplete or unexpected payload is rejected
 with a typed error. It is never treated as success, never replaced with a
 default value, and never recorded as a payment.

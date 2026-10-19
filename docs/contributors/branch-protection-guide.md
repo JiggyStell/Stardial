@@ -1,6 +1,6 @@
 # Branch Protection & Required Status Checks Guide
 
-To maintain high code quality, test coverage thresholds, and artifact integrity across the SplitNaira monorepo, repository administrators must configure branch protection rules on `main` and `develop`.
+To maintain high code quality, test coverage thresholds, and artifact integrity across the Stardial monorepo, repository administrators must configure branch protection rules on `main` and `develop`.
 
 ## Required Status Checks
 

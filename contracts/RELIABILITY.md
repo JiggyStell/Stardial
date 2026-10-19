@@ -39,7 +39,7 @@ Properties checked:
 ```
 cargo test --features testutils deposit_property_tests
 # explore new cases; failures print the case seed
-SPLITNAIRA_PROPTEST_SEED=42 cargo test --features testutils deposit_property_tests
+STARDIAL_PROPTEST_SEED=42 cargo test --features testutils deposit_property_tests
 ```
 
 ### Rollback
@@ -75,7 +75,7 @@ Properties covered:
 ```
 cargo test --features testutils split_sum_property_tests
 # explore new cases; failures print the case seed
-SPLITNAIRA_PROPTEST_SEED=1484 cargo test --features testutils split_sum_property_tests
+STARDIAL_PROPTEST_SEED=1484 cargo test --features testutils split_sum_property_tests
 ```
 
 ### Rollback

@@ -1,10 +1,10 @@
-# SplitNaira Architecture Overview
+# Stardial Architecture Overview
 
-This document provides a high-level architecture overview of SplitNaira, detailing how the frontend, backend API, smart contracts, and the Stellar blockchain relate to each other.
+This document provides a high-level architecture overview of Stardial, detailing how the frontend, backend API, smart contracts, and the Stellar blockchain relate to each other.
 
 ## System Overview
 
-SplitNaira is an automated royalty splitting platform built for Nigeria's creative economy. It uses Soroban smart contracts on the Stellar blockchain to enable transparent revenue distribution among creators, collaborators, and stakeholders.
+Stardial is an automated royalty splitting platform built for Nigeria's creative economy. It uses Soroban smart contracts on the Stellar blockchain to enable transparent revenue distribution among creators, collaborators, and stakeholders.
 
 ## Architecture Diagram
 

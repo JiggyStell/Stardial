@@ -3,7 +3,7 @@
 ## Implementation Plan
 
 ### Overview
-This PR addresses the contracts workstream under Wallet & Payments for SplitNaira Wave 5. The focus is on closing contract-level gaps in payment flows, hardening recoverability, adding regression tests, and updating operational documentation so the release remains deploy-safe and rollback-aware.
+This PR addresses the contracts workstream under Wallet & Payments for Stardial Wave 5. The focus is on closing contract-level gaps in payment flows, hardening recoverability, adding regression tests, and updating operational documentation so the release remains deploy-safe and rollback-aware.
 
 ### Audit Findings
 The current contract implementation already provides a strong Wallet & Payments surface, but the audit found one contract accounting gap and several documentation gaps:

@@ -6,7 +6,7 @@ Proposed | Accepted | Superseded | Deprecated | Retired
 
 ## Context
 
-This document records the rationale, risk assessment, and rollback notes for a mainnet contract upgrade in SplitNaira. Every contract upgrade that touches mainnet must have a completed ADR before the release sign-off checklist is approved.
+This document records the rationale, risk assessment, and rollback notes for a mainnet contract upgrade in Stardial. Every contract upgrade that touches mainnet must have a completed ADR before the release sign-off checklist is approved.
 
 This ADR complements the [Contract Release and Upgrade Runbook](../contract-release-and-upgrade-runbook.md) and the [Release Readiness Checklist](../release-readiness-checklist.md).
 
@@ -20,10 +20,10 @@ Complete this section for each upgrade. Replace the placeholder values with the 
 |-------|-------|
 | ADR number | 0001 |
 | Upgrade title | _e.g., Add `set_max_collaborators` cap raise_ |
-| Target contract | `splitnaira_contract` |
+| Target contract | `stardial_contract` |
 | Upgrade type | Minor non-breaking / Major breaking |
 | Soroban SDK version | _e.g., 20.5.0_ |
-| WASM artifact | `contracts/target/wasm32v1-none/release/splitnaira_contract.wasm` |
+| WASM artifact | `contracts/target/wasm32v1-none/release/stardial_contract.wasm` |
 | Author | _Name_ |
 | Date | YYYY-MM-DD |
 | Issue / PR | _link_ |
@@ -36,7 +36,7 @@ Describe how the upgrade interacts with existing on-chain state and app-layer in
 - **Method signatures:** Are any public method signatures changed (added, removed, or parameter types modified)?
 - **Event topics:** Are any existing event topic formats preserved or altered?
 - **Error codes:** Are any error codes added, removed, or renumbered?
-- **App-facing interface:** Does `contracts/interface/splitnaira.contract-interface.json` need regeneration? If so, has `npm run generate:contract-interface` been run and the diff reviewed?
+- **App-facing interface:** Does `contracts/interface/stardial.contract-interface.json` need regeneration? If so, has `npm run generate:contract-interface` been run and the diff reviewed?
 
 _For minor non-breaking upgrades, all existing method signatures, storage keys, event topics, and error codes must remain unchanged. New methods or parameters must be additive only._
 

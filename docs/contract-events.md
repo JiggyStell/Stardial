@@ -1,7 +1,7 @@
-# SplitNaira Contract Event Reference
+# Stardial Contract Event Reference
 
 This document is the authoritative reference for every event emitted by the
-SplitNaira Soroban contract. Backend services and indexers **must** consume
+Stardial Soroban contract. Backend services and indexers **must** consume
 events through this schema. Do not infer event shape from test snapshots alone.
 
 ---

@@ -1,7 +1,7 @@
 # Privacy-Safe Analytics Event Schema Specification (Issue #1535)
 
 ## Overview
-This document specifies the privacy-safe analytics event schema enforced across SplitNaira's frontend and backend telemetry pipelines.
+This document specifies the privacy-safe analytics event schema enforced across Stardial's frontend and backend telemetry pipelines.
 
 ## Privacy Invariants
 1. **Zero Raw PII**: Wallet addresses (`G...`, `C...`), email addresses, and IP addresses are strictly forbidden in raw analytics events.

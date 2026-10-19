@@ -6,7 +6,7 @@
 
 ## Purpose
 
-This document defines how SplitNaira handles a user's request to close their
+This document defines how Stardial handles a user's request to close their
 account or delete their data. It covers request intake, identity
 verification, exactly what can be deleted versus what must be retained or
 anonymized, and how that interacts with financial/audit records and on-chain
@@ -17,7 +17,7 @@ document describes the manual support process a platform admin follows today,
 and is written so it can be turned directly into an automated flow later
 without changing the underlying data-handling decisions.
 
-## Scope: What Data SplitNaira Actually Holds
+## Scope: What Data Stardial Actually Holds
 
 Before deciding what to delete, it's worth being precise about what user data
 exists in this system, since it's deliberately minimal:
@@ -50,7 +50,7 @@ There is no separate KYC data store in this codebase today.
 
 ### Identity Verification
 
-SplitNaira has no password-based login — accounts are identified by Stellar
+Stardial has no password-based login — accounts are identified by Stellar
 wallet address, and the existing JWT auth flow already treats a valid wallet
 signature as the sole proof of user intent (see
 [wallet-signing-threat-model.md](./wallet-signing-threat-model.md)).
@@ -60,7 +60,7 @@ alone (email is optional and unverified at registration — see
 [`backend/src/routes/users.ts`](../backend/src/routes/users.ts)):
 
 1. Ask the requester to sign a short, purpose-specific message (e.g.
-   `"I am requesting deletion of my SplitNaira account as of <date>"`) with
+   `"I am requesting deletion of my Stardial account as of <date>"`) with
    the private key for the wallet address on the request.
 2. Verify the signature server-side against that wallet's public key before
    proceeding. Support must not action a request based on an email address

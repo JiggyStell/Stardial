@@ -9,7 +9,7 @@
 
 ## Objective
 
-Deliver production-grade security improvements to the SplitNaira Soroban contract, accelerating deployment readiness under the Wave 5 Security Hardening execution track.
+Deliver production-grade security improvements to the Stardial Soroban contract, accelerating deployment readiness under the Wave 5 Security Hardening execution track.
 
 ---
 

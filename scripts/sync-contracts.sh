@@ -24,18 +24,18 @@ FRONTEND_DIR="frontend"
 BACKEND_DIR="backend"
 ARTIFACT_DIR="$CONTRACTS_DIR/target/wasm32v1-none/release"
 
-echo "SplitNaira Contract Release Sync"
+echo "Stardial Contract Release Sync"
 echo "=============================="
 
-if [ ! -f "$ARTIFACT_DIR/splitnaira_contract.wasm" ]; then
+if [ ! -f "$ARTIFACT_DIR/stardial_contract.wasm" ]; then
     echo "Error: Contract WASM not found."
     echo "Build it first with: npm run build:contracts"
     exit 1
 fi
 
 echo "Generating artifact checksums..."
-sha256sum "$ARTIFACT_DIR/splitnaira_contract.wasm" > "$ARTIFACT_DIR/splitnaira_contract.wasm.sha256"
-WASM_HASH="$(cut -d' ' -f1 < "$ARTIFACT_DIR/splitnaira_contract.wasm.sha256")"
+sha256sum "$ARTIFACT_DIR/stardial_contract.wasm" > "$ARTIFACT_DIR/stardial_contract.wasm.sha256"
+WASM_HASH="$(cut -d' ' -f1 < "$ARTIFACT_DIR/stardial_contract.wasm.sha256")"
 
 CONTRACT_ID="${CONTRACT_ID:-}"
 if [ -z "$CONTRACT_ID" ]; then

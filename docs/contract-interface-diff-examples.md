@@ -1,7 +1,7 @@
 # Contract Interface Diff Examples
 
 Worked examples for reviewing changes to
-`contracts/interface/splitnaira.contract-interface.json`. Use them with the
+`contracts/interface/stardial.contract-interface.json`. Use them with the
 [Contract Interface Release Checklist](./CONTRACT_INTERFACE_RELEASE_CHECKLIST.md).
 
 **Owner:** contracts maintainers (`contracts/`). A contracts reviewer approves

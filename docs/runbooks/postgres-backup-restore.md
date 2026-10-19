@@ -6,7 +6,7 @@
 > **Related:** [`audit-log-retention.md`](../audit-log-retention.md), [`runbooks/rollback-guide.md`](../../runbooks/rollback-guide.md), [`runbooks/incident-management.md`](./incident-management.md), [`runbooks/observability.md`](./observability.md)
 
 This runbook gives operators a concrete, drill-tested procedure for backing up
-the SplitNaira Postgres database, restoring it without losing audit log or
+the Stardial Postgres database, restoring it without losing audit log or
 transaction history, and verifying the result before traffic is routed
 back. **Treat this as the authoritative procedure** for any environment
 (dev, staging, or production) — ad-hoc `pg_dump` runs are not a substitute.
@@ -39,12 +39,12 @@ render services snapshot create --service-id <backend-service-id>
 
 # AWS RDS: immediate snapshot
 aws rds create-db-snapshot \
-  --db-instance-identifier splitnaira-prod \
-  --db-snapshot-identifier splitnaira-prod-predeploy-$(date -u +%Y%m%dT%H%M%SZ) \
+  --db-instance-identifier stardial-prod \
+  --db-snapshot-identifier stardial-prod-predeploy-$(date -u +%Y%m%dT%H%M%SZ) \
   --tags Key=Purpose,Value=predeploy
 
 # GCP Cloud SQL
-gcloud sql backups create --instance splitnaira-prod --location us-central1
+gcloud sql backups create --instance stardial-prod --location us-central1
 ```
 
 Always tag the snapshot with the deploy commit SHA and the ticket /
@@ -57,7 +57,7 @@ in-flight writes are not interrupted. Save the dump to durable blob
 storage (S3/GCS) and to a secure local copy.
 
 ```bash
-DUMP_PATH=/var/backups/splitnaira/$(date -u +%Y%m%dT%H%M%SZ).dump
+DUMP_PATH=/var/backups/stardial/$(date -u +%Y%m%dT%H%M%SZ).dump
 pg_dump \
   --dbname="$DATABASE_URL" \
   --format=custom \
@@ -82,20 +82,20 @@ md5sum "$DUMP_PATH".gpg | tee "$DUMP_PATH".gpg.md5
 
 ```cron
 # m h d M w  command
-0 2 * * *  /usr/local/bin/splitnaira-nightly-pgdump.sh >> /var/log/splitnaira-pgdump.log 2>&1
+0 2 * * *  /usr/local/bin/stardial-nightly-pgdump.sh >> /var/log/stardial-pgdump.log 2>&1
 ```
 
 ```bash
 #!/usr/bin/env bash
-# /usr/local/bin/splitnaira-nightly-pgdump.sh
+# /usr/local/bin/stardial-nightly-pgdump.sh
 set -euo pipefail
-DUMP_PATH=/var/backups/splitnaira/$(date -u +%Y%m%dT%H%M%SZ).dump
+DUMP_PATH=/var/backups/stardial/$(date -u +%Y%m%dT%H%M%SZ).dump
 pg_dump "$DATABASE_URL" --format=custom --no-owner --no-privileges \
   --single-transaction --file="$DUMP_PATH"
-gpg --batch --yes --passphrase-file /etc/splitnaira/dump-passphrase \
+gpg --batch --yes --passphrase-file /etc/stardial/dump-passphrase \
   --symmetric --cipher-algo AES256 "$DUMP_PATH"
 rm "$DUMP_PATH"
-aws s3 cp "$DUMP_PATH".gpg "s3://splitnaira-backups/$(date -u +%Y/%m/%d)/"
+aws s3 cp "$DUMP_PATH".gpg "s3://stardial-backups/$(date -u +%Y/%m/%d)/"
 ```
 
 ## 3. Restore drill
@@ -109,9 +109,9 @@ aws s3 cp "$DUMP_PATH".gpg "s3://splitnaira-backups/$(date -u +%Y/%m/%d)/"
 ```bash
 # Example: spin up an empty Postgres 16 container
 docker run --rm --detach \
-  --name splitnaira-restore-drill \
-  -e POSTGRES_USER=splitnaira -e POSTGRES_PASSWORD=splitnaira \
-  -e POSTGRES_DB=splitnaira_drill \
+  --name stardial-restore-drill \
+  -e POSTGRES_USER=stardial -e POSTGRES_PASSWORD=stardial \
+  -e POSTGRES_DB=stardial_drill \
   -p 5433:5432 \
   postgres:16
 ```
@@ -119,13 +119,13 @@ docker run --rm --detach \
 ### 3.2 Decrypt and restore
 
 ```bash
-DUMP_GPG=/var/backups/splitnaira/chosen.dump.gpg
-DUMP_PATH=/tmp/splitnaira-restore.dump
-gpg --batch --yes --passphrase-file /etc/splitnaira/dump-passphrase \
+DUMP_GPG=/var/backups/stardial/chosen.dump.gpg
+DUMP_PATH=/tmp/stardial-restore.dump
+gpg --batch --yes --passphrase-file /etc/stardial/dump-passphrase \
   --decrypt "$DUMP_GPG" > "$DUMP_PATH"
 
 pg_restore \
-  --dbname=postgresql://splitnaira:splitnaira@localhost:5433/splitnaira_drill \
+  --dbname=postgresql://stardial:stardial@localhost:5433/stardial_drill \
   --no-owner --no-privileges \
   --single-transaction \
   --verbose \
@@ -170,7 +170,7 @@ A simple shell wrapper that returns non-zero on any anomaly:
 
 ```bash
 #!/usr/bin/env bash
-# /usr/local/bin/splitnaira-restore-verify.sh
+# /usr/local/bin/stardial-restore-verify.sh
 set -euo pipefail
 DATABASE_URL="$1"
 psql "$DATABASE_URL" -v ON_ERROR_STOP=1 -At <<'SQL'
@@ -204,7 +204,7 @@ curl -fsS "$BACKEND_BASE/transactions/history?limit=5" # expect prior records
 ## 4. Audit log & transaction record handling
 
 Audit logs and transaction records **must be preserved across any
-restore**. The SplitNaira operational model treats them as compliance
+restore**. The Stardial operational model treats them as compliance
 artefacts with a defined retention policy
 (see [`audit-log-retention.md`](../audit-log-retention.md)).
 
@@ -256,23 +256,23 @@ worse state:
 # Snapshot the live DB before any risky change
 pg_dump "$DATABASE_URL" --format=custom --no-owner --no-privileges \
   --single-transaction --verbose \
-  --file=/var/backups/splitnaira/$(date -u +%Y%m%dT%H%M%SZ).dump
+  --file=/var/backups/stardial/$(date -u +%Y%m%dT%H%M%SZ).dump
 
 # Encrypted upload
 gpg --symmetric --cipher-algo AES256 \
-  /var/backups/splitnaira/<stamp>.dump
+  /var/backups/stardial/<stamp>.dump
 
 # Verify a dump
-gpg --decrypt /var/backups/splitnaira/<stamp>.dump.gpg > /tmp/check.dump
+gpg --decrypt /var/backups/stardial/<stamp>.dump.gpg > /tmp/check.dump
 pg_restore --list /tmp/check.dump | head -50
 
 # Restore into a disposable DB
-createdb -h localhost -p 5433 splitnaira_drill
-pg_restore --dbname=postgresql://splitnaira:splitnaira@localhost:5433/splitnaira_drill \
+createdb -h localhost -p 5433 stardial_drill
+pg_restore --dbname=postgresql://stardial:stardial@localhost:5433/stardial_drill \
   --no-owner --no-privileges --single-transaction /tmp/check.dump
 
 # Verify
-psql postgresql://splitnaira:splitnaira@localhost:5433/splitnaira_drill \
+psql postgresql://stardial:stardial@localhost:5433/stardial_drill \
   -c "SELECT COUNT(*) FROM users; SELECT COUNT(*) FROM splits;"
 ```
 

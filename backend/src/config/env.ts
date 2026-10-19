@@ -129,7 +129,7 @@ const backendEnvSchema = z.object({
         code: z.ZodIssueCode.custom,
         path: ["CORS_ORIGIN"],
         message:
-          "CORS_ORIGIN is required in production. Set it to a comma-separated list of allowed frontend origins (e.g. https://app.splitnaira.com).",
+          "CORS_ORIGIN is required in production. Set it to a comma-separated list of allowed frontend origins (e.g. https://app.stardial.com).",
       });
     } else {
       const origins = data.CORS_ORIGIN.split(",").map((o) => o.trim());

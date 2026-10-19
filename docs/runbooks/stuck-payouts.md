@@ -2,7 +2,7 @@
 
 ## Purpose
 
-This runbook defines the operational incident response protocol for SplitNaira payment operations when encountering delayed payouts, stuck transactions, Stellar/Soroban RPC degradation, or partial distribution failures. It provides step-by-step triage procedures, rules for disabling admin write operations, escalation criteria, and recovery guidelines.
+This runbook defines the operational incident response protocol for Stardial payment operations when encountering delayed payouts, stuck transactions, Stellar/Soroban RPC degradation, or partial distribution failures. It provides step-by-step triage procedures, rules for disabling admin write operations, escalation criteria, and recovery guidelines.
 
 ---
 

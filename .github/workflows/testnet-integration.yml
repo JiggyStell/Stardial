@@ -8,7 +8,7 @@ name: Testnet Integration (Nightly)
 # Required configuration (GitHub → Settings → Environments → "testnet")
 #
 #   Secrets:
-#     STELLAR_TESTNET_CONTRACT_ID     Deployed SplitNaira contract id (C...)
+#     STELLAR_TESTNET_CONTRACT_ID     Deployed Stardial contract id (C...)
 #     STELLAR_TESTNET_SOURCE_ACCOUNT  A funded testnet account public key (G...)
 #                                     used as the simulation source / owner.
 #   Optional secrets (enable extra steps):

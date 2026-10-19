@@ -6,7 +6,7 @@ labels: deploy, high priority
 assignees: ''
 ---
 
-## Deploy Checklist — SplitNaira
+## Deploy Checklist — Stardial
 
 Link the PR this deploy is based on: <!-- #PR_NUMBER -->
 

@@ -22,7 +22,7 @@
 import type { ToastVariant } from "@/components/toast-provider";
 
 /** Versioned so a future shape change can migrate instead of mis-parsing. */
-export const TOAST_HISTORY_STORAGE_KEY = "splitnaira:toast-history:v1";
+export const TOAST_HISTORY_STORAGE_KEY = "stardial:toast-history:v1";
 
 /** Bounded so a long-lived session cannot grow storage without limit. */
 export const TOAST_HISTORY_LIMIT = 20;

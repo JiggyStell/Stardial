@@ -20,18 +20,18 @@ function buildApp(env: NodeJS.ProcessEnv) {
 
 describe("CORS preflight behaviour", () => {
   it("allows preflight from an explicitly allowed production origin", async () => {
-    const app = buildApp({ NODE_ENV: "production", CORS_ORIGIN: "https://app.splitnaira.com" });
+    const app = buildApp({ NODE_ENV: "production", CORS_ORIGIN: "https://app.stardial.com" });
     const res = await request(app)
       .options("/ping")
-      .set("Origin", "https://app.splitnaira.com")
+      .set("Origin", "https://app.stardial.com")
       .set("Access-Control-Request-Method", "GET");
 
     expect(res.status).toBe(204);
-    expect(res.headers["access-control-allow-origin"]).toBe("https://app.splitnaira.com");
+    expect(res.headers["access-control-allow-origin"]).toBe("https://app.stardial.com");
   });
 
   it("blocks preflight from an origin not in the allowlist", async () => {
-    const app = buildApp({ NODE_ENV: "production", CORS_ORIGIN: "https://app.splitnaira.com" });
+    const app = buildApp({ NODE_ENV: "production", CORS_ORIGIN: "https://app.stardial.com" });
     const res = await request(app)
       .options("/ping")
       .set("Origin", "https://evil.example.com")
@@ -44,20 +44,20 @@ describe("CORS preflight behaviour", () => {
   it("allows multiple comma-separated origins", async () => {
     const app = buildApp({
       NODE_ENV: "production",
-      CORS_ORIGIN: "https://app.splitnaira.com,https://splitnaira.com",
+      CORS_ORIGIN: "https://app.stardial.com,https://stardial.com",
     });
 
     const res1 = await request(app)
       .options("/ping")
-      .set("Origin", "https://app.splitnaira.com")
+      .set("Origin", "https://app.stardial.com")
       .set("Access-Control-Request-Method", "GET");
-    expect(res1.headers["access-control-allow-origin"]).toBe("https://app.splitnaira.com");
+    expect(res1.headers["access-control-allow-origin"]).toBe("https://app.stardial.com");
 
     const res2 = await request(app)
       .options("/ping")
-      .set("Origin", "https://splitnaira.com")
+      .set("Origin", "https://stardial.com")
       .set("Access-Control-Request-Method", "GET");
-    expect(res2.headers["access-control-allow-origin"]).toBe("https://splitnaira.com");
+    expect(res2.headers["access-control-allow-origin"]).toBe("https://stardial.com");
   });
 
   it("allows the local development origin by default when CORS_ORIGIN is unset", async () => {
@@ -85,7 +85,7 @@ describe("CORS preflight behaviour", () => {
     // Simulates curl / server-to-server calls / same-origin requests, which
     // never send an Origin header. The request itself must still succeed;
     // it simply carries no CORS headers because none were requested.
-    const app = buildApp({ NODE_ENV: "production", CORS_ORIGIN: "https://app.splitnaira.com" });
+    const app = buildApp({ NODE_ENV: "production", CORS_ORIGIN: "https://app.stardial.com" });
     const res = await request(app).get("/ping");
 
     expect(res.status).toBe(200);
@@ -97,14 +97,14 @@ describe("CORS preflight behaviour", () => {
     // The API authenticates via a bearer token in the Authorization header
     // (see middleware/auth-jwt.ts), never cookies, so credentialed CORS is
     // intentionally disabled everywhere - this must stay false.
-    const app = buildApp({ NODE_ENV: "production", CORS_ORIGIN: "https://app.splitnaira.com" });
+    const app = buildApp({ NODE_ENV: "production", CORS_ORIGIN: "https://app.stardial.com" });
     const res = await request(app)
       .options("/ping")
-      .set("Origin", "https://app.splitnaira.com")
+      .set("Origin", "https://app.stardial.com")
       .set("Access-Control-Request-Method", "GET");
 
     expect(res.status).toBe(204);
-    expect(res.headers["access-control-allow-origin"]).toBe("https://app.splitnaira.com");
+    expect(res.headers["access-control-allow-origin"]).toBe("https://app.stardial.com");
     expect(res.headers["access-control-allow-credentials"]).toBeUndefined();
   });
 });
@@ -118,7 +118,7 @@ describe("resolveCorsOrigins", () => {
 
   it("rejects a wildcard mixed in with explicit origins in production", () => {
     expect(() =>
-      resolveCorsOrigins({ NODE_ENV: "production", CORS_ORIGIN: "https://app.splitnaira.com,*" }),
+      resolveCorsOrigins({ NODE_ENV: "production", CORS_ORIGIN: "https://app.stardial.com,*" }),
     ).toThrow(/wildcard.*not allowed in production/i);
   });
 
@@ -135,7 +135,7 @@ describe("CORS production env validation", () => {
   // Minimal env that satisfies all required schema fields
   const requiredEnv: Record<string, string> = {
     NODE_ENV: "production",
-    DATABASE_URL: "postgresql://user:pass@localhost:5432/splitnaira",
+    DATABASE_URL: "postgresql://user:pass@localhost:5432/stardial",
     HORIZON_URL: "https://horizon-testnet.stellar.org",
     SOROBAN_RPC_URL: "https://soroban-testnet.stellar.org",
     SOROBAN_NETWORK_PASSPHRASE: "Test SDF Network ; September 2015",
@@ -170,10 +170,10 @@ describe("CORS production env validation", () => {
   });
 
   it("accepts explicit origin(s) in production", async () => {
-    vi.stubEnv("CORS_ORIGIN", "https://app.splitnaira.com");
+    vi.stubEnv("CORS_ORIGIN", "https://app.stardial.com");
     const { validateEnv, clearEnvCache } = await import("../config/env.js");
     clearEnvCache();
     const result = validateEnv();
-    expect(result.CORS_ORIGIN).toBe("https://app.splitnaira.com");
+    expect(result.CORS_ORIGIN).toBe("https://app.stardial.com");
   });
 });

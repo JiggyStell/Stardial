@@ -13,7 +13,7 @@ const paths = {
   lib: resolve(contractDir, "lib.rs"),
   events: resolve(contractDir, "events.rs"),
   errors: resolve(contractDir, "errors.rs"),
-  output: resolve(contractDir, "interface", "splitnaira.contract-interface.json")
+  output: resolve(contractDir, "interface", "stardial.contract-interface.json")
 };
 
 const cargo = readText(paths.cargo);
@@ -280,13 +280,13 @@ function parseCargoMetadata() {
 
 const sourceFiles = [paths.cargo, paths.lib, paths.events, paths.errors];
 const artifact = {
-  schema: "https://splitnaira.dev/schemas/contract-interface.v1.json",
+  schema: "https://stardial.dev/schemas/contract-interface.v1.json",
   schemaVersion: 1,
   generatedBy: "contracts/scripts/generate-interface.mjs",
   sourceHash: sourceHash(sourceFiles),
   sources: sourceFiles.map(repoRelative),
   contract: {
-    name: "SplitNairaContract",
+    name: "StardialContract",
     ...parseCargoMetadata()
   },
   methods: parseMethods(),

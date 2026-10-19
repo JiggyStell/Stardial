@@ -1,9 +1,26 @@
-# SplitNaira Backend
+# Stardial Backend
 
-Express + TypeScript API scaffold for SplitNaira.
+The TypeScript API and service layer for Stardial, a Stellar wallet intended
+to make USDC and XLM usable from feature phones through USSD and SMS. The
+backend connects browser and operator clients to Stellar while keeping wallet
+spending authority bounded by Soroban contract policy.
 
-<!--
-This fix addresses GitHub Issue #292 (Security: Cross-Site Scripting (XSS) in Split Description Field) by implementing comprehensive XSS prevention across the entire application using a 3-layer defense strategy. -->
+## Product direction
+
+The target platform includes partner APIs, telecom callbacks, transaction
+status and receipts, agent discovery, and a local-language assistant. A future
+USSD/SMS gateway may handle sessions, PIN verification, relay signing, and
+retry queues; those functions must not be assumed available unless implemented
+in this repository and configured for a deployment.
+
+**Status:** early design and Testnet development. This package currently runs
+an Express API with PostgreSQL persistence and Stellar/Soroban integrations.
+Its generated OpenAPI document and route implementations define the supported
+API today. The broader phone-wallet endpoints, telecom provider integrations,
+and Cash Code agent workflow described by the product plan are not implied by
+this README.
+
+## Development
 
 ## Scripts
 

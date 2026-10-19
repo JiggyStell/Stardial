@@ -3,7 +3,7 @@
  * Tests that validation error responses do not reflect malicious user input
  * that could enable XSS or content injection attacks.
  *
- * Related to: SplitNaira security hardening — reflected validation error content
+ * Related to: Stardial security hardening — reflected validation error content
  */
 
 import { describe, it, expect, vi, beforeEach } from "vitest";

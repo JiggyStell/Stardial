@@ -85,30 +85,30 @@ For the complete inventory of every metric, owner, alert threshold, and missing 
 
 Exposed series:
 
-- `splitnaira_validation_failures_total` — response schema validation failures
-- `splitnaira_http_requests_total{method,route,status}` — total HTTP requests by route and status
-- `splitnaira_http_request_duration_seconds_sum{method,route}` — cumulative request latency in seconds
-- `splitnaira_http_request_duration_seconds_count{method,route}` — number of latency samples per route
-- `splitnaira_http_requests_inflight` — current in-flight HTTP requests
-- `splitnaira_http_request_payload_bytes{route_group}` — histogram (`_bucket`/`_sum`/`_count`) of declared request body sizes by route group (Issue #1090); see [Request payload size telemetry](#request-payload-size-telemetry-issue-1090)
-- `splitnaira_http_request_payload_rejected_total{route_group}` — requests rejected with 413 because the body exceeded the 1 MB limit (Issue #1090)
-- `splitnaira_process_uptime_seconds`
-- `splitnaira_process_heap_bytes`
-- `splitnaira_info{version="..."}`
+- `stardial_validation_failures_total` — response schema validation failures
+- `stardial_http_requests_total{method,route,status}` — total HTTP requests by route and status
+- `stardial_http_request_duration_seconds_sum{method,route}` — cumulative request latency in seconds
+- `stardial_http_request_duration_seconds_count{method,route}` — number of latency samples per route
+- `stardial_http_requests_inflight` — current in-flight HTTP requests
+- `stardial_http_request_payload_bytes{route_group}` — histogram (`_bucket`/`_sum`/`_count`) of declared request body sizes by route group (Issue #1090); see [Request payload size telemetry](#request-payload-size-telemetry-issue-1090)
+- `stardial_http_request_payload_rejected_total{route_group}` — requests rejected with 413 because the body exceeded the 1 MB limit (Issue #1090)
+- `stardial_process_uptime_seconds`
+- `stardial_process_heap_bytes`
+- `stardial_info{version="..."}`
 - `projects_created_total` — total projects created
 - `distributions_executed_total` — total distributions executed
 - `deposits_received_total` — total deposits received
 - `sse_connections_active` — active SSE connections (#1166 — now actually wired to connect/disconnect events; previously defined but never incremented)
 - `sse_disconnects_total` — cumulative SSE client disconnects (#1166); a rate spike indicates client churn even when the active gauge looks flat
-- `splitnaira_rpc_retry_attempts_total` — total RPC retry attempts (Issue #836)
-- `splitnaira_rpc_retry_max_attempts_reached_total` — times the retry budget was fully consumed without success (Issue #836)
-- `splitnaira_rpc_retry_duration_ms_total` — cumulative sleeper delay between RPC retry attempts in milliseconds (Issue #836)
-- `splitnaira_rpc_retry_outcomes_total{operation,outcome,endpoint}` — final outcome of RPC retry sequences labelled by operation and endpoint (Issue #836)
-- `splitnaira_rpc_retry_budget_max_retries` — hard ceiling on retries per RPC call (Issue #1089)
-- `splitnaira_rpc_retry_budget_{sequences,allowed,used,exhausted}_total{operation,endpoint}` — per-operation retry budget accounting (Issue #1089); see [Bounded retry budget](#bounded-retry-budget-issue-1089)
-- `splitnaira_event_listener_ledger_lag` — ledgers between the newest ledger observed by the event listener and its last processed ledger
-- `splitnaira_event_listener_last_processed_ledger` — last ledger the listener processed
-- `splitnaira_event_listener_latest_observed_ledger` — latest ledger reported by the listener's Soroban RPC poll
+- `stardial_rpc_retry_attempts_total` — total RPC retry attempts (Issue #836)
+- `stardial_rpc_retry_max_attempts_reached_total` — times the retry budget was fully consumed without success (Issue #836)
+- `stardial_rpc_retry_duration_ms_total` — cumulative sleeper delay between RPC retry attempts in milliseconds (Issue #836)
+- `stardial_rpc_retry_outcomes_total{operation,outcome,endpoint}` — final outcome of RPC retry sequences labelled by operation and endpoint (Issue #836)
+- `stardial_rpc_retry_budget_max_retries` — hard ceiling on retries per RPC call (Issue #1089)
+- `stardial_rpc_retry_budget_{sequences,allowed,used,exhausted}_total{operation,endpoint}` — per-operation retry budget accounting (Issue #1089); see [Bounded retry budget](#bounded-retry-budget-issue-1089)
+- `stardial_event_listener_ledger_lag` — ledgers between the newest ledger observed by the event listener and its last processed ledger
+- `stardial_event_listener_last_processed_ledger` — last ledger the listener processed
+- `stardial_event_listener_latest_observed_ledger` — latest ledger reported by the listener's Soroban RPC poll
 
 ### Request payload size telemetry (Issue #1090)
 
@@ -133,16 +133,16 @@ Useful queries:
 
 ```promql
 # P95 declared body size per route group
-histogram_quantile(0.95, sum by (route_group, le) (rate(splitnaira_http_request_payload_bytes_bucket[15m])))
+histogram_quantile(0.95, sum by (route_group, le) (rate(stardial_http_request_payload_bytes_bucket[15m])))
 
 # Share of payloads above 256 KiB (approaching the 1 MB limit)
-1 - sum by (route_group) (rate(splitnaira_http_request_payload_bytes_bucket{le="262144"}[15m]))
-  / sum by (route_group) (rate(splitnaira_http_request_payload_bytes_count[15m]))
+1 - sum by (route_group) (rate(stardial_http_request_payload_bytes_bucket{le="262144"}[15m]))
+  / sum by (route_group) (rate(stardial_http_request_payload_bytes_count[15m]))
 ```
 
 | Signal | Suggested rule | Action |
 |---|---|---|
-| Oversized-body rejections | `sum by (route_group) (increase(splitnaira_http_request_payload_rejected_total[15m])) > 10` | For `splits`/`users`, check for a frontend regression sending bloated bodies; for `other`, treat it as probing traffic and review rate-limit and WAF logs. |
+| Oversized-body rejections | `sum by (route_group) (increase(stardial_http_request_payload_rejected_total[15m])) > 10` | For `splits`/`users`, check for a frontend regression sending bloated bodies; for `other`, treat it as probing traffic and review rate-limit and WAF logs. |
 | Payload size drift | P95 for a group doubles week-over-week | Correlate with recent deploys; large collaborator lists or metadata changes are the usual cause. |
 
 ### Background listener ledger lag
@@ -152,7 +152,7 @@ the Prometheus scrape and alert route. The listener persists both its opaque
 Soroban event cursor and its last processed ledger in `service_state`, so the
 lag signal survives a process restart.
 
-`splitnaira_event_listener_ledger_lag` is emitted only after the listener has
+`stardial_event_listener_ledger_lag` is emitted only after the listener has
 observed a latest ledger and processed an event ledger. Its absence during an
 idle cursor-only startup is expected; use `/ops/status` to inspect the
 `eventListener.ledgerLag` fields while it warms up. A value of zero is healthy.
@@ -161,14 +161,14 @@ Recommended alerts:
 
 | Severity | Expression | First response |
 |----------|------------|----------------|
-| Warning | `splitnaira_event_listener_ledger_lag > 20 for 5m` | Check `/ops/status`, RPC retry metrics, and listener logs. |
-| Critical | `splitnaira_event_listener_ledger_lag > 100 for 10m` | Page Backend on-call; check DB health and consider the stuck-payouts runbook. |
+| Warning | `stardial_event_listener_ledger_lag > 20 for 5m` | Check `/ops/status`, RPC retry metrics, and listener logs. |
+| Critical | `stardial_event_listener_ledger_lag > 100 for 10m` | Page Backend on-call; check DB health and consider the stuck-payouts runbook. |
 
 The listener's 10,000-ledger catch-up cap remains a safety guard, not an SLO:
 if it is hit, investigate the outage window because older events may need a
 targeted backfill.
 
-Contract-level telemetry is also available through on-chain event topics emitted by the SplitNaira contract. Analytics consumers should combine backend metrics with contract event streams for richer Insights.
+Contract-level telemetry is also available through on-chain event topics emitted by the Stardial contract. Analytics consumers should combine backend metrics with contract event streams for richer Insights.
 
 Scrape from internal network only; do not expose publicly without auth.
 
@@ -178,7 +178,7 @@ Scrape from internal network only; do not expose publicly without auth.
 triage. Platform Engineering owns the Prometheus scrape, alert rule, and
 notification route.
 
-`splitnaira_validation_failures_total` counts response schema mismatches from
+`stardial_validation_failures_total` counts response schema mismatches from
 `withResponseValidation`, not client 4xx request-validation rejections. In
 strict mode, these mismatches become 500 responses; in non-strict mode they
 are logged and the original response is sent. A rise usually indicates API
@@ -190,30 +190,30 @@ creating a misleading percentage alert.
 
 ```yaml
 groups:
-  - name: splitnaira-response-validation
+  - name: stardial-response-validation
     rules:
-      - alert: SplitNairaElevatedResponseValidationFailureRate
+      - alert: StardialElevatedResponseValidationFailureRate
         expr: |
           (
-            sum(increase(splitnaira_validation_failures_total[5m]))
+            sum(increase(stardial_validation_failures_total[5m]))
             /
-            clamp_min(sum(increase(splitnaira_http_requests_total[5m])), 1)
+            clamp_min(sum(increase(stardial_http_requests_total[5m])), 1)
           ) >= 0.01
-          and sum(increase(splitnaira_validation_failures_total[5m])) >= 5
+          and sum(increase(stardial_validation_failures_total[5m])) >= 5
         for: 5m
         labels:
           severity: warning
           owner: backend
         annotations:
           summary: Response validation failures exceed 1% of requests.
-      - alert: SplitNairaCriticalResponseValidationFailureRate
+      - alert: StardialCriticalResponseValidationFailureRate
         expr: |
           (
-            sum(increase(splitnaira_validation_failures_total[5m]))
+            sum(increase(stardial_validation_failures_total[5m]))
             /
-            clamp_min(sum(increase(splitnaira_http_requests_total[5m])), 1)
+            clamp_min(sum(increase(stardial_http_requests_total[5m])), 1)
           ) >= 0.05
-          and sum(increase(splitnaira_validation_failures_total[5m])) >= 10
+          and sum(increase(stardial_validation_failures_total[5m])) >= 10
         for: 5m
         labels:
           severity: critical
@@ -244,8 +244,8 @@ tokens, API keys, or raw request bodies into queries or tickets.
 | Log system | Query | Use |
 |------------|-------|-----|
 | Render log search | `requestId:"<REQUEST_ID>"` | Find structured application and request logs for one request. |
-| Grafana Loki | `{service="splitnaira-backend"} | json | requestId="<REQUEST_ID>"` | Restrict to the backend stream, then parse JSON fields. |
-| Elastic / Kibana KQL | `service.name : "splitnaira-backend" and requestId : "<REQUEST_ID>"` | Correlate API, retry, and error records. |
+| Grafana Loki | `{service="stardial-backend"} | json | requestId="<REQUEST_ID>"` | Restrict to the backend stream, then parse JSON fields. |
+| Elastic / Kibana KQL | `service.name : "stardial-backend" and requestId : "<REQUEST_ID>"` | Correlate API, retry, and error records. |
 | CloudWatch Logs Insights | `fields @timestamp, level, message, requestId | filter requestId = "<REQUEST_ID>" | sort @timestamp asc` | Produce a chronological incident timeline. |
 
 If the first query finds only an HTTP access line, expand the time range by two
@@ -273,8 +273,8 @@ When `BACKEND_METRICS_URL` is also configured, the smoke check validates the ana
    whether the overall `status` is `degraded` (investigate, don't page) or
    `not_ready` (treat as an outage); see "Degraded-mode readiness contract"
    above.
-4. Review metrics around the failure window (`splitnaira_validation_failures_total` spikes indicate schema drift).
-5. For missing payout updates, compare `splitnaira_event_listener_ledger_lag`
+4. Review metrics around the failure window (`stardial_validation_failures_total` spikes indicate schema drift).
+5. For missing payout updates, compare `stardial_event_listener_ledger_lag`
    with `/ops/status` before initiating a manual backfill.
 
 ## Rollback
@@ -318,15 +318,15 @@ Recommended Prometheus alerts:
 
 | Signal | Expression | Rationale |
 |--------|-----------|-----------|
-| Retry budget exhausted for any operation | `rate(splitnaira_rpc_retry_max_attempts_reached_total[5m]) > 0` | Burning the full budget means callers will start seeing 502/504 responses |
-| **Repeated exhaustion for the same operation (#1164)** | `sum by (operation) (increase(splitnaira_rpc_retry_outcomes_total{outcome="exhausted"}[15m])) >= 3` | A single exhaustion can be a transient blip; **3 or more within 15 minutes for the same operation** means the RPC endpoint is sustained-degraded for that call path, not just having a bad moment. This is the signal that should page, not just log — treat it as distinct from (and higher severity than) the "any >0" rule above, which is informational. |
-| Sustained `simulateTransaction` timeouts | `sum by (endpoint) (rate(splitnaira_rpc_retry_outcomes_total{outcome="timeout"}[5m])) > 0.1` | Simulation latency past `timeoutMs` means RPC is degraded for write paths |
-| Cumulative retry sleep growing without success | `increase(splitnaira_rpc_retry_duration_ms_total[15m]) > 60000` | Backoffs are stacking, suggesting the RPC is flapping |
-| Validation rejections from RPC | `sum by (operation) (rate(splitnaira_rpc_retry_outcomes_total{outcome="validation_error"}[5m])) > 0` | Indicates a client is sending payloads the RPC refuses — usually a contract arg drift |
+| Retry budget exhausted for any operation | `rate(stardial_rpc_retry_max_attempts_reached_total[5m]) > 0` | Burning the full budget means callers will start seeing 502/504 responses |
+| **Repeated exhaustion for the same operation (#1164)** | `sum by (operation) (increase(stardial_rpc_retry_outcomes_total{outcome="exhausted"}[15m])) >= 3` | A single exhaustion can be a transient blip; **3 or more within 15 minutes for the same operation** means the RPC endpoint is sustained-degraded for that call path, not just having a bad moment. This is the signal that should page, not just log — treat it as distinct from (and higher severity than) the "any >0" rule above, which is informational. |
+| Sustained `simulateTransaction` timeouts | `sum by (endpoint) (rate(stardial_rpc_retry_outcomes_total{outcome="timeout"}[5m])) > 0.1` | Simulation latency past `timeoutMs` means RPC is degraded for write paths |
+| Cumulative retry sleep growing without success | `increase(stardial_rpc_retry_duration_ms_total[15m]) > 60000` | Backoffs are stacking, suggesting the RPC is flapping |
+| Validation rejections from RPC | `sum by (operation) (rate(stardial_rpc_retry_outcomes_total{outcome="validation_error"}[5m])) > 0` | Indicates a client is sending payloads the RPC refuses — usually a contract arg drift |
 
 ### Why "repeated" needs its own threshold (#1164)
 
-The existing `rate(splitnaira_rpc_retry_max_attempts_reached_total[5m]) > 0`
+The existing `rate(stardial_rpc_retry_max_attempts_reached_total[5m]) > 0`
 rule fires the same way whether the RPC endpoint had a single fluky failure
 or has been failing every call for the last hour — it can't tell the
 difference, because it only asks "did this happen at all". That's fine as a
@@ -334,7 +334,7 @@ low-severity signal to watch, but it's not enough to page on, and pages
 based on it either get ignored (too noisy) or over-escalate a genuine
 one-off blip.
 
-The fix isn't a new metric — `splitnaira_rpc_retry_outcomes_total{operation,
+The fix isn't a new metric — `stardial_rpc_retry_outcomes_total{operation,
 outcome, endpoint}` already carries everything needed, since every
 `exhausted` outcome is recorded per-operation. `sum by (operation)
 (increase(...[15m])) >= 3` asks "how many times has *this specific
@@ -362,24 +362,24 @@ Series, all labelled `{operation, endpoint}`:
 
 | Metric | Meaning |
 |---|---|
-| `splitnaira_rpc_retry_budget_sequences_total` | Finished `executeWithRetry` calls |
-| `splitnaira_rpc_retry_budget_allowed_total` | Sum of retry budgets those calls were granted |
-| `splitnaira_rpc_retry_budget_used_total` | Sum of retries actually consumed (attempts − 1) |
-| `splitnaira_rpc_retry_budget_exhausted_total` | Calls that spent the whole budget without success, **including** calls whose last attempt timed out (`splitnaira_rpc_retry_max_attempts_reached_total` counts only the `exhausted` outcome) |
+| `stardial_rpc_retry_budget_sequences_total` | Finished `executeWithRetry` calls |
+| `stardial_rpc_retry_budget_allowed_total` | Sum of retry budgets those calls were granted |
+| `stardial_rpc_retry_budget_used_total` | Sum of retries actually consumed (attempts − 1) |
+| `stardial_rpc_retry_budget_exhausted_total` | Calls that spent the whole budget without success, **including** calls whose last attempt timed out (`stardial_rpc_retry_max_attempts_reached_total` counts only the `exhausted` outcome) |
 
-Plus the gauge `splitnaira_rpc_retry_budget_max_retries` (the ceiling).
+Plus the gauge `stardial_rpc_retry_budget_max_retries` (the ceiling).
 
 Budget burn ratio is an early-warning signal: retries climb before calls start failing.
 
 ```promql
-sum by (operation) (rate(splitnaira_rpc_retry_budget_used_total[15m]))
-  / clamp_min(sum by (operation) (rate(splitnaira_rpc_retry_budget_allowed_total[15m])), 1e-9)
+sum by (operation) (rate(stardial_rpc_retry_budget_used_total[15m]))
+  / clamp_min(sum by (operation) (rate(stardial_rpc_retry_budget_allowed_total[15m])), 1e-9)
 ```
 
 | Signal | Suggested rule | Action |
 |---|---|---|
 | Budget burn rising | burn ratio > 0.25 for 15m on any operation | RPC is degrading; check provider status and `/health/ready` before it becomes 502/504s |
-| Budget exhausted (incl. timeouts) | `sum by (operation) (increase(splitnaira_rpc_retry_budget_exhausted_total[15m])) >= 3` | Same paging threshold as #1164, but also covers timeout exhaustion |
+| Budget exhausted (incl. timeouts) | `sum by (operation) (increase(stardial_rpc_retry_budget_exhausted_total[15m])) >= 3` | Same paging threshold as #1164, but also covers timeout exhaustion |
 | Clamp warnings in logs | any `RPC retry budget clamped` | A code change asked for an oversized budget; fix the call site |
 
 ### Secret-hygiene guarantees

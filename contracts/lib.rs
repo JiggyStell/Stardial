@@ -72,7 +72,7 @@ const PROJECT_TTL_BUMP_LEDGERS: u32 = 100_000;
 /// Default maximum number of collaborators allowed in a single project.
 ///
 /// This is the value used when no admin override has been configured via
-/// [`SplitNairaContract::set_max_collaborators`]. Keeping it as the default
+/// [`StardialContract::set_max_collaborators`]. Keeping it as the default
 /// preserves the historical contract behaviour for existing deployments.
 const DEFAULT_MAX_COLLABORATORS: u32 = 50;
 
@@ -215,10 +215,10 @@ pub struct ProjectSummary {
 // ============================================================
 
 #[contract]
-pub struct SplitNairaContract;
+pub struct StardialContract;
 
 #[contractimpl]
-impl SplitNairaContract {
+impl StardialContract {
     // ----------------------------------------------------------
     // ADMIN + TOKEN ALLOWLIST
     // ----------------------------------------------------------

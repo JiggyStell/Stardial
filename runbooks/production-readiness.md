@@ -1,6 +1,6 @@
 # Production Readiness Checklist
 
-This document serves as the operational runbook to ensure `SplitNaira` is ready for mainnet deployment and stable production load.
+This document serves as the operational runbook to ensure `Stardial` is ready for mainnet deployment and stable production load.
 
 ## 1. Security Hardening
 - [x] **Helmet**: Ensure `helmet` is configured with strict Content Security Policy (CSP), HSTS (1-year preload), Frameguard, and XSS Filters.

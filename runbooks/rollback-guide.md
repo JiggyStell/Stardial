@@ -10,14 +10,14 @@ If a backend deployment introduces critical failures (e.g., 5xx error spikes, me
 3. **Revert Deployment**:
    - If using containerized deployments (Docker/K8s), rollback to the previous stable image tag:
      ```bash
-     kubectl rollout undo deployment/splitnaira-backend
+     kubectl rollout undo deployment/stardial-backend
      ```
    - If deploying via bare-metal/PM2, pull the stable commit and restart:
      ```bash
      git checkout <STABLE_COMMIT_HASH>
      npm ci
      npm run build
-     pm2 restart splitnaira-backend
+     pm2 restart stardial-backend
      ```
 4. **Re-enable Writes After Verification**: Once the stable release is healthy and payout state is confirmed, restore `PAYMENTS_ADMIN_WRITE_ENABLED=true`.
 

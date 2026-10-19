@@ -1,6 +1,6 @@
 #![cfg(test)]
 
-//! Authorization boundary tests for SplitNaira (issue #865).
+//! Authorization boundary tests for Stardial (issue #865).
 //!
 //! These tests verify that sensitive state-mutating entry points enforce their
 //! documented authorization boundaries and that rejected calls do not mutate
@@ -22,7 +22,7 @@
 //! belongs in the reliability and functional test suites.
 
 use crate::{
-    errors::SplitError, Collaborator, SplitNairaContract, SplitNairaContractClient, SplitProject,
+    errors::SplitError, Collaborator, StardialContract, StardialContractClient, SplitProject,
 };
 use soroban_sdk::{testutils::Address as _, token, vec, Address, Env, String, Symbol, Vec};
 
@@ -30,10 +30,10 @@ use soroban_sdk::{testutils::Address as _, token, vec, Address, Env, String, Sym
 // Shared helpers
 // -----------------------------------------------------------------------------
 
-/// Registers a SplitNaira contract and returns a ready-to-use client.
-fn make_client(env: &Env) -> SplitNairaContractClient {
-    let contract_id = env.register_contract(None, SplitNairaContract);
-    SplitNairaContractClient::new(env, &contract_id)
+/// Registers a Stardial contract and returns a ready-to-use client.
+fn make_client(env: &Env) -> StardialContractClient {
+    let contract_id = env.register_contract(None, StardialContract);
+    StardialContractClient::new(env, &contract_id)
 }
 
 /// Returns two collaborators with an even 50/50 split.
@@ -62,7 +62,7 @@ fn two_collabs(env: &Env) -> Vec<Collaborator> {
 fn setup_project<'a>(
     env: &'a Env,
     project_id: &'a Symbol,
-) -> (SplitNairaContractClient<'a>, Address, Address) {
+) -> (StardialContractClient<'a>, Address, Address) {
     let client = make_client(env);
 
     let token_admin = Address::generate(env);
@@ -86,7 +86,7 @@ fn setup_project<'a>(
 /// Mints tokens to `from` and deposits them into the project.
 fn deposit_to_project(
     env: &Env,
-    client: &SplitNairaContractClient,
+    client: &StardialContractClient,
     token: &Address,
     project_id: &Symbol,
     from: &Address,

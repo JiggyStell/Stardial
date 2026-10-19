@@ -176,7 +176,7 @@ On success the new address is stored and marked verified, the prior address (if 
 | Variable | Default | Meaning |
 |---|---|---|
 | `EMAIL_CHANGE_TOKEN_TTL` | `24h` | Lifetime of the confirmation link |
-| `EMAIL_CHANGE_URL_BASE` | `https://app.splitnaira.com/confirm-email-change` | Page the link opens; it receives `?token=...` |
+| `EMAIL_CHANGE_URL_BASE` | `https://app.stardial.com/confirm-email-change` | Page the link opens; it receives `?token=...` |
 
 ## Tests
 

@@ -1,6 +1,6 @@
 # Contributor Guide: Adding or Changing Contract Error Codes
 
-> Audience: SplitNaira contributors modifying `SplitError` values in the
+> Audience: Stardial contributors modifying `SplitError` values in the
 > Soroban contract. Use this guide for every PR that touches
 > [`contracts/errors.rs`](../contracts/errors.rs).
 
@@ -52,7 +52,7 @@ this as your PR checklist:
 | 3 | [`contracts/lib.rs`](../contracts/lib.rs) | If the variant is returned from a contract method, the call site must `use errors::SplitError;` and `return Err(SplitError::<NewVariant>);`. |
 | 4 | [`backend/src/lib/errors.ts`](../backend/src/lib/errors.ts) | Add the matching `ErrorCode` enum value, the `CONTRACT_ERROR_MAP` entry (numeric → code, message, remediation), and the `translateRawSorobanError` branches if the raw text patterns changed. |
 | 5 | [`contracts/scripts/generate-interface.mjs`](../contracts/scripts/generate-interface.mjs) | If the variant needs custom mapping, ensure the parser still extracts it. The default parser handles `SplitError` automatically. |
-| 6 | [`contracts/interface/splitnaira.contract-interface.json`](../contracts/interface/splitnaira.contract-interface.json) | Must be regenerated after the source change (see §3). |
+| 6 | [`contracts/interface/stardial.contract-interface.json`](../contracts/interface/stardial.contract-interface.json) | Must be regenerated after the source change (see §3). |
 | 7 | [`backend/src/generated/contract-types.ts`](../backend/src/generated/contract-types.ts) | Must be regenerated after the source change (see §3). |
 | 8 | [`frontend/src/generated/contract-types.ts`](../frontend/src/generated/contract-types.ts) | Must be regenerated after the source change (see §3). |
 | 9 | [`backend/src/__tests__/`](../backend/src/__tests__/) | Add tests covering the new error: backend translation (`translateSorobanError`) and, if relevant, retry-ability, idempotency, or admin-restriction behavior. |
@@ -80,7 +80,7 @@ cd contracts && cargo fmt -- --check && cd ..
 cd contracts && cargo clippy --all-targets -- -D warnings && cd ..
 
 # 3. Regenerate the machine-readable interface artifact from the source.
-#    This rebuilds contracts/interface/splitnaira.contract-interface.json
+#    This rebuilds contracts/interface/stardial.contract-interface.json
 #    from contracts/{lib,events,errors}.rs and Cargo.toml.
 npm run generate:contract-interface
 

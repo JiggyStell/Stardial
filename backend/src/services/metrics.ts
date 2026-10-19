@@ -240,10 +240,10 @@ export function getIdempotencyReplaysTotal(): number {
  *      `timeout`), and `endpoint` (a normalised host label like `rpc`).
  *
  * We expose four aggregate series from {@link getRpcRetrySnapshots}:
- * - `splitnaira_rpc_retry_attempts_total`  - attempts cumulatively, including the first try.
- * - `splitnaira_rpc_retry_max_attempts_reached_total` - times we burned the full retry budget.
- * - `splitnaira_rpc_retry_duration_ms_total` - sum of `attempt-1` retry-sleep ms, useful for tail latency.
- * - `splitnaira_rpc_retry_outcomes_total` - final outcome of a retry sequence, by label tuple.
+ * - `stardial_rpc_retry_attempts_total`  - attempts cumulatively, including the first try.
+ * - `stardial_rpc_retry_max_attempts_reached_total` - times we burned the full retry budget.
+ * - `stardial_rpc_retry_duration_ms_total` - sum of `attempt-1` retry-sleep ms, useful for tail latency.
+ * - `stardial_rpc_retry_outcomes_total` - final outcome of a retry sequence, by label tuple.
  */
 interface RpcRetryKey {
   operation: string;

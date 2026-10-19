@@ -1,12 +1,12 @@
 # Contract Storage Layout and Migrations
 
-This document specifies the persistent storage layout, key-value schemas, upgrade compatibility rules, and migration procedures for the SplitNaira smart contracts (`contracts/lib.rs`).
+This document specifies the persistent storage layout, key-value schemas, upgrade compatibility rules, and migration procedures for the Stardial smart contracts (`contracts/lib.rs`).
 
 ---
 
 ## 1. Storage Architecture Overview
 
-SplitNaira is built on the Stellar Soroban smart contract framework. All persistent state is managed via Soroban's `env.storage().persistent()` interface.
+Stardial is built on the Stellar Soroban smart contract framework. All persistent state is managed via Soroban's `env.storage().persistent()` interface.
 
 ### Storage Characteristics
 

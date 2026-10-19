@@ -66,13 +66,13 @@ function verifyUnchanged(paths, before) {
   process.exit(1);
 }
 
-console.log("SplitNaira data integrity verification");
+console.log("Stardial data integrity verification");
 console.log("====================================");
 
 verifyReadmeErrorCodes();
 console.log("✓ contracts/README.md error table matches errors.rs");
 
-const interfacePaths = ["contracts/interface/splitnaira.contract-interface.json"];
+const interfacePaths = ["contracts/interface/stardial.contract-interface.json"];
 const interfaceBefore = snapshot(interfacePaths);
 run("node contracts/scripts/generate-interface.mjs");
 verifyUnchanged(interfacePaths, interfaceBefore);

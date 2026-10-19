@@ -1,13 +1,13 @@
-# SplitNaira for GrantFox
+# Stardial for GrantFox
 
 ## Summary
-SplitNaira is an open-source royalty-splitting platform for Nigeria's creative economy. It helps creators, labels, and collaborators define and distribute revenue splits transparently on Stellar Soroban.
+Stardial is an open-source royalty-splitting platform for Nigeria's creative economy. It helps creators, labels, and collaborators define and distribute revenue splits transparently on Stellar Soroban.
 
 ## Problem
 Creative teams often manage royalties in spreadsheets, manual payout runs, and informal agreements. That creates avoidable disputes, slow settlement, and poor visibility into who should get paid.
 
 ## Solution
-SplitNaira combines Soroban smart contracts, a production backend, and a wallet-enabled frontend to make royalty splits auditable, testable, and easier to operate.
+Stardial combines Soroban smart contracts, a production backend, and a wallet-enabled frontend to make royalty splits auditable, testable, and easier to operate.
 
 ## Why It Fits A Grant
 - Improves financial transparency for independent creators and small teams.

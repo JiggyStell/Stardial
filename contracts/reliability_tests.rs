@@ -1,6 +1,6 @@
 #![cfg(test)]
 
-//! Reliability tests for SplitNaira.
+//! Reliability tests for Stardial.
 //!
 //! These tests verify that the contract:
 //! - Returns the expected error for invalid inputs.
@@ -14,16 +14,16 @@
 
 use soroban_sdk::{testutils::Address as _, vec, Address, Env, String, Symbol, Vec};
 
-use crate::{errors::SplitError, Collaborator, SplitNairaContract, SplitNairaContractClient};
+use crate::{errors::SplitError, Collaborator, StardialContract, StardialContractClient};
 
 // ─────────────────────────────────────────────────────────────────────────────
 // Shared test helpers
 // ─────────────────────────────────────────────────────────────────────────────
 
-/// Registers a fresh SplitNaira contract and returns its client and address.
-fn make_client<'a>(env: &'a Env) -> (SplitNairaContractClient<'a>, Address) {
-    let contract_id = env.register_contract(None, SplitNairaContract);
-    let client = SplitNairaContractClient::new(env, &contract_id);
+/// Registers a fresh Stardial contract and returns its client and address.
+fn make_client<'a>(env: &'a Env) -> (StardialContractClient<'a>, Address) {
+    let contract_id = env.register_contract(None, StardialContract);
+    let client = StardialContractClient::new(env, &contract_id);
 
     (client, contract_id)
 }
@@ -71,7 +71,7 @@ fn create_token(env: &Env) -> Address {
 fn setup_project<'a>(
     env: &'a Env,
     project_id: &'a Symbol,
-) -> (SplitNairaContractClient<'a>, Address, Address) {
+) -> (StardialContractClient<'a>, Address, Address) {
     let (client, _) = make_client(env);
     let token = create_token(env);
     let owner = Address::generate(env);

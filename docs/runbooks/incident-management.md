@@ -2,7 +2,7 @@
 
 ## Purpose
 
-This runbook captures the operational response for CI/CD incidents affecting SplitNaira deployments, builds, and release automation.
+This runbook captures the operational response for CI/CD incidents affecting Stardial deployments, builds, and release automation.
 It complements the existing CI/CD reliability, security, and observability runbooks by focusing on incident detection, triage, rollback, and post-incident recovery.
 
 ## Incident classes

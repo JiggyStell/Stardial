@@ -1,8 +1,8 @@
 #!/usr/bin/env node
 /**
- * TTL Refresh Operator Script for SplitNaira
+ * TTL Refresh Operator Script for Stardial
  * 
- * This script calls the `refresh_project_storage` function on the SplitNaira contract
+ * This script calls the `refresh_project_storage` function on the Stardial contract
  * to extend TTL for project storage entries, preventing them from expiring.
  * 
  * Usage:
@@ -21,7 +21,7 @@
  * Environment Variables:
  *   SOROBAN_RPC_URL - Soroban RPC endpoint
  *   SOROBAN_NETWORK_PASSPHRASE - Network passphrase
- *   CONTRACT_ID - SplitNaira contract address
+ *   CONTRACT_ID - Stardial contract address
  *   OPERATOR_SECRET_KEY - Secret key for the operator account (required for actual execution)
  *   SIMULATOR_ACCOUNT - Account for simulation (optional, defaults to operator account)
  */
@@ -110,7 +110,7 @@ function parseArgs() {
 // Show help message
 function showHelp() {
   console.log(`
-TTL Refresh Operator Script for SplitNaira
+TTL Refresh Operator Script for Stardial
 
 Usage:
   node scripts/refresh-project-ttl.mjs [options]
@@ -132,7 +132,7 @@ Examples:
   node scripts/refresh-project-ttl.mjs --all --dry-run
 
 Environment Variables:
-  CONTRACT_ID              SplitNaira contract address (required)
+  CONTRACT_ID              Stardial contract address (required)
   OPERATOR_SECRET_KEY      Secret key for operator account (required for execution)
   SOROBAN_RPC_URL         Soroban RPC endpoint (default: testnet)
   SOROBAN_NETWORK_PASSPHRASE  Network passphrase (default: testnet)

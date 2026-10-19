@@ -14,7 +14,7 @@ export const docsRouter = Router();
 
 docsRouter.use("/", swaggerUi.serve);
 docsRouter.get("/", swaggerUi.setup(openapiSpec, {
-  customSiteTitle: "SplitNaira API Docs",
+  customSiteTitle: "Stardial API Docs",
 }));
 
 // Serve the raw OpenAPI JSON so tooling can always fetch the latest spec

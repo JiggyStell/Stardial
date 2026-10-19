@@ -1207,7 +1207,7 @@ dependencies = [
 ]
 
 [[package]]
-name = "splitnaira-contracts"
+name = "stardial-contracts"
 version = "0.1.0"
 dependencies = [
  "derive_arbitrary",

@@ -1,6 +1,6 @@
 # Secrets and Rotation Guide
 
-This document captures the secret inventory, ownership, and rotation procedures for SplitNaira.
+This document captures the secret inventory, ownership, and rotation procedures for Stardial.
 
 > Never commit `.env`, `.env.local`, or any files containing live secrets to git. Use host secret stores, platform environment variables, or GitHub Actions secrets instead.
 
@@ -91,7 +91,7 @@ The Render deploy hook is a trigger URL used by GitHub Actions to start backend 
 
 ## Secret Scanning Policy
 
-SplitNaira enforces secret scanning at multiple layers to prevent credential leakage into source control, CI logs, and deployment artifacts.
+Stardial enforces secret scanning at multiple layers to prevent credential leakage into source control, CI logs, and deployment artifacts.
 
 ### Required Scanning Layers
 

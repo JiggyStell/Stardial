@@ -1,6 +1,6 @@
 # Contract Release and Upgrade Runbook
 
-This runbook describes the end-to-end release/upgrade path for the `contracts/` workspace in SplitNaira.
+This runbook describes the end-to-end release/upgrade path for the `contracts/` workspace in Stardial.
 
 ## Contract Interface Changes
 - Before releasing any interface-affecting update, complete [CONTRACT_INTERFACE_RELEASE_CHECKLIST.md](./CONTRACT_INTERFACE_RELEASE_CHECKLIST.md).
@@ -9,7 +9,7 @@ This runbook describes the end-to-end release/upgrade path for the `contracts/` 
 ## 1. Prerequisites
 - Rust toolchain 1.76+ (stable)
 - `cargo` installed and on PATH
-- Node.js 18+ for regenerating `contracts/interface/splitnaira.contract-interface.json`
+- Node.js 18+ for regenerating `contracts/interface/stardial.contract-interface.json`
 - Soroban CLI (v0.28+ recommended)
 - Stellar CLI (for non‑WASM key management as needed)
 - Local testnet account with Lumens for fees
@@ -22,12 +22,12 @@ This runbook describes the end-to-end release/upgrade path for the `contracts/` 
 4. `cargo clippy --all-targets -- -D warnings`
 5. `cd .. && npm run generate:contract-interface`
 6. `npm run generate:contract-types`
-7. Confirm `contracts/interface/splitnaira.contract-interface.json` and generated types are committed with any contract surface change.
+7. Confirm `contracts/interface/stardial.contract-interface.json` and generated types are committed with any contract surface change.
 
 ## 3. Build WASM bundle
 1. `cargo build --release --target wasm32-unknown-unknown`
 2. `wasm-bindgen` is not required for Soroban contracts.
-3. Verify artifact path: `contracts/target/wasm32v1-none/release/splitnaira_contract.wasm`
+3. Verify artifact path: `contracts/target/wasm32v1-none/release/stardial_contract.wasm`
 4. Refresh the machine-consumable interface artifact if method, event, type, or error definitions changed:
    - `npm run generate:contract-interface`
    - `npm run generate:contract-types`
@@ -35,7 +35,7 @@ This runbook describes the end-to-end release/upgrade path for the `contracts/` 
 1. `rustup target add wasm32v1-none` (one-time)
 2. `cargo build --release --target wasm32v1-none`
 3. `wasm-bindgen` is not required for Soroban contracts.
-4. Verify artifact path: `contracts/target/wasm32v1-none/release/splitnaira_contract.wasm`
+4. Verify artifact path: `contracts/target/wasm32v1-none/release/stardial_contract.wasm`
 
 ## 4. Run contract-level testing
 - Unit test suite in `contracts/tests.rs` includes behavior, edge cases, event emission.
@@ -48,7 +48,7 @@ This runbook describes the end-to-end release/upgrade path for the `contracts/` 
    - `stellar keys generate deployer`
    - `stellar keys fund deployer --network testnet`
 3. Deploy contract:
-   - `stellar contract deploy --wasm target/wasm32v1-none/release/splitnaira_contract.wasm --source deployer --network testnet`
+   - `stellar contract deploy --wasm target/wasm32v1-none/release/stardial_contract.wasm --source deployer --network testnet`
 4. Record contract ID and update frontend/backend env `.env` variables.
 
 ## 6. Smoke test on testnet
@@ -151,7 +151,7 @@ Before starting an upgrade, review the [Contract Storage Layout and Migrations](
 - [ ] All tests pass locally + GitHub Actions
 - [ ] Version and CLI docs aligned (`README.md`, `docs/SOROBAN_SETUP.md`)
 - [ ] Contract event behavior is stable
-- [ ] `contracts/interface/splitnaira.contract-interface.json` refreshed and reviewed
+- [ ] `contracts/interface/stardial.contract-interface.json` refreshed and reviewed
 - [ ] Runbook updated for any new contract entrypoints
 - [ ] Release note summarized in PR
 

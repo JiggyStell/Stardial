@@ -134,20 +134,20 @@ function Sidebar({
           <div className="flex items-center gap-2">
             <Image
               src="/logo.svg"
-              alt="SplitNaira logo"
+              alt="Stardial logo"
               width={32}
               height={32}
               className="shrink-0"
             />
             <span className="font-display font-bold text-[var(--brand-accent)] text-lg truncate">
-              SplitNaira
+              Stardial
             </span>
           </div>
         )}
         {collapsed && (
           <Image
             src="/logo.svg"
-            alt="SplitNaira logo"
+            alt="Stardial logo"
             width={32}
             height={32}
             className="mx-auto"

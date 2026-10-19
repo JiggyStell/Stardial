@@ -138,7 +138,7 @@ describe("Route Integration Tests", () => {
     it("should return API info", async () => {
       const res = await request(app).get("/");
       expect(res.status).toBe(200);
-      expect(res.body.name).toBe("SplitNaira API");
+      expect(res.body.name).toBe("Stardial API");
     });
   });
 
@@ -252,7 +252,7 @@ describe("Route Integration Tests", () => {
       const originalRenderHook = process.env.RENDER_BACKEND_DEPLOY_HOOK_URL;
 
       process.env.NODE_ENV = "production";
-      process.env.CORS_ORIGIN = "https://app.splitnaira.com";
+      process.env.CORS_ORIGIN = "https://app.stardial.com";
       delete process.env.MAINNET_CONTRACT_ID;
       delete process.env.RENDER_BACKEND_DEPLOY_HOOK_URL;
 

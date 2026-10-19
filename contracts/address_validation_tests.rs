@@ -13,7 +13,7 @@
 //! Each invalid input must return the documented `SplitError` and must not
 //! create a project.
 
-use crate::{errors::SplitError, Collaborator, SplitNairaContract, SplitNairaContractClient};
+use crate::{errors::SplitError, Collaborator, StardialContract, StardialContractClient};
 extern crate alloc;
 
 use alloc::boxed::Box;
@@ -23,11 +23,11 @@ use soroban_sdk::{testutils::Address as _, vec, Address, Env, String, Symbol, Ve
 // Shared helpers
 // -----------------------------------------------------------------------------
 
-/// Creates a test environment with a registered SplitNaira contract and token.
+/// Creates a test environment with a registered Stardial contract and token.
 ///
 /// Authentication is mocked because these tests focus on collaborator
 /// validation rather than Soroban authorization.
-fn setup() -> (Env, SplitNairaContractClient<'static>, Address) {
+fn setup() -> (Env, StardialContractClient<'static>, Address) {
     // The env is leaked so the returned client can hold a `'static` borrow of
     // it; `Env` is a cheap handle onto a shared host, so cloning it out of the
     // leak shares the same host state.
@@ -37,8 +37,8 @@ fn setup() -> (Env, SplitNairaContractClient<'static>, Address) {
     let token_admin = Address::generate(env);
     let token = env.register_stellar_asset_contract(token_admin);
 
-    let contract_id = env.register_contract(None, SplitNairaContract);
-    let client = SplitNairaContractClient::new(env, &contract_id);
+    let contract_id = env.register_contract(None, StardialContract);
+    let client = StardialContractClient::new(env, &contract_id);
 
     (env.clone(), client, token)
 }
@@ -60,7 +60,7 @@ fn collaborator(env: &Env, address: Address, alias: &str, basis_points: u32) -> 
 /// Attempts to create a project using the supplied collaborator list.
 fn try_create_project(
     env: &Env,
-    client: &SplitNairaContractClient,
+    client: &StardialContractClient,
     token: &Address,
     id: &Symbol,
     collaborators: &Vec<Collaborator>,
@@ -81,7 +81,7 @@ fn try_create_project(
 /// Asserts that an invalid collaborator list does not create a project.
 fn assert_invalid_collaborators(
     env: &Env,
-    client: &SplitNairaContractClient,
+    client: &StardialContractClient,
     token: &Address,
     id: &Symbol,
     collaborators: &Vec<Collaborator>,

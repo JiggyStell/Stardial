@@ -1,7 +1,7 @@
 # Contracts Compliance - Wave 5
 
 ## Objective
-Deliver production-grade Soroban smart contract compliance improvements for SplitNaira, with a focus on Wallet & Payments.
+Deliver production-grade Soroban smart contract compliance improvements for Stardial, with a focus on Wallet & Payments.
 
 ## Implementation Plan
 

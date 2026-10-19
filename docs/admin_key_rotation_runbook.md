@@ -1,6 +1,6 @@
 # Soroban Contract Admin Key Rotation Runbook
 
-This runbook outlines the operational procedure for rotating the administrative signing key (`ADMIN_SECRET`) for SplitNaira's Soroban smart contracts on Stellar.
+This runbook outlines the operational procedure for rotating the administrative signing key (`ADMIN_SECRET`) for Stardial's Soroban smart contracts on Stellar.
 
 ---
 
@@ -20,11 +20,11 @@ Rotating this key must be performed on-chain via an authorized state transition 
 ### Phase 1: Keypair Generation & Security Staging
 1. Generate a new cryptographic keypair on an isolated, air-gapped machine or hardware security module:
    ```bash
-   stellar keys generate --global splitnaira-contract-admin-v2 --network mainnet
+   stellar keys generate --global stardial-contract-admin-v2 --network mainnet
    ```
 2. Export the public address:
    ```bash
-   NEW_ADMIN_ADDRESS=$(stellar keys address splitnaira-contract-admin-v2)
+   NEW_ADMIN_ADDRESS=$(stellar keys address stardial-contract-admin-v2)
    echo "New Admin Address: $NEW_ADMIN_ADDRESS"
    ```
 3. Secure the secret key in cold storage or enterprise key custody (e.g. AWS CloudHSM / HashiCorp Vault Transit).
@@ -38,7 +38,7 @@ Rotating this key must be performed on-chain via an authorized state transition 
    ```bash
    stellar contract invoke \
      --id "$CONTRACT_ID" \
-     --source splitnaira-contract-admin-current \
+     --source stardial-contract-admin-current \
      --network mainnet \
      -- \
      set_admin --new_admin "$NEW_ADMIN_ADDRESS"

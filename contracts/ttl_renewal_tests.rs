@@ -21,7 +21,7 @@ use soroban_sdk::{
 };
 
 use crate::{
-    errors::SplitError, Collaborator, DataKey, SplitNairaContract, SplitNairaContractClient,
+    errors::SplitError, Collaborator, DataKey, StardialContract, StardialContractClient,
 };
 
 // ─────────────────────────────────────────────────────────────────────────────
@@ -29,14 +29,14 @@ use crate::{
 // ─────────────────────────────────────────────────────────────────────────────
 
 /// Creates a fresh test environment with mocked authorization and a test token.
-fn setup_env_with_token<'a>(env: &'a Env) -> (SplitNairaContractClient<'a>, Address) {
+fn setup_env_with_token<'a>(env: &'a Env) -> (StardialContractClient<'a>, Address) {
     env.mock_all_auths();
 
     let token_admin = Address::generate(env);
     let token = env.register_stellar_asset_contract(token_admin);
 
-    let contract_id = env.register_contract(None, SplitNairaContract);
-    let client = SplitNairaContractClient::new(env, &contract_id);
+    let contract_id = env.register_contract(None, StardialContract);
+    let client = StardialContractClient::new(env, &contract_id);
 
     (client, token)
 }
@@ -66,7 +66,7 @@ fn two_collaborators(env: &Env) -> (Address, Address, Vec<Collaborator>) {
 /// Creates a project and returns its owner.
 fn create_project(
     env: &Env,
-    client: &SplitNairaContractClient,
+    client: &StardialContractClient,
     token: &Address,
     project_id: &Symbol,
     collaborators: &Vec<Collaborator>,

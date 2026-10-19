@@ -5,7 +5,7 @@
 # Resolves issues #592 #593 #594 #595 in one branch.
 #
 # Usage:
-#   1. Copy this script into the ROOT of your local SplitNaira clone.
+#   1. Copy this script into the ROOT of your local Stardial clone.
 #   2. Copy the entire "frontend/" folder output next to this script
 #      (or keep the folder structure from the delivery zip).
 #   3. Run:  bash submit_pr.sh
@@ -26,13 +26,13 @@ COMMIT_MSG='feat(ui): resolve issues #592 #593 #594 #595
 
 echo ""
 echo "========================================"
-echo "  SplitNaira – PR branch setup"
+echo "  Stardial – PR branch setup"
 echo "========================================"
 echo ""
 
 # 0. Sanity
 if [ ! -f "package.json" ]; then
-  echo "ERROR: Run this script from the ROOT of the SplitNaira repo."
+  echo "ERROR: Run this script from the ROOT of the Stardial repo."
   exit 1
 fi
 
@@ -147,7 +147,7 @@ git push -u origin "$BRANCH"
 echo ""
 echo "========================================"
 echo "  Done! Open your PR at:"
-echo "  https://github.com/Godsmiracle001/SplitNaira/compare/$BRANCH"
+echo "  https://github.com/Godsmiracle001/Stardial/compare/$BRANCH"
 echo ""
 echo "  PR title:"
 echo "  feat(ui): resolve issues #592 #593 #594 #595"

@@ -1,4 +1,41 @@
-# SplitNaira Soroban Contract Spec
+# Stardial Soroban Contracts
+
+Stardial's product direction is a feature-phone wallet on Stellar. The target
+contract design uses Soroban smart accounts to enforce spending limits even
+when a relay gateway is compromised, and an escrow contract to protect cash-out
+transactions.
+
+> **Implementation status:** early design and Testnet development. The wallet,
+> phone registry, and agent escrow described by the product plan are targets,
+> not the interface currently implemented in this package. The contract
+> documented below is `StardialContract`, a project and collaborator-splitting
+> contract. Do not treat the planned wallet or escrow methods as deployed or
+> available to clients.
+
+## Target product contracts
+
+The intended architecture described in the product plan includes:
+
+| Contract | Intended responsibility | Status |
+|---|---|---|
+| `StardialWallet` | Owner and relay authorization, transfer limits, recipient delay, freezes, recovery, and savings pockets | Planned |
+| `WalletFactory` | Deploy a wallet with its owner, relay key, and initial policy | Planned |
+| `PhoneRegistry` | Bind a keyed phone-number hash to a wallet and manage recipient claims | Planned |
+| `AgentEscrow` | Hold cash-out funds until a one-time Cash Code is verified or the deadline permits a refund | Planned |
+
+The gateway must not be treated as a custodian with unrestricted signing
+authority. The target security model places spending limits in contracts; PINs
+and phone numbers are not stored on-chain, and phone numbers or PINs must never
+be sent to an AI model. See the repository [README](../README.md) and
+[SECURITY.md](../SECURITY.md) for the broader product and security
+descriptions.
+
+## Current contract interface
+
+The interface and invariants below describe the implemented
+`StardialContract`, including its project lifecycle, collaborator splits,
+deposits, distributions, and claims. They are not a specification for the
+planned phone-wallet contracts.
 
 ## Soroban SDK Version Policy
 
@@ -16,7 +53,7 @@ limits, or XDR encoding in ways that silently break deployed contracts.
 
 Current pinned version: **20.5.0** (last verified testnet deploy: 2026-06-24)
 
-This document defines the public interface exposed by `SplitNairaContract` in `contracts/lib.rs`.
+This document defines the public interface exposed by `StardialContract` in `contracts/lib.rs`.
 
 ## Data Model
 
@@ -228,7 +265,7 @@ happens before the authorization check on every gated method above.
 
 The generated interface artifact lives at:
 
-- `contracts/interface/splitnaira.contract-interface.json`
+- `contracts/interface/stardial.contract-interface.json`
 
 It is designed for backend and frontend tooling that needs contract method names, argument order/type names, event topic/data shapes, app-facing contract types, storage key variants, and error codes without scraping Rust or duplicating README tables.
 

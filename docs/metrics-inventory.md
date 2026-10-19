@@ -3,7 +3,7 @@
 > Last updated: 2026-07-27
 > Part of the production readiness observability stack. Linked from `docs/runbooks/observability.md`.
 
-This document inventories every metric exposed by the SplitNaira backend, plus the key signals that teams should monitor but are not yet instrumented. Each row maps a metric to its owner, alert threshold, and the dashboard panel where it should appear.
+This document inventories every metric exposed by the Stardial backend, plus the key signals that teams should monitor but are not yet instrumented. Each row maps a metric to its owner, alert threshold, and the dashboard panel where it should appear.
 
 ---
 
@@ -13,14 +13,14 @@ Source: `backend/src/routes/metrics.ts`, `backend/src/services/metrics.ts`, `bac
 
 | Metric | Type | Labels | Owner | Alert Threshold | Dashboard Panel |
 |--------|------|--------|-------|----------------|-----------------|
-| `splitnaira_http_requests_total` | counter | `method`, `route`, `status` | Backend | P99 daily spike >5x baseline | Request Rate by Route |
-| `splitnaira_http_request_duration_seconds_sum` | gauge | `method`, `route` | Backend | Route P99 > 5s | Request Latency by Route |
-| `splitnaira_http_request_duration_seconds_count` | gauge | `method`, `route` | Backend | — | Request Latency (companion) |
-| `splitnaira_http_requests_inflight` | gauge | — | Backend | Sustained >50 | In-Flight Requests |
-| `splitnaira_http_request_payload_bytes` | histogram | `route_group`, `le` | Backend | P95 per group doubles week-over-week | Request Payload Size by Route Group |
-| `splitnaira_http_request_payload_rejected_total` | counter | `route_group` | Backend | >10 in 15m for one group | Oversized Payload Rejections (413) |
-| `splitnaira_validation_failures_total` | counter | — | Backend | Warning: >=1% of requests and >=5 failures in 5m, sustained 5m. Critical: >=5% and >=10 failures in 5m, sustained 5m. | Response Validation Failures |
-| `splitnaira_info` | gauge | `version` | Platform | — | Service Version |
+| `stardial_http_requests_total` | counter | `method`, `route`, `status` | Backend | P99 daily spike >5x baseline | Request Rate by Route |
+| `stardial_http_request_duration_seconds_sum` | gauge | `method`, `route` | Backend | Route P99 > 5s | Request Latency by Route |
+| `stardial_http_request_duration_seconds_count` | gauge | `method`, `route` | Backend | — | Request Latency (companion) |
+| `stardial_http_requests_inflight` | gauge | — | Backend | Sustained >50 | In-Flight Requests |
+| `stardial_http_request_payload_bytes` | histogram | `route_group`, `le` | Backend | P95 per group doubles week-over-week | Request Payload Size by Route Group |
+| `stardial_http_request_payload_rejected_total` | counter | `route_group` | Backend | >10 in 15m for one group | Oversized Payload Rejections (413) |
+| `stardial_validation_failures_total` | counter | — | Backend | Warning: >=1% of requests and >=5 failures in 5m, sustained 5m. Critical: >=5% and >=10 failures in 5m, sustained 5m. | Response Validation Failures |
+| `stardial_info` | gauge | `version` | Platform | — | Service Version |
 
 ### Notes
 - Latency metrics use `process.hrtime.bigint()` via the `metricsMiddleware` in `index.ts`.
@@ -82,15 +82,15 @@ Health endpoint runs `checkSorobanReachability()` and `checkContractHealth()`.
 
 | Metric | Type | Labels | Owner | Alert Threshold | Status |
 |--------|------|--------|-------|----------------|--------|
-| `splitnaira_rpc_retry_attempts_total` | counter | — | Backend | Sustained > 2x baseline | ✅ Live (Issue #836) |
-| `splitnaira_rpc_retry_max_attempts_reached_total` | counter | — | Backend | Any >0 in 5m (warn); repeated (see #1164 below) escalates | ✅ Live (Issue #836) |
-| `splitnaira_rpc_retry_duration_ms_total` | counter | — | Backend | Increase > 60s/15m | ✅ Live (Issue #836) |
-| `splitnaira_rpc_retry_outcomes_total` | counter | `operation`, `outcome`, `endpoint` | Backend | Timeouts / exhausted >0 | ✅ Live (Issue #836) |
-| `splitnaira_rpc_retry_budget_max_retries` | gauge | — | Backend | — (config, currently 5) | ✅ Live (Issue #1089) |
-| `splitnaira_rpc_retry_budget_sequences_total` | counter | `operation`, `endpoint` | Backend | — | ✅ Live (Issue #1089) |
-| `splitnaira_rpc_retry_budget_allowed_total` | counter | `operation`, `endpoint` | Backend | — (burn ratio denominator) | ✅ Live (Issue #1089) |
-| `splitnaira_rpc_retry_budget_used_total` | counter | `operation`, `endpoint` | Backend | used/allowed > 0.25 for 15m | ✅ Live (Issue #1089) |
-| `splitnaira_rpc_retry_budget_exhausted_total` | counter | `operation`, `endpoint` | Backend | >=3 per operation in 15m (page) | ✅ Live (Issue #1089) |
+| `stardial_rpc_retry_attempts_total` | counter | — | Backend | Sustained > 2x baseline | ✅ Live (Issue #836) |
+| `stardial_rpc_retry_max_attempts_reached_total` | counter | — | Backend | Any >0 in 5m (warn); repeated (see #1164 below) escalates | ✅ Live (Issue #836) |
+| `stardial_rpc_retry_duration_ms_total` | counter | — | Backend | Increase > 60s/15m | ✅ Live (Issue #836) |
+| `stardial_rpc_retry_outcomes_total` | counter | `operation`, `outcome`, `endpoint` | Backend | Timeouts / exhausted >0 | ✅ Live (Issue #836) |
+| `stardial_rpc_retry_budget_max_retries` | gauge | — | Backend | — (config, currently 5) | ✅ Live (Issue #1089) |
+| `stardial_rpc_retry_budget_sequences_total` | counter | `operation`, `endpoint` | Backend | — | ✅ Live (Issue #1089) |
+| `stardial_rpc_retry_budget_allowed_total` | counter | `operation`, `endpoint` | Backend | — (burn ratio denominator) | ✅ Live (Issue #1089) |
+| `stardial_rpc_retry_budget_used_total` | counter | `operation`, `endpoint` | Backend | used/allowed > 0.25 for 15m | ✅ Live (Issue #1089) |
+| `stardial_rpc_retry_budget_exhausted_total` | counter | `operation`, `endpoint` | Backend | >=3 per operation in 15m (page) | ✅ Live (Issue #1089) |
 | `rpc_request_duration_seconds` | histogram | `endpoint` | Backend | P99 > 5s | ❌ Missing |
 | `rpc_request_errors_total` | counter | `endpoint`, `code` | Backend | Any >0 | ✅ Partial (Issue #836 covers retry outcomes) |
 | `rpc_simulation_latency_seconds` | histogram | — | Backend | P99 > 3s | ❌ Missing |
@@ -102,11 +102,11 @@ Health endpoint runs `checkSorobanReachability()` and `checkContractHealth()`.
 
 ### Issue #836: How retry metrics are recorded
 - Per-attempt: `recordRpcRetryAttempt(operation, endpoint, attempt, delayMs)`
-  increments `splitnaira_rpc_retry_attempts_total` and, when `delayMs > 0`,
-  `splitnaira_rpc_retry_duration_ms_total`.
+  increments `stardial_rpc_retry_attempts_total` and, when `delayMs > 0`,
+  `stardial_rpc_retry_duration_ms_total`.
 - Per-final-outcome: `recordRpcRetryOutcome(operation, outcome, endpoint)`
-  increments `splitnaira_rpc_retry_outcomes_total{operation, outcome, endpoint}`
-  and bumps `splitnaira_rpc_retry_max_attempts_reached_total` when outcome is
+  increments `stardial_rpc_retry_outcomes_total{operation, outcome, endpoint}`
+  and bumps `stardial_rpc_retry_max_attempts_reached_total` when outcome is
   `exhausted`.
 - Outcomes: `success`, `validation_error`, `timeout`, `exhausted`,
   `transient_failure` (reserved for future behaviour changes).
@@ -158,9 +158,9 @@ Source: `services/PayoutHistoryService.ts`, `services/EventListenerService.ts`.
 | `payouts_failed_total` | counter | `token`, `reason` | Backend | Any >0 | ❌ Missing |
 | `tx_submit_duration_seconds` | histogram | — | Backend | P99 > 30s | ❌ Missing |
 | `tx_poll_cycles_total` | counter | `status` | Backend | — | ❌ Missing |
-| `splitnaira_event_listener_ledger_lag` | gauge | — | Backend / Platform | >20 for 5m warning; >100 for 10m critical | ✅ Live |
-| `splitnaira_event_listener_last_processed_ledger` | gauge | — | Backend | — | ✅ Live |
-| `splitnaira_event_listener_latest_observed_ledger` | gauge | — | Backend | — | ✅ Live |
+| `stardial_event_listener_ledger_lag` | gauge | — | Backend / Platform | >20 for 5m warning; >100 for 10m critical | ✅ Live |
+| `stardial_event_listener_last_processed_ledger` | gauge | — | Backend | — | ✅ Live |
+| `stardial_event_listener_latest_observed_ledger` | gauge | — | Backend | — | ✅ Live |
 
 ### Existing Coverage
 - Soroban transaction submit and poll errors captured in Sentry (`soroban-transaction.ts`).
@@ -212,9 +212,9 @@ Source: `routes/metrics.ts`
 
 | Metric | Type | Labels | Owner | Alert Threshold | Dashboard Panel |
 |--------|------|--------|-------|----------------|-----------------|
-| `splitnaira_process_uptime_seconds` | gauge | — | Platform | <60 after deploy | Process Uptime |
-| `splitnaira_process_heap_bytes` | gauge | — | Platform | >80% of limit | Heap Usage |
-| `splitnaira_info` | gauge | `version` | Platform | — | Deployed Version |
+| `stardial_process_uptime_seconds` | gauge | — | Platform | <60 after deploy | Process Uptime |
+| `stardial_process_heap_bytes` | gauge | — | Platform | >80% of limit | Heap Usage |
+| `stardial_info` | gauge | `version` | Platform | — | Deployed Version |
 
 ### Missing (TODO)
 - Event loop lag histogram.

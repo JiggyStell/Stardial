@@ -1,4 +1,4 @@
-# First-Time Contributor Onboarding — SplitNaira
+# First-Time Contributor Onboarding — Stardial
 
 Welcome! This checklist gets you from zero to a passing test run.
 
@@ -21,8 +21,8 @@ Welcome! This checklist gets you from zero to a passing test run.
 - [ ] **Clone and install**
 
   ```bash
-  git clone https://github.com/Split-Naira/SplitNaira.git
-  cd SplitNaira
+  git clone https://github.com/Split-Naira/Stardial.git
+  cd Stardial
   pnpm install
   ```
 
@@ -80,7 +80,7 @@ Welcome! This checklist gets you from zero to a passing test run.
 
 ## Good first issues
 
-Look for issues labelled [`good first issue`](https://github.com/Split-Naira/SplitNaira/issues?q=is%3Aopen+label%3A%22good+first+issue%22) on GitHub.
+Look for issues labelled [`good first issue`](https://github.com/Split-Naira/Stardial/issues?q=is%3Aopen+label%3A%22good+first+issue%22) on GitHub.
 
 ---
 
@@ -104,7 +104,7 @@ Ensure you have the Xcode Command Line Tools (macOS: `xcode-select --install`) o
 
 1. Fork the repo and create a branch off `main`: `git checkout -b feat/my-feature`.
 2. Make your changes with tests.
-3. Push and open a PR against `Split-Naira/SplitNaira:main`.
+3. Push and open a PR against `Split-Naira/Stardial:main`.
 4. Add `Closes #<issue-number>` in the PR description so the issue closes automatically.
 
 See [CONTRIBUTING.md](../CONTRIBUTING.md) for code style and review guidelines.

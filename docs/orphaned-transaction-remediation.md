@@ -199,7 +199,7 @@ tables from an earlier migration run, is unaffected.
 
 ```bash
 cd backend
-DATABASE_URL=postgresql://user:password@localhost:5432/splitnaira \
+DATABASE_URL=postgresql://user:password@localhost:5432/stardial \
   HORIZON_URL=https://horizon-testnet.stellar.org \
   SOROBAN_RPC_URL=https://soroban-testnet.stellar.org \
   SOROBAN_NETWORK_PASSPHRASE="Test SDF Network ; September 2015" \

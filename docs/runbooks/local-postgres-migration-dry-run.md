@@ -37,27 +37,27 @@ docker compose up -d postgres
 docker compose ps postgres
 ```
 
-The default Compose credentials are `splitnaira` / `splitnaira`. That role is
+The default Compose credentials are `stardial` / `stardial`. That role is
 created as the Postgres superuser by the local image and can create the
 disposable database below.
 
 ## Run the check
 
 Set explicit, isolated target and admin connections. These examples use the
-default Compose credentials and a database named `splitnaira_ci` that is safe
+default Compose credentials and a database named `stardial_ci` that is safe
 for the command to recreate.
 
 ```bash
-export MIGRATION_DRY_RUN_DATABASE_URL='postgresql://splitnaira:splitnaira@localhost:5432/splitnaira_ci'
-export MIGRATION_DRY_RUN_ADMIN_DATABASE_URL='postgresql://splitnaira:splitnaira@localhost:5432/postgres'
+export MIGRATION_DRY_RUN_DATABASE_URL='postgresql://stardial:stardial@localhost:5432/stardial_ci'
+export MIGRATION_DRY_RUN_ADMIN_DATABASE_URL='postgresql://stardial:stardial@localhost:5432/postgres'
 npm run migration:dry-run
 ```
 
 In PowerShell, use the equivalent session-scoped variables:
 
 ```powershell
-$env:MIGRATION_DRY_RUN_DATABASE_URL = 'postgresql://splitnaira:splitnaira@localhost:5432/splitnaira_ci'
-$env:MIGRATION_DRY_RUN_ADMIN_DATABASE_URL = 'postgresql://splitnaira:splitnaira@localhost:5432/postgres'
+$env:MIGRATION_DRY_RUN_DATABASE_URL = 'postgresql://stardial:stardial@localhost:5432/stardial_ci'
+$env:MIGRATION_DRY_RUN_ADMIN_DATABASE_URL = 'postgresql://stardial:stardial@localhost:5432/postgres'
 npm run migration:dry-run
 ```
 
@@ -74,7 +74,7 @@ The root command delegates to the backend workspace. It may also be run as
 
 | Variable | Required | Purpose |
 |----------|----------|---------|
-| `MIGRATION_DRY_RUN_DATABASE_URL` | Recommended | Connection URL for the database that will be dropped, recreated, and migrated. Defaults only to the local `splitnaira_ci` URL shown above. |
+| `MIGRATION_DRY_RUN_DATABASE_URL` | Recommended | Connection URL for the database that will be dropped, recreated, and migrated. Defaults only to the local `stardial_ci` URL shown above. |
 | `MIGRATION_DRY_RUN_ADMIN_DATABASE_URL` | Recommended | Connection URL to an existing administrative database, normally `postgres`, using a role permitted to create and drop the target database. |
 | `MIGRATION_DRY_RUN_DATABASE_NAME` | Optional | Extra guard: when set, it must exactly match the database name in `MIGRATION_DRY_RUN_DATABASE_URL`. |
 | `MIGRATION_DRY_RUN_ADMIN_DATABASE` | Optional | Administrative database name when an admin URL is not supplied; defaults to `postgres`. |
@@ -89,7 +89,7 @@ as legacy aliases, but new local and CI configuration should use the
 | Symptom | Likely cause | Resolution |
 |---------|--------------|------------|
 | Connection refused on port 5432 | Postgres is not running or the port is already in use. | Run `docker compose up -d postgres`, then inspect `docker compose logs postgres`. Use URLs with the actual local port if it differs. |
-| `permission denied to create database` | The admin role is not a database creator. | Use an admin URL with a role that has `CREATEDB` (the Compose `splitnaira` role does), or ask the database owner to provide a disposable target. |
+| `permission denied to create database` | The admin role is not a database creator. | Use an admin URL with a role that has `CREATEDB` (the Compose `stardial` role does), or ask the database owner to provide a disposable target. |
 | `MIGRATION_DRY_RUN_DATABASE_NAME must match` | The explicit name and target URL point at different databases. | Correct one of the values so they name the same disposable database. |
 | Migration error after the reset completes | A migration cannot be applied cleanly from an empty schema. | Treat this as a migration defect: keep the failed output, fix the migration, and re-run the command. Do not mark the migration as applied manually. |
 
@@ -112,8 +112,8 @@ Set `MIGRATION_TIMING=1` before the dry-run command. The script then emits a
 structured JSON line on stdout after `migration:run` completes:
 
 ```bash
-export MIGRATION_DRY_RUN_DATABASE_URL='postgresql://splitnaira:splitnaira@localhost:5432/splitnaira_ci'
-export MIGRATION_DRY_RUN_ADMIN_DATABASE_URL='postgresql://splitnaira:splitnaira@localhost:5432/postgres'
+export MIGRATION_DRY_RUN_DATABASE_URL='postgresql://stardial:stardial@localhost:5432/stardial_ci'
+export MIGRATION_DRY_RUN_ADMIN_DATABASE_URL='postgresql://stardial:stardial@localhost:5432/postgres'
 MIGRATION_TIMING=1 npm run migration:dry-run 2>&1 | tee migration-dry-run.log
 ```
 
@@ -153,12 +153,12 @@ Postgres. Run the dry-run first to apply all migrations, then point
 
 ```bash
 # 1. Apply all migrations to the isolated target
-export MIGRATION_DRY_RUN_DATABASE_URL='postgresql://splitnaira:splitnaira@localhost:5432/splitnaira_ci'
-export MIGRATION_DRY_RUN_ADMIN_DATABASE_URL='postgresql://splitnaira:splitnaira@localhost:5432/postgres'
+export MIGRATION_DRY_RUN_DATABASE_URL='postgresql://stardial:stardial@localhost:5432/stardial_ci'
+export MIGRATION_DRY_RUN_ADMIN_DATABASE_URL='postgresql://stardial:stardial@localhost:5432/postgres'
 npm run migration:dry-run
 
 # 2. Run the benchmark suite against the migrated database
-DATABASE_URL='postgresql://splitnaira:splitnaira@localhost:5432/splitnaira_ci' \
+DATABASE_URL='postgresql://stardial:stardial@localhost:5432/stardial_ci' \
   npm run test -w backend -- src/__tests__/migration-timing.test.ts
 ```
 

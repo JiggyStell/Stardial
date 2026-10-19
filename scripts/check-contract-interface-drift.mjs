@@ -4,7 +4,7 @@
  *
  * Compares the checksum of the currently deployed contract's interface
  * (as recorded in deployments.json) against the checksum of the committed
- * interface artifact (contracts/interface/splitnaira.contract-interface.json).
+ * interface artifact (contracts/interface/stardial.contract-interface.json).
  * A mismatch means the deployed contract no longer matches what's committed.
  *
  * Usage: node scripts/check-contract-interface-drift.mjs [network]
@@ -35,7 +35,7 @@ try {
   }
 
   const committedInterface = readFileSync(
-    join(repoRoot, 'contracts/interface/splitnaira.contract-interface.json'),
+    join(repoRoot, 'contracts/interface/stardial.contract-interface.json'),
     'utf8'
   );
   const committedChecksum = sha256(committedInterface);

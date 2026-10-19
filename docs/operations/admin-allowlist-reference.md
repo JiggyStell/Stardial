@@ -1,7 +1,7 @@
 # Operations Reference: Admin Allowlist Management
 
 ## Overview
-The SplitNaira platform utilizes cryptographic and role-based allowlists to restrict administrative actions, sensitive contract deployments, and high-privilege backend operations to authorized keys and addresses.
+The Stardial platform utilizes cryptographic and role-based allowlists to restrict administrative actions, sensitive contract deployments, and high-privilege backend operations to authorized keys and addresses.
 
 ---
 

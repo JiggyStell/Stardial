@@ -1,5 +1,5 @@
 #!/bin/bash
-# Deploy SplitNaira Soroban contract to Stellar testnet.
+# Deploy Stardial Soroban contract to Stellar testnet.
 # Usage: ./scripts/deploy-testnet.sh [SECRET_KEY]
 #
 # Prerequisites:
@@ -25,7 +25,7 @@ SCRIPTS_DIR="scripts"
 NETWORK="testnet"
 NETWORK_PASSPHRASE="Test SDF Network ; September 2015"
 RPC_URL="https://soroban-testnet.stellar.org"
-WASM_PATH="$CONTRACTS_DIR/target/wasm32v1-none/release/splitnaira_contract.wasm"
+WASM_PATH="$CONTRACTS_DIR/target/wasm32v1-none/release/stardial_contract.wasm"
 
 # ── helpers ──────────────────────────────────────────────────────────────────
 
@@ -147,7 +147,7 @@ EOF
 log "Deployment registry -> contracts/deployments.json"
 
 log ""
-log "Done. SplitNaira contract live on testnet."
+log "Done. Stardial contract live on testnet."
 log "  Contract ID : $CONTRACT_ID"
 log "  Network     : $NETWORK"
 log "  WASM hash   : $WASM_HASH"

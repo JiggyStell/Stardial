@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# Bootstraps a freshly deployed SplitNaira contract on testnet.
+# Bootstraps a freshly deployed Stardial contract on testnet.
 # It sets the contract admin and allowlists the standard testnet tokens.
 #
 # Usage:
@@ -72,7 +72,7 @@ invoke_contract() {
     --args "${args[@]}"
 }
 
-log "Bootstrapping SplitNaira contract allowlist on $NETWORK"
+log "Bootstrapping Stardial contract allowlist on $NETWORK"
 log "Contract ID: $CONTRACT_ID"
 log "Admin: $ADMIN_PUBLIC"
 

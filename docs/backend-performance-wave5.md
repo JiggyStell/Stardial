@@ -49,7 +49,7 @@ Wave 5 performance work reduces RPC load, caps in-memory read-cache growth, tune
 
 ```bash
 export CI=true NODE_ENV=test \
-  DATABASE_URL=postgresql://splitnaira:splitnaira@localhost:5432/splitnaira_ci \
+  DATABASE_URL=postgresql://stardial:stardial@localhost:5432/stardial_ci \
   HORIZON_URL=https://horizon-testnet.stellar.org \
   SOROBAN_RPC_URL=https://soroban-testnet.stellar.org \
   SOROBAN_NETWORK_PASSPHRASE="Test SDF Network ; September 2015" \

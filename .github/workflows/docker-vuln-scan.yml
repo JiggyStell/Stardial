@@ -19,21 +19,21 @@ jobs:
       - uses: actions/checkout@v6
 
       - name: Build backend image
-        run: docker build -t splitnaira-backend:scan ./backend
+        run: docker build -t stardial-backend:scan ./backend
 
       - name: Scan backend image
         uses: aquasecurity/trivy-action@0.24.0
         with:
-          image-ref: splitnaira-backend:scan
+          image-ref: stardial-backend:scan
           severity: HIGH,CRITICAL
           exit-code: "1"
 
       - name: Build frontend image
-        run: docker build -t splitnaira-frontend:scan ./frontend
+        run: docker build -t stardial-frontend:scan ./frontend
 
       - name: Scan frontend image
         uses: aquasecurity/trivy-action@0.24.0
         with:
-          image-ref: splitnaira-frontend:scan
+          image-ref: stardial-frontend:scan
           severity: HIGH,CRITICAL
           exit-code: "1"

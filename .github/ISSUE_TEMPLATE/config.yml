@@ -1,8 +1,8 @@
 blank_issues_enabled: true
 contact_links:
-  - name: SplitNaira Discussions
-    url: https://github.com/Split-Naira/SplitNaira/discussions
+  - name: Stardial Discussions
+    url: https://github.com/Split-Naira/Stardial/discussions
     about: Ask questions and discuss ideas before opening an issue
   - name: Security Policy
-    url: https://github.com/Split-Naira/SplitNaira/blob/main/SECURITY.md
+    url: https://github.com/Split-Naira/Stardial/blob/main/SECURITY.md
     about: Report security vulnerabilities responsibly

@@ -1,6 +1,6 @@
 # Release Readiness Checklist (Contracts)
 
-This checklist is the authoritative guide for contract release flow in SplitNaira.
+This checklist is the authoritative guide for contract release flow in Stardial.
 
 **Runbooks:** [docs/runbooks/README.md](./runbooks/README.md) — contracts (#436), CI/CD (#437), ops (#438), frontend (#439).
 
@@ -9,7 +9,7 @@ This checklist is the authoritative guide for contract release flow in SplitNair
 - [x] `npm run verify:data-integrity` passes (interface JSON + generated types committed).
 - [x] `contracts/` unit tests pass (`cargo test`).
 - [x] `contracts/` formatter and linter checks pass.
-- [x] Release build file exists: `contracts/target/wasm32v1-none/release/splitnaira_contract.wasm`.
+- [x] Release build file exists: `contracts/target/wasm32v1-none/release/stardial_contract.wasm`.
 - [x] Contract API is current:
   - `create_project`
   - `refresh_project_storage`

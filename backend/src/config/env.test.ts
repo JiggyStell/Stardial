@@ -151,7 +151,7 @@ describe("validateEnv()", () => {
     Object.assign(process.env, {
       ...VALID_ENV,
       NODE_ENV: "production",
-      CORS_ORIGIN: "https://app.splitnaira.com"
+      CORS_ORIGIN: "https://app.stardial.com"
     });
     delete process.env.PAYMENTS_ADMIN_API_KEY;
 
@@ -162,7 +162,7 @@ describe("validateEnv()", () => {
     Object.assign(process.env, {
       ...VALID_ENV,
       NODE_ENV: "production",
-      CORS_ORIGIN: "https://app.splitnaira.com",
+      CORS_ORIGIN: "https://app.stardial.com",
       PAYMENTS_ADMIN_API_KEY: "super-secret-admin-key",
       PAYMENTS_ADMIN_WRITE_ENABLED: "false"
     });
@@ -186,7 +186,7 @@ describe("validateEnv()", () => {
     Object.assign(process.env, {
       ...VALID_ENV,
       NODE_ENV: "production",
-      CORS_ORIGIN: "https://app.splitnaira.com,*"
+      CORS_ORIGIN: "https://app.stardial.com,*"
     });
 
     expect(() => validateEnv()).toThrowError(/\*'/);

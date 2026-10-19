@@ -1,7 +1,7 @@
 # Ops Compliance - Wave 5
 
 ## Objective
-Deliver production-grade operational compliance improvements for SplitNaira as part of the API Evolution Wave 5 execution track.
+Deliver production-grade operational compliance improvements for Stardial as part of the API Evolution Wave 5 execution track.
 
 ## Implementation Status: ✅ COMPLETE
 

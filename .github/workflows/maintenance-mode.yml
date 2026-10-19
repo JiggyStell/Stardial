@@ -15,7 +15,7 @@ on:
       announcement_message:
         description: "User-facing maintenance announcement message"
         required: false
-        default: "SplitNaira is currently undergoing scheduled maintenance. Payouts and deposits are temporarily paused. We expect to resume normal operations shortly."
+        default: "Stardial is currently undergoing scheduled maintenance. Payouts and deposits are temporarily paused. We expect to resume normal operations shortly."
       estimated_duration:
         description: "Estimated maintenance duration (e.g., '30 minutes', '2 hours')"
         required: false
@@ -79,8 +79,8 @@ jobs:
 
           ## Status Updates
 
-          - Status page: [https://status.splitnaira.com](https://status.splitnaira.com)
-          - Twitter/X: [@SplitNaira](https://twitter.com/SplitNaira)
+          - Status page: [https://status.stardial.com](https://status.stardial.com)
+          - Twitter/X: [@Stardial](https://twitter.com/Stardial)
 
           ---
 
@@ -102,7 +102,7 @@ jobs:
 
             ---
 
-            SplitNaira has resumed normal operations. All payout and deposit
+            Stardial has resumed normal operations. All payout and deposit
             services are fully functional.
 
             If you experience any issues, please contact support or open
@@ -121,7 +121,7 @@ jobs:
             **Status**: 🟢 OPERATIONAL
             **Completed**: $(date -u +"%Y-%m-%dT%H:%M:%SZ")
 
-            SplitNaira has resumed normal operations.
+            Stardial has resumed normal operations.
             MEOF
           fi
 
@@ -157,7 +157,7 @@ jobs:
           fi
           PAYLOAD=$(cat <<EOF
           {
-            "text": "🛠️ *SplitNaira Maintenance Mode — ${{ inputs.action == 'schedule' && 'Scheduled' || 'Started' }}*",
+            "text": "🛠️ *Stardial Maintenance Mode — ${{ inputs.action == 'schedule' && 'Scheduled' || 'Started' }}*",
             "blocks": [
               {
                 "type": "header",
@@ -199,7 +199,7 @@ jobs:
           fi
           PAYLOAD=$(cat <<EOF
           {
-            "text": "✅ *SplitNaira Maintenance Complete*",
+            "text": "✅ *Stardial Maintenance Complete*",
             "blocks": [
               {
                 "type": "header",

@@ -1,7 +1,7 @@
 # User Guide: Managing Collaborators
 
 ## Overview
-The SplitNaira dashboard allows project owners and administrators to seamlessly invite team members, assign role-based permissions, and manage access control for shared financial workspaces and split agreements.
+The Stardial dashboard allows project owners and administrators to seamlessly invite team members, assign role-based permissions, and manage access control for shared financial workspaces and split agreements.
 
 ---
 

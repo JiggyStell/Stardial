@@ -1,6 +1,6 @@
 # Backend API Response Validation Architecture
 
-This document describes response schema validation in SplitNaira, specifically covering privileged admin routes, ops diagnostics, audit context metadata, and intentionally unvalidated streaming endpoints.
+This document describes response schema validation in Stardial, specifically covering privileged admin routes, ops diagnostics, audit context metadata, and intentionally unvalidated streaming endpoints.
 
 ---
 
@@ -11,7 +11,7 @@ Privileged admin routes power critical operator dashboards, emergency circuit-br
 To prevent drift and guarantee API correctness:
 1. **Schema Contracts:** Every admin and operations endpoint is typed and validated using Zod schemas (`backend/src/schemas/admin.schemas.ts`).
 2. **Response Interceptor:** Route handlers are wrapped with `withResponseValidation(schema, handler)` (`backend/src/middleware/validateResponse.ts`).
-3. **Strict Validation in Production:** In production (or when `STRICT_RESPONSE_VALIDATION=true`), schema mismatches immediately return HTTP `500` and increment the in-process metric counter `splitnaira_validation_failures_total`.
+3. **Strict Validation in Production:** In production (or when `STRICT_RESPONSE_VALIDATION=true`), schema mismatches immediately return HTTP `500` and increment the in-process metric counter `stardial_validation_failures_total`.
 4. **OpenAPI Alignment:** Admin and operations routes are fully registered in `backend/src/openapi.ts` and verified in CI via `npm run drift:openapi`.
 
 ---
@@ -128,7 +128,7 @@ checks:
 |---|---|
 | Exact body shape | A 200 body has a field the Zod schema doesn't declare (`schema.strict()`), or is missing a required one |
 | OpenAPI parity | The OpenAPI 200 schema from `generateOpenApi()` differs from the runtime Zod schema in field names or required fields |
-| Strict drift → 500 | In strict mode, a contract value that breaks the schema doesn't return `500 internal_error` and doesn't increment `splitnaira_validation_failures_total` (drift cases for `allowlist` and `token-count`) |
+| Strict drift → 500 | In strict mode, a contract value that breaks the schema doesn't return `500 internal_error` and doesn't increment `stardial_validation_failures_total` (drift cases for `allowlist` and `token-count`) |
 | Lenient drift | In lenient mode, the drifted body isn't forwarded or isn't counted |
 | Error envelope | RPC failures and missing query params don't return `{ error, message, requestId }`, or are counted as schema violations |
 

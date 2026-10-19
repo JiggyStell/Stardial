@@ -15,7 +15,7 @@ CONTRACT_ID=C... NETWORK=testnet ./scripts/sync-contracts.sh
 
 `sync-contracts.sh`:
 
-- Writes `contracts/target/wasm32v1-none/release/splitnaira_contract.wasm.sha256`
+- Writes `contracts/target/wasm32v1-none/release/stardial_contract.wasm.sha256`
 - Writes `release-info.json` (contract ID, network, wasm hash, timestamp)
 - Updates `backend/src/config/contract.json` and `frontend/src/config/contract.ts`
 
@@ -28,7 +28,7 @@ CONTRACT_ID=C... NETWORK=testnet ./scripts/sync-contracts.sh --non-interactive
 ## Pre-deploy checklist
 
 - [ ] `npm run verify:data-integrity` passes
-- [ ] `contracts/target/.../splitnaira_contract.wasm` exists
+- [ ] `contracts/target/.../stardial_contract.wasm` exists
 - [ ] `CONTRACT_ID` matches target network (testnet vs mainnet)
 - [ ] Backend `CONTRACT_ID` and frontend `NEXT_PUBLIC_CONTRACT_ID` match
 - [ ] Database migrations applied (`npm run migration:run -w backend`)

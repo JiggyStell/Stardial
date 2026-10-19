@@ -26,11 +26,11 @@
 
 | # | Trigger | Detection Source |
 |---|---------|-----------------|
-| 1 | Systemic payout failure across **> 5 projects simultaneously** | Alert: `splitnaira_payouts_failed_total` spike; user reports |
+| 1 | Systemic payout failure across **> 5 projects simultaneously** | Alert: `stardial_payouts_failed_total` spike; user reports |
 | 2 | Smart contract state corruption — on-chain balance ≠ sum of `get_claimable` for all collaborators | Manual audit; contract state check |
 | 3 | Confirmed double-spend or funds sent to wrong addresses | On-chain investigation; Horizon query |
 | 4 | Admin private key or `PAYMENTS_ADMIN_API_KEY` compromise | Security alert; audit log `ADMIN_ACCESS_DENIED` spike |
-| 5 | Total Soroban RPC outage lasting > 15 minutes | `splitnaira_rpc_retry_outcomes_total{outcome="exhausted"}` > 0 sustained |
+| 5 | Total Soroban RPC outage lasting > 15 minutes | `stardial_rpc_retry_outcomes_total{outcome="exhausted"}` > 0 sustained |
 | 6 | Contract accounting discrepancy detected (e.g., `total_distributed` out of sync) | Backfill script anomaly; manual check |
 
 ### P1 — Critical
@@ -38,8 +38,8 @@
 | # | Trigger | Detection Source |
 |---|---------|-----------------|
 | 1 | Single project payout failure **unresolvable by retry** after 3 attempts | Payout retry logs; manual check |
-| 2 | RPC degradation causing p99 latency > 10 s or retry rate > 20 % for > 10 min | `splitnaira_rpc_retry_duration_ms_total` spike |
-| 3 | Event listener stream disconnected > 30 minutes | `splitnaira_event_listener_ledger_lag` > 100 |
+| 2 | RPC degradation causing p99 latency > 10 s or retry rate > 20 % for > 10 min | `stardial_rpc_retry_duration_ms_total` spike |
+| 3 | Event listener stream disconnected > 30 minutes | `stardial_event_listener_ledger_lag` > 100 |
 | 4 | Partial distribution failure requiring manual backfill (multi-beneficiary `distribute` reverted after partial transfers) | On-chain event analysis |
 | 5 | Database writes for payout records failing (`PayoutHistoryService` errors) | Winston error logs |
 | 6 | `pause_distributions` triggered on contract but admin unaware | Contract state query |
@@ -49,10 +49,10 @@
 | # | Trigger | Detection Source |
 |---|---------|-----------------|
 | 1 | Single project payout delayed > 3 min but < 15 min (possible transient RPC issue) | User report; tx status check |
-| 2 | RPC 429 (rate-limit) responses on payout submission | `splitnaira_rpc_retry_outcomes_total{outcome="transient_failure"}` |
+| 2 | RPC 429 (rate-limit) responses on payout submission | `stardial_rpc_retry_outcomes_total{outcome="transient_failure"}` |
 | 3 | Backend payout status showing "pending" while Horizon shows `txSUCCESS` (data sync lag < 30 min) | Event listener lag metric |
 | 4 | Payout history backfill script needed for isolated historical ledger | Ops request |
-| 5 | Elevated `splitnaira_payouts_failed_total` for a single token type | Business metrics dashboard |
+| 5 | Elevated `stardial_payouts_failed_total` for a single token type | Business metrics dashboard |
 
 ### P3 — Minor
 
@@ -116,7 +116,7 @@ Payout failure reported or detected
 
 ### P2 Major — Investigate & Retry
 
-1. **Check RPC health** (`GET /health/ready` and `splitnaira_rpc_retry_outcomes_total`).
+1. **Check RPC health** (`GET /health/ready` and `stardial_rpc_retry_outcomes_total`).
 2. **Retry the payout** once RPC is confirmed healthy.
 3. **If data sync lag**: Wait for event listener to catch up; do not force-retry on-chain.
 4. **Communicate**: Respond to affected user with status update.
@@ -207,11 +207,11 @@ Metrics that feed directly into severity classification:
 
 | Metric | P0 Trigger | P1 Trigger | P2 Trigger |
 |--------|-----------|-----------|-----------|
-| `splitnaira_payouts_failed_total` | > 0 across > 5 projects in 5 min | > 0 for single project (unresolvable) | Elevated for single token type |
-| `splitnaira_rpc_retry_outcomes_total{outcome="exhausted"}` | > 0 sustained 15 min | > 0 for 10 min | — |
-| `splitnaira_rpc_retry_duration_ms_total` | Spike > 2x baseline | Increase > 60 s / 15 min | Moderate increase |
-| `splitnaira_event_listener_ledger_lag` | — | > 100 for 10 min | > 20 for 5 min |
-| `splitnaira_payouts_confirmed_total` | < `initiated` in 15 min (systemic) | < `initiated` in 30 min (single) | — |
+| `stardial_payouts_failed_total` | > 0 across > 5 projects in 5 min | > 0 for single project (unresolvable) | Elevated for single token type |
+| `stardial_rpc_retry_outcomes_total{outcome="exhausted"}` | > 0 sustained 15 min | > 0 for 10 min | — |
+| `stardial_rpc_retry_duration_ms_total` | Spike > 2x baseline | Increase > 60 s / 15 min | Moderate increase |
+| `stardial_event_listener_ledger_lag` | — | > 100 for 10 min | > 20 for 5 min |
+| `stardial_payouts_confirmed_total` | < `initiated` in 15 min (systemic) | < `initiated` in 30 min (single) | — |
 
 ---
 

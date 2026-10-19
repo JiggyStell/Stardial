@@ -1,5 +1,5 @@
 {
-  "schema": "https://splitnaira.dev/schemas/contract-interface.v1.json",
+  "schema": "https://stardial.dev/schemas/contract-interface.v1.json",
   "schemaVersion": 1,
   "generatedBy": "contracts/scripts/generate-interface.mjs",
   "sourceHash": "bcc44f4dd98dbea997b07599a9e5ae9ca1ff7ee27d37bb147c0b83ce0bc36b2d",
@@ -10,8 +10,8 @@
     "contracts/errors.rs"
   ],
   "contract": {
-    "name": "SplitNairaContract",
-    "package": "splitnaira-contracts",
+    "name": "StardialContract",
+    "package": "stardial-contracts",
     "version": "0.1.0",
     "sorobanSdk": "20.5.0"
   },

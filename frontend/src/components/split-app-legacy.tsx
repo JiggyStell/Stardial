@@ -1173,7 +1173,7 @@ export function SplitApp({
         <header className="glass-card rounded-[2.5rem] p-8 md:p-10">
           <div className="flex flex-wrap items-start justify-between gap-6">
             <div className="space-y-1">
-              <h1 className="font-display text-4xl tracking-tight text-ink">SplitNaira</h1>
+              <h1 className="font-display text-4xl tracking-tight text-ink">Stardial</h1>
               <p className="max-w-md text-sm leading-relaxed text-muted">
                 Premium royalty management on Stellar.
               </p>

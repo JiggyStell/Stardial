@@ -18,7 +18,7 @@
 //! set of hand-picked splits so a regression in the rounding rule fails with
 //! a concrete, human-readable diff.
 
-use crate::{errors::SplitError, Collaborator, SplitNairaContract, SplitNairaContractClient};
+use crate::{errors::SplitError, Collaborator, StardialContract, StardialContractClient};
 use soroban_sdk::{testutils::Address as _, token, Address, Env, String, Symbol, Vec};
 
 // -----------------------------------------------------------------------------
@@ -42,7 +42,7 @@ fn collabs_from_bp(env: &Env, bps: &[u32]) -> Vec<Collaborator> {
 /// Mints `amount` to `from` and deposits it into the project.
 fn fund(
     env: &Env,
-    client: &SplitNairaContractClient,
+    client: &StardialContractClient,
     token: &Address,
     project_id: &Symbol,
     from: &Address,
@@ -70,8 +70,8 @@ fn distribute_uneven_three_way_split_pays_remainder_to_last_collaborator() {
     let env = Env::default();
     env.mock_all_auths();
 
-    let contract_id = env.register_contract(None, SplitNairaContract);
-    let client = SplitNairaContractClient::new(&env, &contract_id);
+    let contract_id = env.register_contract(None, StardialContract);
+    let client = StardialContractClient::new(&env, &contract_id);
     let token_admin = Address::generate(&env);
     let token = env.register_stellar_asset_contract(token_admin);
 
@@ -116,8 +116,8 @@ fn distribute_odd_amount_two_way_split_leaves_no_dust() {
     let env = Env::default();
     env.mock_all_auths();
 
-    let contract_id = env.register_contract(None, SplitNairaContract);
-    let client = SplitNairaContractClient::new(&env, &contract_id);
+    let contract_id = env.register_contract(None, StardialContract);
+    let client = StardialContractClient::new(&env, &contract_id);
     let token_admin = Address::generate(&env);
     let token = env.register_stellar_asset_contract(token_admin);
 
@@ -160,8 +160,8 @@ fn distribute_payouts_sum_exactly_to_pre_distribution_balance() {
     let env = Env::default();
     env.mock_all_auths();
 
-    let contract_id = env.register_contract(None, SplitNairaContract);
-    let client = SplitNairaContractClient::new(&env, &contract_id);
+    let contract_id = env.register_contract(None, StardialContract);
+    let client = StardialContractClient::new(&env, &contract_id);
     let token_admin = Address::generate(&env);
     let token = env.register_stellar_asset_contract(token_admin);
 
@@ -215,8 +215,8 @@ fn distribute_with_minimum_two_collaborators_preserves_invariants() {
     let env = Env::default();
     env.mock_all_auths();
 
-    let contract_id = env.register_contract(None, SplitNairaContract);
-    let client = SplitNairaContractClient::new(&env, &contract_id);
+    let contract_id = env.register_contract(None, StardialContract);
+    let client = StardialContractClient::new(&env, &contract_id);
     let token_admin = Address::generate(&env);
     let token = env.register_stellar_asset_contract(token_admin);
 
@@ -263,8 +263,8 @@ fn distribute_with_maximum_participant_count_preserves_invariants() {
     let env = Env::default();
     env.mock_all_auths();
 
-    let contract_id = env.register_contract(None, SplitNairaContract);
-    let client = SplitNairaContractClient::new(&env, &contract_id);
+    let contract_id = env.register_contract(None, StardialContract);
+    let client = StardialContractClient::new(&env, &contract_id);
     let token_admin = Address::generate(&env);
     let token = env.register_stellar_asset_contract(token_admin);
 
@@ -317,8 +317,8 @@ fn create_project_above_configured_cap_is_rejected() {
     let env = Env::default();
     env.mock_all_auths();
 
-    let contract_id = env.register_contract(None, SplitNairaContract);
-    let client = SplitNairaContractClient::new(&env, &contract_id);
+    let contract_id = env.register_contract(None, StardialContract);
+    let client = StardialContractClient::new(&env, &contract_id);
     let token_admin = Address::generate(&env);
     let token = env.register_stellar_asset_contract(token_admin);
 

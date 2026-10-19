@@ -116,7 +116,7 @@ authAccountRouter.post(
         prev: prevEmail,
       });
       const base =
-        process.env.EMAIL_CHANGE_URL_BASE ?? "https://app.splitnaira.com/confirm-email-change";
+        process.env.EMAIL_CHANGE_URL_BASE ?? "https://app.stardial.com/confirm-email-change";
       const provider = getEmailProvider();
 
       await provider.sendEmailChangeConfirmationEmail({

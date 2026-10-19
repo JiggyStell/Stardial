@@ -133,10 +133,10 @@ BACKEND_URL=https://api.example.com REQUIRE_READY=true node scripts/check-mainne
 
 ```bash
 # Single origin (Vercel preview URL)
-CORS_ORIGIN=https://splitnaira.vercel.app
+CORS_ORIGIN=https://stardial.vercel.app
 
 # Multiple origins — comma-separated (Vercel + custom domain)
-CORS_ORIGIN=https://splitnaira.vercel.app,https://app.splitnaira.com,https://splitnaira.com
+CORS_ORIGIN=https://stardial.vercel.app,https://app.stardial.com,https://stardial.com
 ```
 
 If `CORS_ORIGIN` is missing or contains `*` in production the process will refuse to start with a descriptive error.

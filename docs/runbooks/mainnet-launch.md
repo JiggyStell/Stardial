@@ -1,6 +1,6 @@
 # Mainnet Launch Runbook
 
-> **Scope:** Production deployment of the SplitNaira backend to mainnet.
+> **Scope:** Production deployment of the Stardial backend to mainnet.
 > Covers pre-launch validation, deploy steps, smoke testing, and rollback.
 
 ---
@@ -119,12 +119,12 @@ validate-mainnet-config
 
 ### Fast Rollback (< 5 minutes)
 
-1. **Identify the last stable deploy** in the Render dashboard (Services → splitnaira-backend → Deploys).
+1. **Identify the last stable deploy** in the Render dashboard (Services → stardial-backend → Deploys).
 2. Click **Rollback** on the last known-good deploy in Render, or re-trigger the previous deploy hook.
 3. Verify recovery:
    ```bash
-   curl https://api.splitnaira.com/health/ready
-   curl https://api.splitnaira.com/ops/mainnet-readiness
+   curl https://api.stardial.com/health/ready
+   curl https://api.stardial.com/ops/mainnet-readiness
    ```
 4. Confirm all four readiness checks return `"pass"`.
 

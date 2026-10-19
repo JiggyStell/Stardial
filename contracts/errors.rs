@@ -1,6 +1,6 @@
 use soroban_sdk::contracterror;
 
-/// Errors returned by the SplitNaira smart contract.
+/// Errors returned by the Stardial smart contract.
 ///
 /// # Error Code Stability
 ///

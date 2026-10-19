@@ -8,7 +8,7 @@
 
 ## Overview
 
-User onboarding in SplitNaira is wallet-first: a Stellar public key is the
+User onboarding in Stardial is wallet-first: a Stellar public key is the
 primary identity. The backend exposes three endpoints:
 
 | Method | Path | Purpose |
@@ -90,10 +90,10 @@ Optional fields:
 
 If a deploy breaks the onboarding flow:
 
-1. Revert the backend deploy in Render (Services → splitnaira-backend → Deploys → Rollback).
+1. Revert the backend deploy in Render (Services → stardial-backend → Deploys → Rollback).
 2. Verify:
    ```bash
-   curl -X POST https://api.splitnaira.com/users/login \
+   curl -X POST https://api.stardial.com/users/login \
      -H "Content-Type: application/json" \
      -d '{"walletAddress":"<KNOWN_WALLET>"}'
    # Expect: 200 OK

@@ -1,7 +1,7 @@
 # Windows Troubleshooting Guide
 
 This guide covers the Windows/PowerShell-specific wrinkles you may hit while
-setting up and working on **SplitNaira**. It follows the same setup flow as
+setting up and working on **Stardial**. It follows the same setup flow as
 [`CONTRIBUTING.md`](../CONTRIBUTING.md#-development-setup) — fork/clone,
 install dependencies, configure `.env`, run locally, connect Freighter — but
 calls out the commands and gotchas that differ on Windows.
@@ -51,8 +51,8 @@ calls out the commands and gotchas that differ on Windows.
 ### 1. Fork & clone
 
 ```powershell
-git clone https://github.com/YOUR_USERNAME/splitnaira.git
-cd splitnaira
+git clone https://github.com/YOUR_USERNAME/stardial.git
+cd stardial
 ```
 
 ### 2. Install dependencies
@@ -243,7 +243,7 @@ requires an extra toolchain decision that Linux/macOS don't:
 
 The root `docker-compose.yml` spins up three services: `postgres`
 (`postgres:16-alpine`, exposed on `5432` by default), `backend` (exposed on
-`3001`), and `frontend` (exposed on `3000`), all on a shared `splitnaira`
+`3001`), and `frontend` (exposed on `3000`), all on a shared `stardial`
 Docker network.
 
 - **Docker Desktop + WSL2 backend is required, not optional.** The legacy
@@ -258,10 +258,10 @@ Docker network.
   side by side on a current Docker Desktop install, but only one may be on
   `PATH` depending on how Docker Desktop was installed.
 - **Volume mount path translation.** Bind mounts declared with Windows paths
-  in `docker-compose.yml` or `.env` (e.g. `C:\Users\you\splitnaira`) need to
+  in `docker-compose.yml` or `.env` (e.g. `C:\Users\you\stardial`) need to
   be reachable from the Linux VM that WSL2 runs. Prefer running
   `docker compose` **from inside a WSL2 distro** (with the repo cloned into
-  the Linux filesystem, e.g. `~/splitnaira`) rather than from Windows-native
+  the Linux filesystem, e.g. `~/stardial`) rather than from Windows-native
   PowerShell against a Windows-path checkout — this avoids the
   `/c/Users/...` vs `C:\Users\...` path-translation layer entirely and is
   noticeably faster for file-watching/hot-reload, since crossing the

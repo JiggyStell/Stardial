@@ -1,14 +1,14 @@
 ﻿[package]
-name = "splitnaira-contracts"
+name = "stardial-contracts"
 version = "0.1.0"
 edition = "2021"
-description = "Soroban smart contracts for SplitNaira â€” royalty splitting on Stellar"
+description = "Soroban smart contracts for Stardial â€” royalty splitting on Stellar"
 license = "MIT"
-repository = "https://github.com/Split-Naira/SplitNaira"
+repository = "https://github.com/Split-Naira/Stardial"
 
 [lib]
 crate-type = ["cdylib", "rlib"]
-name = "splitnaira_contract"
+name = "stardial_contract"
 path = "lib.rs"
 
 # reliability_tests.rs is registered via #[cfg(test)] mod in lib.rs

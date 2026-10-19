@@ -238,7 +238,7 @@ function main() {
   }
 
   const network = target;
-  console.log(bold(`\nSplitNaira deploy consistency check — ${network.toUpperCase()}\n`));
+  console.log(bold(`\nStardial deploy consistency check — ${network.toUpperCase()}\n`));
 
   // Resolve env files
   const frontendEnvPath = resolve(PROJECT_ROOT, "frontend", ".env");

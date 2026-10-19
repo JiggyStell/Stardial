@@ -3,7 +3,7 @@
 ## Implementation Plan
 
 ### Overview
-This PR delivers a contract-focused Analytics & Insights workstream for SplitNaira Wave 5. The goal is to harden contract-level telemetry and query surfaces so analytics consumers can reliably derive insights from on-chain project and payout activity.
+This PR delivers a contract-focused Analytics & Insights workstream for Stardial Wave 5. The goal is to harden contract-level telemetry and query surfaces so analytics consumers can reliably derive insights from on-chain project and payout activity.
 
 ### Audit Findings
 The current contract already exposes a solid set of read-only query methods and event signals. The audit identified two practical gaps:

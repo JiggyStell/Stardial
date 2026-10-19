@@ -1,4 +1,4 @@
-# SplitNaira Operational Runbooks
+# Stardial Operational Runbooks
 
 Deployment-focused runbooks for the Stellar Wave release program. Each document includes operational impact and rollback guidance.
 

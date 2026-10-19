@@ -1,6 +1,6 @@
 # Backend Route Testing Contributor Guide
 
-This guide establishes the standards and procedures for contributing route and controller tests to the SplitNaira backend workspace (`apps/api` or `backend`).
+This guide establishes the standards and procedures for contributing route and controller tests to the Stardial backend workspace (`apps/api` or `backend`).
 
 ## Testing Stack & Tools
 * **Test Runner & Framework:** Jest configured with NestJS testing utilities (`@nestjs/testing`).

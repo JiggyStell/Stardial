@@ -75,7 +75,7 @@ authEmailRouter.post("/password-reset/request", async (req: Request, res: Respon
     // confirmed once (#1446); see /password-reset/confirm.
     const sessionVersion = (await getMaxSessionVersionForEmail(email)) ?? 0;
     const token = signEmailFlowToken(email, "password_reset", { sv: sessionVersion });
-    const base = resetUrlBase ?? process.env.PASSWORD_RESET_URL_BASE ?? "https://app.splitnaira.com/reset-password";
+    const base = resetUrlBase ?? process.env.PASSWORD_RESET_URL_BASE ?? "https://app.stardial.com/reset-password";
     const resetUrl = `${base}?token=${encodeURIComponent(token)}`;
 
     await getEmailProvider().sendPasswordResetEmail({
@@ -177,7 +177,7 @@ authEmailRouter.post("/email-verification/resend", async (req: Request, res: Res
       await rotateEmailVerificationToken(email, issued);
 
       const base =
-        body.verifyUrlBase ?? process.env.EMAIL_VERIFICATION_URL_BASE ?? "https://app.splitnaira.com/verify-email";
+        body.verifyUrlBase ?? process.env.EMAIL_VERIFICATION_URL_BASE ?? "https://app.stardial.com/verify-email";
       try {
         await getEmailProvider().sendVerificationEmail({
           to: email,
@@ -262,7 +262,7 @@ authEmailRouter.post("/invitations", async (req: Request, res: Response, next: N
       projectId,
       inviterWalletAddress,
     });
-    const base = inviteUrlBase ?? process.env.INVITATION_URL_BASE ?? "https://app.splitnaira.com/invite";
+    const base = inviteUrlBase ?? process.env.INVITATION_URL_BASE ?? "https://app.stardial.com/invite";
     const inviteUrl = `${base}?token=${encodeURIComponent(token)}`;
 
     await getEmailProvider().sendInvitationEmail({

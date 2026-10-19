@@ -1,6 +1,6 @@
 # Stellar & Soroban Payment Terms Glossary
 
-This glossary defines key technical terminology used across the SplitNaira smart contracts, backend services, and deployment pipelines.
+This glossary defines key technical terminology used across the Stardial smart contracts, backend services, and deployment pipelines.
 
 ## Stellar Network & Ledger
 * **Ledger Sequence:** A monotonically increasing integer representing a specific block height on the Stellar network. Used for time-bound transaction validation and recurring schedule tracking.

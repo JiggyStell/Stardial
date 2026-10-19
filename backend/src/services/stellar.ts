@@ -231,7 +231,7 @@ export async function executeWithRetry<T>(
         // Record scheduler-side backoff so tail-latency is observable. The
         // attempt itself was already counted at the top of the loop via
         // `recordRpcRetryAttempt`, so we use the dedicated helper that only
-        // increments `splitnaira_rpc_retry_duration_ms_total` and never
+        // increments `stardial_rpc_retry_duration_ms_total` and never
         // touches the attempts counter.
         recordRpcRetryBackoff(operationLabel, endpoint, attempt + 1, delay);
         await new Promise((resolve) => setTimeout(resolve, delay));

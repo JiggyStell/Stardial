@@ -1,8 +1,8 @@
 {
-  "name": "splitnaira-workspace",
+  "name": "stardial-workspace",
   "version": "1.0.0",
   "private": true,
-  "description": "SplitNaira - Royalty splitting for Nigeria's creative economy",
+  "description": "Stardial - Royalty splitting for Nigeria's creative economy",
   "scripts": {
     "setup": "npm install && cd frontend && npm install && cd ../backend && npm install && cd ../contracts && cargo build",
     "dev": "npm-run-all --parallel dev:frontend dev:backend",

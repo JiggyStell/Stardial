@@ -6,7 +6,7 @@
 
 ## Purpose
 
-This document defines the retention policy, access controls, and archival process for backend audit logs in the SplitNaira platform. It ensures compliance with operational requirements and supports incident response by making audit data predictable and manageable.
+This document defines the retention policy, access controls, and archival process for backend audit logs in the Stardial platform. It ensures compliance with operational requirements and supports incident response by making audit data predictable and manageable.
 
 ## Audit Event Categories
 

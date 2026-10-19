@@ -8,8 +8,8 @@ Use the dedicated example templates in `frontend/` and `backend/` to bootstrap e
 | Environment | Network | Soroban RPC | Contract ID | Frontend API URL | Backend CORS origins |
 |---|---|---|---|---|---|
 | `dev` | testnet | `https://soroban-testnet.stellar.org` | `NEXT_PUBLIC_CONTRACT_ID` / `CONTRACT_ID` from local/testnet deployment | `http://localhost:3001` | `http://localhost:3000` |
-| `staging` | testnet | `https://soroban-testnet.stellar.org` | `NEXT_PUBLIC_CONTRACT_ID` / `CONTRACT_ID` from staging testnet deployment | `https://api-staging.splitnaira.com` | `https://staging.splitnaira.com` |
-| `production` | mainnet | `https://soroban-mainnet.stellar.org` | `NEXT_PUBLIC_CONTRACT_ID` / `CONTRACT_ID` from production mainnet deployment | `https://api.splitnaira.com` | `https://app.splitnaira.com` |
+| `staging` | testnet | `https://soroban-testnet.stellar.org` | `NEXT_PUBLIC_CONTRACT_ID` / `CONTRACT_ID` from staging testnet deployment | `https://api-staging.stardial.com` | `https://staging.stardial.com` |
+| `production` | mainnet | `https://soroban-mainnet.stellar.org` | `NEXT_PUBLIC_CONTRACT_ID` / `CONTRACT_ID` from production mainnet deployment | `https://api.stardial.com` | `https://app.stardial.com` |
 
 ## What this means for each service
 

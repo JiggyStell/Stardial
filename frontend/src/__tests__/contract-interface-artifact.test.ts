@@ -14,7 +14,7 @@ type ContractInterfaceArtifact = {
 
 const interfacePath = resolve(
   dirname(fileURLToPath(import.meta.url)),
-  "../../../contracts/interface/splitnaira.contract-interface.json"
+  "../../../contracts/interface/stardial.contract-interface.json"
 );
 
 const contractInterface = JSON.parse(

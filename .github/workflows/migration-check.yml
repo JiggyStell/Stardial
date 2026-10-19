@@ -15,9 +15,9 @@ jobs:
       postgres:
         image: postgres:15-alpine
         env:
-          POSTGRES_USER: splitnaira_test
+          POSTGRES_USER: stardial_test
           POSTGRES_PASSWORD: test_password_123
-          POSTGRES_DB: splitnaira_migration_test
+          POSTGRES_DB: stardial_migration_test
         ports:
           - 5432:5432
         options: >-
@@ -30,8 +30,8 @@ jobs:
       NODE_ENV: test
       # The dry-run command only uses these isolated URLs. Never pass a normal
       # deployment DATABASE_URL to a command that recreates its target DB.
-      MIGRATION_DRY_RUN_DATABASE_URL: postgresql://splitnaira_test:test_password_123@localhost:5432/splitnaira_migration_test
-      MIGRATION_DRY_RUN_ADMIN_DATABASE_URL: postgresql://splitnaira_test:test_password_123@localhost:5432/postgres
+      MIGRATION_DRY_RUN_DATABASE_URL: postgresql://stardial_test:test_password_123@localhost:5432/stardial_migration_test
+      MIGRATION_DRY_RUN_ADMIN_DATABASE_URL: postgresql://stardial_test:test_password_123@localhost:5432/postgres
       # Emit a JSON timing line on stdout after migration:run completes.
       MIGRATION_TIMING: "1"
 
@@ -84,7 +84,7 @@ jobs:
         # dry-run step above, so the suite connects and skips when unavailable
         # but fails when CI=true and the connection fails.
         env:
-          DATABASE_URL: postgresql://splitnaira_test:test_password_123@localhost:5432/splitnaira_migration_test
+          DATABASE_URL: postgresql://stardial_test:test_password_123@localhost:5432/stardial_migration_test
           CI: "true"
         run: npm run test -w backend -- --reporter=verbose src/__tests__/migration-timing.test.ts
         # A non-zero exit from the benchmark step must fail the job.

@@ -8,7 +8,7 @@
 
 ## Executive Summary
 
-Wave 5 delivers production-grade improvements across contracts, backend, and CI/CD to accelerate deployment readiness for SplitNaira. All critical gaps identified in the audit have been resolved, workflows are validated, and operational documentation is complete.
+Wave 5 delivers production-grade improvements across contracts, backend, and CI/CD to accelerate deployment readiness for Stardial. All critical gaps identified in the audit have been resolved, workflows are validated, and operational documentation is complete.
 
 ### Key Achievements
 
@@ -139,15 +139,15 @@ npm run build -w backend
 
 **Postgres Service** (for backend tests)
 - Version: PostgreSQL 16
-- Database: `splitnaira_ci`
-- Credentials: `splitnaira:splitnaira`
+- Database: `stardial_ci`
+- Credentials: `stardial:stardial`
 - Health check: 10s interval, 5s timeout, 5 retries
 
 **Test Environment Variables**
 ```bash
 CI=true
 NODE_ENV=test
-DATABASE_URL=postgresql://splitnaira:splitnaira@localhost:5432/splitnaira_ci
+DATABASE_URL=postgresql://stardial:stardial@localhost:5432/stardial_ci
 HORIZON_URL=https://horizon-testnet.stellar.org
 SOROBAN_RPC_URL=https://soroban-testnet.stellar.org
 SOROBAN_NETWORK_PASSPHRASE=Test SDF Network ; September 2015
@@ -207,11 +207,11 @@ npm run generate:contract-types      # Refresh TypeScript types
 ### Build & Deploy
 ```bash
 cargo build --release --target wasm32v1-none
-# Output: contracts/target/wasm32v1-none/release/splitnaira_contract.wasm
+# Output: contracts/target/wasm32v1-none/release/stardial_contract.wasm
 
 # Deploy to testnet
 stellar contract deploy \
-  --wasm target/wasm32v1-none/release/splitnaira_contract.wasm \
+  --wasm target/wasm32v1-none/release/stardial_contract.wasm \
   --source deployer \
   --network testnet
 

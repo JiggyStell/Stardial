@@ -173,7 +173,7 @@ transactionsRouter.get("/export", authJwtMiddleware, async (req: Request, res: R
     }
 
     // format === "csv": stream the full authorized result set.
-    const filename = `splitnaira-transactions-${Date.now()}.csv`;
+    const filename = `stardial-transactions-${Date.now()}.csv`;
     res.setHeader("Content-Type", "text/csv; charset=utf-8");
     res.setHeader("Content-Disposition", `attachment; filename="${filename}"`);
     res.setHeader("Cache-Control", "no-store");

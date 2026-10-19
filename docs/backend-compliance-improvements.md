@@ -2,7 +2,7 @@
 
 ## Overview
 
-This document covers production-grade compliance improvements delivered in Wave 5 to accelerate deployment readiness for SplitNaira backend.
+This document covers production-grade compliance improvements delivered in Wave 5 to accelerate deployment readiness for Stardial backend.
 
 ## Implementation Summary
 
@@ -83,7 +83,7 @@ npm run migration:run -w backend
 # - Verify API endpoints responding
 
 # 6. Verify post-deployment
-curl https://api.splitnaira.com/health
+curl https://api.stardial.com/health
 # Should return { "status": "ok" }
 ```
 

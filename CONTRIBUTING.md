@@ -1,6 +1,6 @@
-# 🤝 Contributing to SplitNaira
+# 🤝 Contributing to Stardial
 
-Thank you for your interest in contributing to **SplitNaira** — a royalty distribution platform built for Nigeria's creative economy on Stellar. Every contribution, big or small, helps us build a fairer system for artists, filmmakers, and creators across Nigeria.
+Thank you for your interest in contributing to **Stardial** — a royalty distribution platform built for Nigeria's creative economy on Stellar. Every contribution, big or small, helps us build a fairer system for artists, filmmakers, and creators across Nigeria.
 <!-- 
 This fix addresses GitHub Issue #292 (Security: Cross-Site Scripting (XSS) in Split Description Field) by implementing comprehensive XSS prevention across the entire application using a 3-layer defense strategy. -->
 ---<!-- ..
@@ -26,7 +26,7 @@ This fix addresses sGitHub Issue #292 (Security: Cross-Site Scripting (XSS) in S
 
 ## 📜 Code of Conduct
 
-By participating in this project, you agree to uphold a respectful and inclusive environment. We are committed to making SplitNaira welcoming for contributors regardless of background, experience level, nationality, or identity.
+By participating in this project, you agree to uphold a respectful and inclusive environment. We are committed to making Stardial welcoming for contributors regardless of background, experience level, nationality, or identity.
 
 **We do not tolerate:**
 - Harassment or discrimination of any kind
@@ -48,7 +48,7 @@ Found something broken? Open a GitHub Issue with:
 - Your environment (OS, browser, Node version)
 
 ### ✨ Feature Requests
-Have an idea to improve SplitNaira? Open an Issue tagged `enhancement` with:
+Have an idea to improve Stardial? Open an Issue tagged `enhancement` with:
 - A description of the feature
 - The problem it solves
 - Any mockups or references (optional)
@@ -65,7 +65,7 @@ You can contribute to:
 We welcome UI/UX improvements. Submit Figma links or design proposals as Issues tagged `design`.
 
 ### 🌍 Localization
-Help translate SplitNaira into Nigerian languages (Yoruba, Igbo, Hausa). Open an Issue tagged `i18n`.
+Help translate Stardial into Nigerian languages (Yoruba, Igbo, Hausa). Open an Issue tagged `i18n`.
 
 ---
 
@@ -75,8 +75,8 @@ Help translate SplitNaira into Nigerian languages (Yoruba, Igbo, Hausa). Open an
 
 ```bash
 # Fork the repo on GitHub, then:
-git clone https://github.com/YOUR_USERNAME/splitnaira.git
-cd splitnaira
+git clone https://github.com/YOUR_USERNAME/stardial.git
+cd stardial
 ```
 
 ### 2. Install Dependencies
@@ -249,7 +249,7 @@ npm run generate:contract-types
 make -C contracts generate
 ```
 
-This runs `contracts/scripts/generate-interface.mjs` to refresh `contracts/interface/splitnaira.contract-interface.json`, then updates `frontend/src/generated/contract-types.ts` and `backend/src/generated/contract-types.ts`. Commit the regenerated files with the contract change. CI runs `npm run verify:data-integrity` to ensure the artifacts stay in sync.
+This runs `contracts/scripts/generate-interface.mjs` to refresh `contracts/interface/stardial.contract-interface.json`, then updates `frontend/src/generated/contract-types.ts` and `backend/src/generated/contract-types.ts`. Commit the regenerated files with the contract change. CI runs `npm run verify:data-integrity` to ensure the artifacts stay in sync.
 
 ```rust
 /// Distributes accumulated revenue to all registered collaborators
@@ -289,7 +289,7 @@ pub fn distribute(env: Env, project_id: Symbol) -> Result<(), Error> {
 ## 🌐 Community
 
 - **GitHub Discussions** — for questions, ideas, and general chat
-- **Twitter/X** — follow [@SplitNaira](https://twitter.com) for updates
+- **Twitter/X** — follow [@Stardial](https://twitter.com) for updates
 - **Telegram** — join our builder community (link in GitHub bio)
 
 ---

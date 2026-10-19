@@ -42,11 +42,11 @@ async function validateMetrics() {
   if (!result.ok) {
     throw new Error(`Metrics endpoint returned HTTP ${result.status}`);
   }
-  if (!result.body.includes("splitnaira_info")) {
-    throw new Error("Metrics endpoint missing splitnaira_info metric");
+  if (!result.body.includes("stardial_info")) {
+    throw new Error("Metrics endpoint missing stardial_info metric");
   }
-  if (!result.body.includes("splitnaira_process_uptime_seconds")) {
-    throw new Error("Metrics endpoint missing splitnaira_process_uptime_seconds metric");
+  if (!result.body.includes("stardial_process_uptime_seconds")) {
+    throw new Error("Metrics endpoint missing stardial_process_uptime_seconds metric");
   }
   console.log("Metrics endpoint validation passed.");
 }
