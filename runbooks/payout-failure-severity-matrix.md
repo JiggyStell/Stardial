@@ -94,8 +94,17 @@ Payout failure reported or detected
 ### P0 Catastrophic — Immediate Actions
 
 1. **Freeze all payout operations immediately**:
-   - Set `PAYMENTS_ADMIN_WRITE_ENABLED=false` and restart backend.
-   - Invoke `pause_distributions` on the smart contract.
+   - Set `PAYMENTS_ADMIN_WRITE_ENABLED=false` and restart backend. This rejects
+     non-GET requests under `/splits/admin/*` with `503 payments_admin_writes_disabled`
+     (pause/unpause, allowlist changes, unallocated-withdrawal XDR). It does
+     **not** cover `POST /splits/:projectId/distribute` or
+     `POST /splits/:projectId/claim` — those are not admin routes, and the
+     backend will keep returning unsigned payout XDR while the flag is off.
+   - Invoke `pause_distributions` on the smart contract. This is the only
+     control that actually stops `distribute`, `batch_distribute` and `claim`
+     on-chain.
+   - If payout requests must also be refused at the edge, block the two routes
+     at the proxy/WAF until the contract pause is confirmed.
 2. **Incident Commander** opens a war room (`#incidents-payments`).
 3. **Security Officer** rotates `PAYMENTS_ADMIN_API_KEY` and audits access logs.
 4. **Lead Blockchain Eng** inspects contract state for corruption.

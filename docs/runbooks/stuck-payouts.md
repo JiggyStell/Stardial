@@ -161,6 +161,12 @@ HTTP 503 Service Unavailable
 
 #### 2. Smart Contract Distribution Pause (`pause_distributions`)
 
+> **Scope:** this flag guards `/splits/admin/*` only. It does **not** block
+> `POST /splits/:projectId/distribute` or `POST /splits/:projectId/claim`, so
+> the backend keeps serving unsigned payout XDR while it is off. Use
+> `pause_distributions` below — or a proxy/WAF block on those two routes — to
+> actually stop payouts.
+
 If contract-level payout freezing is required, invoke `pause_distributions` using the admin Stellar wallet:
 ```bash
 # Using Soroban CLI with contract admin identity
