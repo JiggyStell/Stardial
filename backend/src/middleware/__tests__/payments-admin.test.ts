@@ -421,3 +421,55 @@ describe("enforcePaymentsAdminWriteEnabled: method-allowlist bypass resistance (
     }
   });
 });
+
+describe("requirePaymentsAdminAccess: credential verification logging", () => {
+  // The secret-rotation runbooks verify a rotated key by grepping pod logs for
+  // ADMIN_ACCESS_GRANTED, so the granted line is part of the documented
+  // procedure and must exist without ever logging the key itself.
+  function mockReq(apiKey?: string): Request {
+    return {
+      method: "POST",
+      originalUrl: "/splits/admin/pause-distributions",
+      ip: "203.0.113.5",
+      header: (name: string) => (name === "x-admin-api-key" ? apiKey : undefined),
+    } as unknown as Request;
+  }
+
+  function mockRes(): Response {
+    return { locals: { requestId: "test-request-id" } } as unknown as Response;
+  }
+
+  it("logs ADMIN_ACCESS_GRANTED with a hashed ip and no key material", () => {
+    process.env.PAYMENTS_ADMIN_API_KEY = "rotated-admin-key";
+    clearEnvCache();
+    const infoSpy = vi.spyOn(logger, "info").mockImplementation(() => logger);
+
+    const next = vi.fn();
+    requirePaymentsAdminAccess(mockReq("rotated-admin-key"), mockRes(), next);
+
+    expect(next).toHaveBeenCalledTimes(1);
+    expect(infoSpy).toHaveBeenCalledTimes(1);
+    const [message, meta] = infoSpy.mock.calls[0] as [string, Record<string, unknown>];
+    expect(message).toBe("Payments admin request authorized");
+    expect(meta.event).toBe("ADMIN_ACCESS_GRANTED");
+    expect(meta.method).toBe("POST");
+    expect(meta.ip).toMatch(/^[0-9a-f]{16}$/);
+    expect(JSON.stringify(meta)).not.toContain("rotated-admin-key");
+
+    infoSpy.mockRestore();
+  });
+
+  it("does not log a grant when no key is configured", () => {
+    delete process.env.PAYMENTS_ADMIN_API_KEY;
+    clearEnvCache();
+    const infoSpy = vi.spyOn(logger, "info").mockImplementation(() => logger);
+
+    const next = vi.fn();
+    requirePaymentsAdminAccess(mockReq(), mockRes(), next);
+
+    expect(next).toHaveBeenCalledTimes(1);
+    expect(infoSpy).not.toHaveBeenCalled();
+
+    infoSpy.mockRestore();
+  });
+});
