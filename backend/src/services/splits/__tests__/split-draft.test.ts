@@ -9,6 +9,16 @@ import {
   getDraft,
 } from "../split-draft.registry.js";
 
+/** Rejection codes live on `error.code`; `error.message` is the human wording. */
+function rejection(fn: () => unknown): unknown {
+  try {
+    fn();
+  } catch (error) {
+    return error;
+  }
+  throw new Error("expected call to be rejected");
+}
+
 describe("split draft support (#1302)", () => {
   beforeEach(() => {
     resetSplitDraftRegistryForTests();
@@ -23,7 +33,9 @@ describe("split draft support (#1302)", () => {
     expect(draft.status).toBe("draft");
     expect(draft.title).toBe("WIP split");
     expect(isFinancialActionBlockedForDraft(draft)).toBe(true);
-    expect(() => assertNotDraft(draft)).toThrow(/financial_action_on_draft/);
+    expect(rejection(() => assertNotDraft(draft))).toMatchObject({
+      code: "financial_action_on_draft",
+    });
   });
 
   it("distinguishes draft from published", () => {
@@ -52,14 +64,16 @@ describe("split draft support (#1302)", () => {
         { address: "GB", basisPoints: 5000 },
       ],
     });
-    expect(() => assertNotDraft(draft)).toThrow(/financial_action_on_draft/);
+    expect(rejection(() => assertNotDraft(draft))).toMatchObject({
+      code: "financial_action_on_draft",
+    });
   });
 
   it("rejects publish when incomplete", () => {
     const draft = saveDraft({ owner: "GOWNER", title: "no token" });
-    expect(() => publishDraft({ id: draft.id, owner: "GOWNER" })).toThrow(
-      /draft_incomplete/,
-    );
+    expect(rejection(() => publishDraft({ id: draft.id, owner: "GOWNER" }))).toMatchObject({
+      code: "draft_incomplete",
+    });
   });
 
   it("allows discard of a draft", () => {

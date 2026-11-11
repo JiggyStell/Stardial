@@ -8,6 +8,16 @@ import {
   getProjectOwner,
 } from "../ownership-transfer.js";
 
+/** Rejection codes live on `error.code`; `error.message` is the human wording. */
+function rejection(fn: () => unknown): unknown {
+  try {
+    fn();
+  } catch (error) {
+    return error;
+  }
+  throw new Error("expected call to be rejected");
+}
+
 describe("ownership transfer (#1297)", () => {
   beforeEach(() => {
     resetOwnershipTransferForTests();
@@ -15,13 +25,15 @@ describe("ownership transfer (#1297)", () => {
 
   it("requires authorization from the current owner", () => {
     setProjectOwner("proj1", "GOWNER");
-    expect(() =>
-      transferOwnership({
-        projectId: "proj1",
-        actor: "GSTRANGER",
-        newOwner: "GNEW",
-      }),
-    ).toThrow(/forbidden_not_owner/);
+    expect(
+      rejection(() =>
+        transferOwnership({
+          projectId: "proj1",
+          actor: "GSTRANGER",
+          newOwner: "GNEW",
+        }),
+      ),
+    ).toMatchObject({ code: "forbidden_not_owner" });
   });
 
   it("validates the new owner", () => {
@@ -33,13 +45,15 @@ describe("ownership transfer (#1297)", () => {
         newOwner: "GOWNER",
       }),
     ).toThrow(/new_owner_same_as_current/);
-    expect(() =>
-      transferOwnership({
-        projectId: "proj1",
-        actor: "GOWNER",
-        newOwner: "x",
-      }),
-    ).toThrow(/invalid_new_owner/);
+    expect(
+      rejection(() =>
+        transferOwnership({
+          projectId: "proj1",
+          actor: "GOWNER",
+          newOwner: "x",
+        }),
+      ),
+    ).toMatchObject({ code: "invalid_new_owner" });
   });
 
   it("records the transfer in audit history and updates access", () => {

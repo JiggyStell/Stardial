@@ -28,8 +28,11 @@ describe("TransactionRecord entity", () => {
     expect(indexes.map((index) => index.name).sort()).toEqual(
       [
         "IDX_transactions_recipient",
+        "IDX_transactions_recipient_timestamp",
+        "IDX_transactions_recipient_timestamp_id",
         "IDX_transactions_round_id",
         "IDX_transactions_timestamp",
+        "IDX_transactions_timestamp_id",
         "IDX_transactions_tx_hash",
       ].sort(),
     );

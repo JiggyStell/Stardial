@@ -1,0 +1,1357 @@
+{
+  "schema": "https://stardial.dev/schemas/contract-interface.v1.json",
+  "schemaVersion": 1,
+  "generatedBy": "contracts/scripts/generate-interface.mjs",
+  "sourceHash": "401fcf35ea6ea880b96b23680714df49b1fc4f3b2980e8a6179a7b09360591b8",
+  "sources": [
+    "contracts/Cargo.toml",
+    "contracts/lib.rs",
+    "contracts/events.rs",
+    "contracts/errors.rs"
+  ],
+  "contract": {
+    "name": "StardialContract",
+    "package": "stardial-contracts",
+    "version": "0.1.0",
+    "sorobanSdk": "20.5.0"
+  },
+  "methods": [
+    {
+      "name": "set_admin",
+      "args": [
+        {
+          "name": "admin",
+          "type": "Address"
+        }
+      ],
+      "returnType": "Result<(), SplitError>",
+      "mutability": "write"
+    },
+    {
+      "name": "pause_distributions",
+      "args": [
+        {
+          "name": "admin",
+          "type": "Address"
+        }
+      ],
+      "returnType": "Result<(), SplitError>",
+      "mutability": "write"
+    },
+    {
+      "name": "unpause_distributions",
+      "args": [
+        {
+          "name": "admin",
+          "type": "Address"
+        }
+      ],
+      "returnType": "Result<(), SplitError>",
+      "mutability": "write"
+    },
+    {
+      "name": "get_max_collaborators",
+      "args": [],
+      "returnType": "u32",
+      "mutability": "write"
+    },
+    {
+      "name": "set_max_collaborators",
+      "args": [
+        {
+          "name": "admin",
+          "type": "Address"
+        },
+        {
+          "name": "value",
+          "type": "u32"
+        }
+      ],
+      "returnType": "Result<(), SplitError>",
+      "mutability": "write"
+    },
+    {
+      "name": "allow_token",
+      "args": [
+        {
+          "name": "admin",
+          "type": "Address"
+        },
+        {
+          "name": "token",
+          "type": "Address"
+        }
+      ],
+      "returnType": "Result<(), SplitError>",
+      "mutability": "write"
+    },
+    {
+      "name": "disallow_token",
+      "args": [
+        {
+          "name": "admin",
+          "type": "Address"
+        },
+        {
+          "name": "token",
+          "type": "Address"
+        }
+      ],
+      "returnType": "Result<(), SplitError>",
+      "mutability": "write"
+    },
+    {
+      "name": "create_project",
+      "args": [
+        {
+          "name": "owner",
+          "type": "Address"
+        },
+        {
+          "name": "project_id",
+          "type": "Symbol"
+        },
+        {
+          "name": "title",
+          "type": "String"
+        },
+        {
+          "name": "project_type",
+          "type": "String"
+        },
+        {
+          "name": "token",
+          "type": "Address"
+        },
+        {
+          "name": "collaborators",
+          "type": "Vec<Collaborator>"
+        }
+      ],
+      "returnType": "Result<(), SplitError>",
+      "mutability": "write"
+    },
+    {
+      "name": "update_collaborators",
+      "args": [
+        {
+          "name": "project_id",
+          "type": "Symbol"
+        },
+        {
+          "name": "owner",
+          "type": "Address"
+        },
+        {
+          "name": "collaborators",
+          "type": "Vec<Collaborator>"
+        }
+      ],
+      "returnType": "Result<(), SplitError>",
+      "mutability": "write"
+    },
+    {
+      "name": "lock_project",
+      "args": [
+        {
+          "name": "project_id",
+          "type": "Symbol"
+        },
+        {
+          "name": "owner",
+          "type": "Address"
+        }
+      ],
+      "returnType": "Result<(), SplitError>",
+      "mutability": "write"
+    },
+    {
+      "name": "deposit",
+      "args": [
+        {
+          "name": "project_id",
+          "type": "Symbol"
+        },
+        {
+          "name": "from",
+          "type": "Address"
+        },
+        {
+          "name": "amount",
+          "type": "i128"
+        }
+      ],
+      "returnType": "Result<(), SplitError>",
+      "mutability": "write"
+    },
+    {
+      "name": "distribute",
+      "args": [
+        {
+          "name": "project_id",
+          "type": "Symbol"
+        }
+      ],
+      "returnType": "Result<(), SplitError>",
+      "mutability": "write"
+    },
+    {
+      "name": "batch_distribute",
+      "args": [
+        {
+          "name": "project_ids",
+          "type": "Vec<Symbol>"
+        }
+      ],
+      "returnType": "Result<Vec<(Symbol, Option<SplitError>)>, SplitError>",
+      "mutability": "write"
+    },
+    {
+      "name": "claim",
+      "args": [
+        {
+          "name": "project_id",
+          "type": "Symbol"
+        },
+        {
+          "name": "claimer",
+          "type": "Address"
+        }
+      ],
+      "returnType": "Result<i128, SplitError>",
+      "mutability": "write"
+    },
+    {
+      "name": "get_project",
+      "args": [
+        {
+          "name": "project_id",
+          "type": "Symbol"
+        }
+      ],
+      "returnType": "Option<SplitProject>",
+      "mutability": "read"
+    },
+    {
+      "name": "project_exists",
+      "args": [
+        {
+          "name": "project_id",
+          "type": "Symbol"
+        }
+      ],
+      "returnType": "bool",
+      "mutability": "read"
+    },
+    {
+      "name": "get_claimed",
+      "args": [
+        {
+          "name": "project_id",
+          "type": "Symbol"
+        },
+        {
+          "name": "address",
+          "type": "Address"
+        }
+      ],
+      "returnType": "i128",
+      "mutability": "read"
+    },
+    {
+      "name": "refresh_project_storage",
+      "args": [
+        {
+          "name": "project_id",
+          "type": "Symbol"
+        }
+      ],
+      "returnType": "Result<(), SplitError>",
+      "mutability": "maintenance"
+    },
+    {
+      "name": "get_project_count",
+      "args": [],
+      "returnType": "u32",
+      "mutability": "read"
+    },
+    {
+      "name": "list_projects",
+      "args": [
+        {
+          "name": "start",
+          "type": "u32"
+        },
+        {
+          "name": "limit",
+          "type": "u32"
+        }
+      ],
+      "returnType": "Vec<SplitProject>",
+      "mutability": "read"
+    },
+    {
+      "name": "list_project_summaries",
+      "args": [
+        {
+          "name": "start",
+          "type": "u32"
+        },
+        {
+          "name": "limit",
+          "type": "u32"
+        }
+      ],
+      "returnType": "Vec<ProjectSummary>",
+      "mutability": "read"
+    },
+    {
+      "name": "get_balance",
+      "args": [
+        {
+          "name": "project_id",
+          "type": "Symbol"
+        }
+      ],
+      "returnType": "Result<i128, SplitError>",
+      "mutability": "read"
+    },
+    {
+      "name": "get_unallocated_balance",
+      "args": [
+        {
+          "name": "token",
+          "type": "Address"
+        }
+      ],
+      "returnType": "Result<i128, SplitError>",
+      "mutability": "read"
+    },
+    {
+      "name": "withdraw_unallocated",
+      "args": [
+        {
+          "name": "admin",
+          "type": "Address"
+        },
+        {
+          "name": "token",
+          "type": "Address"
+        },
+        {
+          "name": "to",
+          "type": "Address"
+        },
+        {
+          "name": "amount",
+          "type": "i128"
+        }
+      ],
+      "returnType": "Result<(), SplitError>",
+      "mutability": "write"
+    },
+    {
+      "name": "is_token_allowed",
+      "args": [
+        {
+          "name": "token",
+          "type": "Address"
+        }
+      ],
+      "returnType": "bool",
+      "mutability": "read"
+    },
+    {
+      "name": "is_distributions_paused",
+      "args": [],
+      "returnType": "bool",
+      "mutability": "read"
+    },
+    {
+      "name": "get_allowed_token_count",
+      "args": [],
+      "returnType": "u32",
+      "mutability": "read"
+    },
+    {
+      "name": "get_allowed_tokens",
+      "args": [
+        {
+          "name": "start",
+          "type": "u32"
+        },
+        {
+          "name": "limit",
+          "type": "u32"
+        }
+      ],
+      "returnType": "Vec<Address>",
+      "mutability": "read"
+    },
+    {
+      "name": "get_admin",
+      "args": [],
+      "returnType": "Option<Address>",
+      "mutability": "read"
+    },
+    {
+      "name": "get_project_ids",
+      "args": [
+        {
+          "name": "start",
+          "type": "u32"
+        },
+        {
+          "name": "limit",
+          "type": "u32"
+        }
+      ],
+      "returnType": "Vec<Symbol>",
+      "mutability": "read"
+    },
+    {
+      "name": "migrate_flat_to_buckets",
+      "args": [
+        {
+          "name": "admin",
+          "type": "Address"
+        }
+      ],
+      "returnType": "Result<(), SplitError>",
+      "mutability": "maintenance"
+    },
+    {
+      "name": "get_claimable",
+      "args": [
+        {
+          "name": "project_id",
+          "type": "Symbol"
+        },
+        {
+          "name": "collaborator",
+          "type": "Address"
+        }
+      ],
+      "returnType": "Result<ClaimableInfo, SplitError>",
+      "mutability": "read"
+    },
+    {
+      "name": "update_project_metadata",
+      "args": [
+        {
+          "name": "project_id",
+          "type": "Symbol"
+        },
+        {
+          "name": "owner",
+          "type": "Address"
+        },
+        {
+          "name": "title",
+          "type": "String"
+        },
+        {
+          "name": "project_type",
+          "type": "String"
+        }
+      ],
+      "returnType": "Result<(), SplitError>",
+      "mutability": "write"
+    },
+    {
+      "name": "transfer_project_ownership",
+      "args": [
+        {
+          "name": "project_id",
+          "type": "Symbol"
+        },
+        {
+          "name": "current_owner",
+          "type": "Address"
+        },
+        {
+          "name": "new_owner",
+          "type": "Address"
+        }
+      ],
+      "returnType": "Result<(), SplitError>",
+      "mutability": "write"
+    }
+  ],
+  "events": [
+    {
+      "name": "ProjectCreated",
+      "rustName": "ProjectCreated",
+      "topics": [
+        {
+          "position": 0,
+          "type": "Symbol",
+          "value": "ProjectCreated"
+        },
+        {
+          "position": 1,
+          "type": "from_field",
+          "field": null
+        }
+      ],
+      "data": {
+        "tupleFields": []
+      },
+      "fields": [
+        {
+          "name": "project_id",
+          "type": "Symbol",
+          "doc": ""
+        },
+        {
+          "name": "owner",
+          "type": "Address",
+          "doc": ""
+        }
+      ]
+    },
+    {
+      "name": "ProjectLocked",
+      "rustName": "ProjectLocked",
+      "topics": [
+        {
+          "position": 0,
+          "type": "Symbol",
+          "value": "ProjectLocked"
+        },
+        {
+          "position": 1,
+          "type": "from_field",
+          "field": null
+        }
+      ],
+      "data": {
+        "tupleFields": []
+      },
+      "fields": [
+        {
+          "name": "project_id",
+          "type": "Symbol",
+          "doc": ""
+        }
+      ]
+    },
+    {
+      "name": "PaymentSent",
+      "rustName": "PaymentSent",
+      "topics": [
+        {
+          "position": 0,
+          "type": "Symbol",
+          "value": "PaymentSent"
+        },
+        {
+          "position": 1,
+          "type": "from_field",
+          "field": null
+        }
+      ],
+      "data": {
+        "tupleFields": []
+      },
+      "fields": [
+        {
+          "name": "project_id",
+          "type": "Symbol",
+          "doc": ""
+        },
+        {
+          "name": "recipient",
+          "type": "Address",
+          "doc": ""
+        },
+        {
+          "name": "amount",
+          "type": "i128",
+          "doc": "Payment amount in stroops; must be > 0."
+        }
+      ]
+    },
+    {
+      "name": "DistributionComplete",
+      "rustName": "DistributionComplete",
+      "topics": [
+        {
+          "position": 0,
+          "type": "Symbol",
+          "value": "DistributionComplete"
+        },
+        {
+          "position": 1,
+          "type": "from_field",
+          "field": null
+        }
+      ],
+      "data": {
+        "tupleFields": []
+      },
+      "fields": [
+        {
+          "name": "project_id",
+          "type": "Symbol",
+          "doc": ""
+        },
+        {
+          "name": "round",
+          "type": "u32",
+          "doc": "Round counter (1-based)."
+        },
+        {
+          "name": "total",
+          "type": "i128",
+          "doc": "Total amount distributed in this round, in stroops; must be ≥ 0."
+        }
+      ]
+    },
+    {
+      "name": "DepositReceived",
+      "rustName": "DepositReceived",
+      "topics": [
+        {
+          "position": 0,
+          "type": "Symbol",
+          "value": "DepositReceived"
+        },
+        {
+          "position": 1,
+          "type": "from_field",
+          "field": null
+        }
+      ],
+      "data": {
+        "tupleFields": []
+      },
+      "fields": [
+        {
+          "name": "project_id",
+          "type": "Symbol",
+          "doc": ""
+        },
+        {
+          "name": "from",
+          "type": "Address",
+          "doc": ""
+        },
+        {
+          "name": "amount",
+          "type": "i128",
+          "doc": "Deposited amount in stroops; must be > 0."
+        },
+        {
+          "name": "project_balance",
+          "type": "i128",
+          "doc": "Running project balance after this deposit, in stroops; must be ≥ 0."
+        }
+      ]
+    },
+    {
+      "name": "MetadataUpdated",
+      "rustName": "MetadataUpdated",
+      "topics": [
+        {
+          "position": 0,
+          "type": "Symbol",
+          "value": "MetadataUpdated"
+        },
+        {
+          "position": 1,
+          "type": "from_field",
+          "field": null
+        }
+      ],
+      "data": {
+        "tupleFields": []
+      },
+      "fields": [
+        {
+          "name": "project_id",
+          "type": "Symbol",
+          "doc": ""
+        }
+      ]
+    },
+    {
+      "name": "UnallocatedWithdrawn",
+      "rustName": "UnallocatedWithdrawn",
+      "topics": [
+        {
+          "position": 0,
+          "type": "Symbol",
+          "value": "UnallocatedWithdrawn"
+        },
+        {
+          "position": 1,
+          "type": "from_field",
+          "field": null
+        }
+      ],
+      "data": {
+        "tupleFields": []
+      },
+      "fields": [
+        {
+          "name": "token",
+          "type": "Address",
+          "doc": ""
+        },
+        {
+          "name": "admin",
+          "type": "Address",
+          "doc": ""
+        },
+        {
+          "name": "to",
+          "type": "Address",
+          "doc": ""
+        },
+        {
+          "name": "amount",
+          "type": "i128",
+          "doc": "Amount withdrawn in stroops; must be > 0."
+        },
+        {
+          "name": "remaining_unallocated",
+          "type": "i128",
+          "doc": "Remaining unallocated balance in stroops; must be ≥ 0."
+        }
+      ]
+    },
+    {
+      "name": "OwnershipTransferred",
+      "rustName": "OwnershipTransferred",
+      "topics": [
+        {
+          "position": 0,
+          "type": "Symbol",
+          "value": "OwnershipTransferred"
+        },
+        {
+          "position": 1,
+          "type": "from_field",
+          "field": null
+        }
+      ],
+      "data": {
+        "tupleFields": []
+      },
+      "fields": [
+        {
+          "name": "project_id",
+          "type": "Symbol",
+          "doc": ""
+        },
+        {
+          "name": "previous_owner",
+          "type": "Address",
+          "doc": ""
+        },
+        {
+          "name": "new_owner",
+          "type": "Address",
+          "doc": ""
+        }
+      ]
+    },
+    {
+      "name": "CollaboratorsUpdated",
+      "rustName": "CollaboratorsUpdated",
+      "topics": [
+        {
+          "position": 0,
+          "type": "Symbol",
+          "value": "CollaboratorsUpdated"
+        },
+        {
+          "position": 1,
+          "type": "from_field",
+          "field": null
+        }
+      ],
+      "data": {
+        "tupleFields": []
+      },
+      "fields": [
+        {
+          "name": "project_id",
+          "type": "Symbol",
+          "doc": ""
+        }
+      ]
+    },
+    {
+      "name": "DistributionsPaused",
+      "rustName": "DistributionsPaused",
+      "topics": [
+        {
+          "position": 0,
+          "type": "Symbol",
+          "value": "DistributionsPaused"
+        },
+        {
+          "position": 1,
+          "type": "from_field",
+          "field": null
+        }
+      ],
+      "data": {
+        "tupleFields": []
+      },
+      "fields": [
+        {
+          "name": "admin",
+          "type": "Address",
+          "doc": ""
+        }
+      ]
+    },
+    {
+      "name": "DistributionsUnpaused",
+      "rustName": "DistributionsUnpaused",
+      "topics": [
+        {
+          "position": 0,
+          "type": "Symbol",
+          "value": "DistributionsUnpaused"
+        },
+        {
+          "position": 1,
+          "type": "from_field",
+          "field": null
+        }
+      ],
+      "data": {
+        "tupleFields": []
+      },
+      "fields": [
+        {
+          "name": "admin",
+          "type": "Address",
+          "doc": ""
+        }
+      ]
+    },
+    {
+      "name": "CollaboratorClaimed",
+      "rustName": "CollaboratorClaimed",
+      "topics": [
+        {
+          "position": 0,
+          "type": "Symbol",
+          "value": "CollaboratorClaimed"
+        },
+        {
+          "position": 1,
+          "type": "from_field",
+          "field": null
+        }
+      ],
+      "data": {
+        "tupleFields": []
+      },
+      "fields": [
+        {
+          "name": "project_id",
+          "type": "Symbol",
+          "doc": ""
+        },
+        {
+          "name": "claimer",
+          "type": "Address",
+          "doc": ""
+        },
+        {
+          "name": "amount",
+          "type": "i128",
+          "doc": "Claimed amount in stroops; must be > 0."
+        },
+        {
+          "name": "distribution_round",
+          "type": "u32",
+          "doc": "1-based distribution round in which the claim was made."
+        }
+      ]
+    },
+    {
+      "name": "SplitsUpdatedWithPendingBalance",
+      "rustName": "SplitsUpdatedWithPendingBalance",
+      "topics": [
+        {
+          "position": 0,
+          "type": "Symbol",
+          "value": "SplitsUpdatedWithPendingBalance"
+        },
+        {
+          "position": 1,
+          "type": "from_field",
+          "field": null
+        }
+      ],
+      "data": {
+        "tupleFields": []
+      },
+      "fields": [
+        {
+          "name": "project_id",
+          "type": "Symbol",
+          "doc": ""
+        },
+        {
+          "name": "pending_balance",
+          "type": "i128",
+          "doc": "Undistributed balance at the time of the split update, in stroops; must be > 0."
+        }
+      ]
+    },
+    {
+      "name": "TokenAllowed",
+      "rustName": "TokenAllowed",
+      "topics": [
+        {
+          "position": 0,
+          "type": "Symbol",
+          "value": "TokenAllowed"
+        },
+        {
+          "position": 1,
+          "type": "from_field",
+          "field": null
+        }
+      ],
+      "data": {
+        "tupleFields": []
+      },
+      "fields": [
+        {
+          "name": "token",
+          "type": "Address",
+          "doc": ""
+        },
+        {
+          "name": "admin",
+          "type": "Address",
+          "doc": ""
+        }
+      ]
+    },
+    {
+      "name": "TokenDisallowed",
+      "rustName": "TokenDisallowed",
+      "topics": [
+        {
+          "position": 0,
+          "type": "Symbol",
+          "value": "TokenDisallowed"
+        },
+        {
+          "position": 1,
+          "type": "from_field",
+          "field": null
+        }
+      ],
+      "data": {
+        "tupleFields": []
+      },
+      "fields": [
+        {
+          "name": "token",
+          "type": "Address",
+          "doc": ""
+        },
+        {
+          "name": "admin",
+          "type": "Address",
+          "doc": ""
+        }
+      ]
+    },
+    {
+      "name": "accounting_discrepancy",
+      "rustName": "AccountingDiscrepancy",
+      "topics": [
+        {
+          "position": 0,
+          "type": "Symbol",
+          "value": "accounting_discrepancy"
+        },
+        {
+          "position": 1,
+          "type": "from_field",
+          "field": "token"
+        }
+      ],
+      "data": {
+        "tupleFields": [
+          "contract_balance",
+          "accounted_balance"
+        ]
+      },
+      "fields": [
+        {
+          "name": "token",
+          "type": "Address",
+          "doc": ""
+        },
+        {
+          "name": "contract_balance",
+          "type": "i128",
+          "doc": ""
+        },
+        {
+          "name": "accounted_balance",
+          "type": "i128",
+          "doc": ""
+        }
+      ]
+    }
+  ],
+  "types": {
+    "Collaborator": {
+      "kind": "struct",
+      "fields": [
+        {
+          "name": "address",
+          "type": "Address",
+          "doc": "Stellar wallet address of the collaborator"
+        },
+        {
+          "name": "alias",
+          "type": "String",
+          "doc": "Human-readable alias (e.g. \"Burna B.\")"
+        },
+        {
+          "name": "basis_points",
+          "type": "u32",
+          "doc": "Percentage share in basis points (e.g. 5000 = 50.00%) Using basis points avoids floating point entirely."
+        }
+      ]
+    },
+    "SplitProject": {
+      "kind": "struct",
+      "fields": [
+        {
+          "name": "project_id",
+          "type": "Symbol",
+          "doc": "Unique project identifier"
+        },
+        {
+          "name": "title",
+          "type": "String",
+          "doc": "Human-readable project title"
+        },
+        {
+          "name": "project_type",
+          "type": "String",
+          "doc": "Project type: \"music\", \"film\", \"art\", \"podcast\", \"book\", \"other\""
+        },
+        {
+          "name": "token",
+          "type": "Address",
+          "doc": "Token contract address (XLM or USDC)"
+        },
+        {
+          "name": "owner",
+          "type": "Address",
+          "doc": "The project creator / admin address"
+        },
+        {
+          "name": "collaborators",
+          "type": "Vec<Collaborator>",
+          "doc": "All collaborators and their splits"
+        },
+        {
+          "name": "locked",
+          "type": "bool",
+          "doc": "Whether the split is locked (immutable after locking)"
+        },
+        {
+          "name": "total_distributed",
+          "type": "i128",
+          "doc": "Total funds distributed so far (in token stroops)"
+        },
+        {
+          "name": "distribution_round",
+          "type": "u32",
+          "doc": "Number of successful distribution rounds completed"
+        }
+      ]
+    },
+    "ClaimableInfo": {
+      "kind": "struct",
+      "fields": [
+        {
+          "name": "claimed",
+          "type": "i128",
+          "doc": "Total amount claimed (paid out) to this collaborator across all rounds"
+        },
+        {
+          "name": "distribution_round",
+          "type": "u32",
+          "doc": "Push-based `distribute` rounds only (not `claim`)."
+        },
+        {
+          "name": "last_claim_amount",
+          "type": "i128",
+          "doc": "Most recent `claim` payout amount for this collaborator."
+        }
+      ]
+    },
+    "ProjectSummary": {
+      "kind": "struct",
+      "fields": [
+        {
+          "name": "project_id",
+          "type": "Symbol",
+          "doc": "Unique project identifier"
+        },
+        {
+          "name": "title",
+          "type": "String",
+          "doc": "Human-readable title"
+        },
+        {
+          "name": "owner",
+          "type": "Address",
+          "doc": "Project owner"
+        },
+        {
+          "name": "locked",
+          "type": "bool",
+          "doc": "Whether collaborator configuration is immutable"
+        },
+        {
+          "name": "distribution_round",
+          "type": "u32",
+          "doc": "Number of completed distributions"
+        }
+      ]
+    },
+    "DataKey": {
+      "kind": "enum",
+      "variants": [
+        {
+          "name": "Project",
+          "fields": [
+            "Symbol"
+          ],
+          "doc": "Stores SplitProject by project_id"
+        },
+        {
+          "name": "ProjectBalance",
+          "fields": [
+            "Symbol"
+          ],
+          "doc": "Tracks available project-specific funds that can be distributed"
+        },
+        {
+          "name": "Claimed",
+          "fields": [
+            "Symbol",
+            "Address"
+          ],
+          "doc": "Tracks how much each address has claimed per project"
+        },
+        {
+          "name": "LastClaimAmount",
+          "fields": [
+            "Symbol",
+            "Address"
+          ],
+          "doc": "Amount from the most recent claim for a collaborator on a project"
+        },
+        {
+          "name": "ProjectCount",
+          "fields": [],
+          "doc": "Total project count (for enumeration)"
+        },
+        {
+          "name": "ProjectIds",
+          "fields": [],
+          "doc": "Deprecated flat project ID index. Use `ProjectIdsBucket` instead."
+        },
+        {
+          "name": "ProjectIdsBucket",
+          "fields": [
+            "u32"
+          ],
+          "doc": "Bucketed project ID index for memory-efficient pagination. Each bucket holds up to PROJECT_ID_BUCKET_SIZE IDs."
+        },
+        {
+          "name": "ProjectIdsBucketCount",
+          "fields": [],
+          "doc": "Total number of buckets in the ProjectIdsBucket index."
+        },
+        {
+          "name": "Admin",
+          "fields": [],
+          "doc": "Contract admin for global allowlist management"
+        },
+        {
+          "name": "AllowedTokenCount",
+          "fields": [],
+          "doc": "Number of allowlisted token contract addresses"
+        },
+        {
+          "name": "AllowedTokenList",
+          "fields": [],
+          "doc": "Ordered list of allowlisted token contract addresses"
+        },
+        {
+          "name": "AllowedToken",
+          "fields": [
+            "Address"
+          ],
+          "doc": "Allowlisted token contract address marker"
+        },
+        {
+          "name": "AccountedTokenBalance",
+          "fields": [
+            "Address"
+          ],
+          "doc": "Cached total of all project balances for a given token"
+        },
+        {
+          "name": "DistributionsPaused",
+          "fields": [],
+          "doc": "Global flag to pause all distributions (emergency stop)"
+        },
+        {
+          "name": "MaxCollaborators",
+          "fields": [],
+          "doc": "Admin-configurable per-project collaborator cap. When unset, the contract falls back to `DEFAULT_MAX_COLLABORATORS`."
+        },
+        {
+          "name": "ClaimEpoch",
+          "fields": [
+            "Symbol"
+          ],
+          "doc": "Monotonic per-project \"claim epoch\" counter. Bumped whenever new funds become claimable (a `deposit`) or the pending balance is settled by a push `distribute`. Used to enforce one claim per collaborator per epoch."
+        },
+        {
+          "name": "LastClaimEpoch",
+          "fields": [
+            "Symbol",
+            "Address"
+          ],
+          "doc": "The `ClaimEpoch` value a collaborator last successfully claimed at. Presence indicates the collaborator has claimed within the current epoch."
+        }
+      ]
+    }
+  },
+  "errors": [
+    {
+      "name": "ProjectExists",
+      "code": 1,
+      "doc": "A project with the specified ID already exists."
+    },
+    {
+      "name": "NotFound",
+      "code": 2,
+      "doc": "The requested project could not be found."
+    },
+    {
+      "name": "AlreadyLocked",
+      "code": 8,
+      "doc": "The project has already been permanently locked."
+    },
+    {
+      "name": "ProjectLocked",
+      "code": 9,
+      "doc": "The project is locked and cannot be modified."
+    },
+    {
+      "name": "Unauthorized",
+      "code": 3,
+      "doc": "The caller is not authorized to perform the requested action."
+    },
+    {
+      "name": "NotACollaborator",
+      "code": 18,
+      "doc": "The address is not a registered collaborator on the project."
+    },
+    {
+      "name": "InvalidSplit",
+      "code": 4,
+      "doc": "Collaborator basis points must total exactly 10,000."
+    },
+    {
+      "name": "TooFewCollaborators",
+      "code": 5,
+      "doc": "At least two collaborators are required."
+    },
+    {
+      "name": "ZeroShare",
+      "code": 6,
+      "doc": "A collaborator cannot have a zero share."
+    },
+    {
+      "name": "DuplicateCollaborator",
+      "code": 10,
+      "doc": "A duplicate collaborator address was provided."
+    },
+    {
+      "name": "InvalidAmount",
+      "code": 11,
+      "doc": "The specified deposit or transfer amount is invalid."
+    },
+    {
+      "name": "InvalidRecipient",
+      "code": 17,
+      "doc": "The recipient address is invalid.  This prevents funds from being sent to the contract itself."
+    },
+    {
+      "name": "TooManyCollaborators",
+      "code": 19,
+      "doc": "The maximum number of collaborators has been exceeded."
+    },
+    {
+      "name": "NoBalance",
+      "code": 7,
+      "doc": "The project has no balance available for distribution."
+    },
+    {
+      "name": "TokenNotAllowed",
+      "code": 12,
+      "doc": "The token is not included in the configured allowlist."
+    },
+    {
+      "name": "InsufficientUnallocated",
+      "code": 15,
+      "doc": "The requested withdrawal exceeds the available unallocated funds."
+    },
+    {
+      "name": "AdminNotSet",
+      "code": 13,
+      "doc": "The contract administrator has not been configured."
+    },
+    {
+      "name": "DistributionsPaused",
+      "code": 16,
+      "doc": "Distribution operations are currently paused by the administrator."
+    },
+    {
+      "name": "AccountingDiscrepancy",
+      "code": 20,
+      "doc": "The cached accounted balance exceeds the contract's actual token balance."
+    },
+    {
+      "name": "InvalidMaxCollaborators",
+      "code": 21,
+      "doc": "The administrator-supplied collaborator capacity is outside the permitted range."
+    },
+    {
+      "name": "ArithmeticOverflow",
+      "code": 14,
+      "doc": "An arithmetic operation overflowed.  Error code `14` is intentionally preserved because it is already part of the contract's public error-code interface."
+    },
+    {
+      "name": "AlreadyClaimed",
+      "code": 22,
+      "doc": "The claimer has already claimed their entitlement for the current claim epoch (the period since the last deposit or push distribution).  This prevents a participant from draining a project balance by repeatedly claiming against the same entitlement. A new claim becomes available once new funds are deposited or a distribution round settles the current balance."
+    }
+  ]
+}

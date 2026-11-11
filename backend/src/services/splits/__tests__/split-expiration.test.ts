@@ -8,6 +8,16 @@ import {
 } from "../split-expiration.registry.js";
 import { deriveSplitState } from "../../../lib/split-lifecycle.js";
 
+/** Rejection codes live on `error.code`; `error.message` is the human wording. */
+function rejection(fn: () => unknown): unknown {
+  try {
+    fn();
+  } catch (error) {
+    return error;
+  }
+  throw new Error("expected call to be rejected");
+}
+
 describe("split expiration (#1303)", () => {
   beforeEach(() => {
     resetSplitExpirationRegistryForTests();
@@ -15,15 +25,17 @@ describe("split expiration (#1303)", () => {
 
   it("defines optional expiration and validates against creation time", () => {
     const created = new Date("2026-06-01T00:00:00.000Z");
-    expect(() =>
-      configureExpiration({
-        projectId: "proj1",
-        createdAt: created,
-        expiresAt: new Date("2026-05-01T00:00:00.000Z"),
-        actor: "GOWNER",
-        now: created,
-      }),
-    ).toThrow(/expiration_before_creation/);
+    expect(
+      rejection(() =>
+        configureExpiration({
+          projectId: "proj1",
+          createdAt: created,
+          expiresAt: new Date("2026-05-01T00:00:00.000Z"),
+          actor: "GOWNER",
+          now: created,
+        }),
+      ),
+    ).toMatchObject({ code: "expiration_before_creation" });
 
     const record = configureExpiration({
       projectId: "proj1",
@@ -49,7 +61,9 @@ describe("split expiration (#1303)", () => {
     });
     const after = new Date("2026-07-02T00:00:00.000Z");
     expect(isSplitExpired("proj1", after)).toBe(true);
-    expect(() => assertNotExpired("proj1", after)).toThrow(/split_expired/);
+    expect(rejection(() => assertNotExpired("proj1", after))).toMatchObject({
+      code: "split_expired",
+    });
     expect(
       listExpirationEvents("proj1").some((e) => e.type === "expiration.reached"),
     ).toBe(true);
