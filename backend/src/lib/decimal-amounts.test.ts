@@ -14,7 +14,7 @@ import {
   sumAmounts,
   toUnits,
   isValidAmountString,
-} from "./decimal-amounts";
+} from "./decimal-amounts.js";
 
 /**
  * Decimal precision boundary tests (#1479).

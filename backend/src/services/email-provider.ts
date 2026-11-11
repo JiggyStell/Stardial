@@ -162,6 +162,16 @@ export interface EmailFlowTokenClaims {
    * same second.
    */
   jti?: string;
+  /**
+   * User the token was issued for. Email-change tokens carry it so the confirm
+   * step can find the account without trusting a client-supplied id.
+   */
+  uid?: string;
+  /**
+   * Email address on the account when the change was requested, normalized.
+   * The confirm step refuses the token if the account email has moved on.
+   */
+  prev?: string;
 }
 
 export function signEmailFlowToken(
@@ -184,6 +194,8 @@ export function verifyEmailFlowToken(
       purpose?: string;
       sv?: unknown;
       jti?: unknown;
+      uid?: unknown;
+      prev?: unknown;
     };
     if (payload.purpose !== expectedPurpose || !payload.email) {
       return null;
@@ -193,6 +205,8 @@ export function verifyEmailFlowToken(
       email: payload.email,
       ...(typeof payload.sv === "number" ? { sv: payload.sv } : {}),
       ...(typeof payload.jti === "string" ? { jti: payload.jti } : {}),
+      ...(typeof payload.uid === "string" ? { uid: payload.uid } : {}),
+      ...(typeof payload.prev === "string" ? { prev: payload.prev } : {}),
     };
   } catch {
     return null;

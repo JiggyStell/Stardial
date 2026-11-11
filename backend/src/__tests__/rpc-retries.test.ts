@@ -110,9 +110,14 @@ describe("RPC Retry and Timeout Policy", () => {
       });
 
       expect(warnSpy).toHaveBeenCalled();
-      const callArgs = warnSpy.mock.calls.find(([, meta]) =>
-        meta && typeof meta === "object" && (meta as Record<string, unknown>).operation === "simulateTransaction"
-      );
+      const callArgs = warnSpy.mock.calls.find((call: unknown) => {
+        const meta = (call as unknown[])[1];
+        return (
+          meta &&
+          typeof meta === "object" &&
+          (meta as Record<string, unknown>).operation === "simulateTransaction"
+        );
+      });
       expect(callArgs).toBeTruthy();
       const [, meta] = callArgs!;
       // The log must be structured: include operation, attempt, delayMs, endpoint.

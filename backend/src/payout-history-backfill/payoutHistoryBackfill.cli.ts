@@ -1,4 +1,4 @@
-import { PayoutHistoryBackfillService } from "./payoutHistoryBackfill.service";
+import { PayoutHistoryBackfillService } from "./payoutHistoryBackfill.service.js";
 
 interface CliDependencies {
   service: PayoutHistoryBackfillService;

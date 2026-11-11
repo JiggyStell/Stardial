@@ -230,7 +230,7 @@ describe("Security: XSS Prevention", () => {
           title: "Safe Title",
           projectType: validType,
         });
-        expect(result.success).toBe(true, `Failed for ${validType}`);
+        expect(result.success, `Failed for ${validType}`).toBe(true);
       }
     });
   });
@@ -311,10 +311,7 @@ describe("Security: XSS Prevention", () => {
           ...basePayload,
           title: payload,
         });
-        expect(result.success).toBe(
-          false,
-          `${name} should be rejected but was accepted`
-        );
+        expect(result.success, `${name} should be rejected but was accepted`).toBe(false);
       });
 
       it(`should reject ${name} in projectType`, () => {
@@ -322,10 +319,10 @@ describe("Security: XSS Prevention", () => {
           ...basePayload,
           projectType: payload,
         });
-        expect(result.success).toBe(
-          false,
+        expect(
+          result.success,
           `${name} should be rejected in projectType but was accepted`
-        );
+        ).toBe(false);
       });
     });
   });

@@ -1,5 +1,5 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from "vitest";
-import { requestTimeout } from "../middleware/timeout";
+import { requestTimeout } from "../middleware/timeout.js";
 import type { Request, Response, NextFunction } from "express";
 
 function makeRes(overrides: Partial<Response> & { locals?: Record<string, unknown> } = {}): Response {

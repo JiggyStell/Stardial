@@ -47,12 +47,14 @@ describe("database initialization", () => {
 
     const initializeSpy = vi.spyOn(DataSource.prototype, "initialize").mockImplementation(async function (this: DataSource) {
       await initializationGate;
-      this.isInitialized = true;
+      // isInitialized is read-only in TypeORM types; the mock needs to set it.
+      (this as unknown as { isInitialized: boolean }).isInitialized = true;
       return this;
     });
 
     const destroySpy = vi.spyOn(DataSource.prototype, "destroy").mockImplementation(async function (this: DataSource) {
-      this.isInitialized = false;
+      // isInitialized is read-only in TypeORM types; the mock needs to set it.
+      (this as unknown as { isInitialized: boolean }).isInitialized = false;
     });
 
     const first = initDatabase();
@@ -89,11 +91,13 @@ describe("withTransaction", () => {
 
   it("commits when the callback succeeds", async () => {
     vi.spyOn(DataSource.prototype, "initialize").mockImplementation(async function (this: DataSource) {
-      this.isInitialized = true;
+      // isInitialized is read-only in TypeORM types; the mock needs to set it.
+      (this as unknown as { isInitialized: boolean }).isInitialized = true;
       return this;
     });
     vi.spyOn(DataSource.prototype, "destroy").mockImplementation(async function (this: DataSource) {
-      this.isInitialized = false;
+      // isInitialized is read-only in TypeORM types; the mock needs to set it.
+      (this as unknown as { isInitialized: boolean }).isInitialized = false;
     });
 
     const commitMock = vi.fn();
@@ -126,11 +130,13 @@ describe("withTransaction", () => {
 
   it("rolls back when the callback throws", async () => {
     vi.spyOn(DataSource.prototype, "initialize").mockImplementation(async function (this: DataSource) {
-      this.isInitialized = true;
+      // isInitialized is read-only in TypeORM types; the mock needs to set it.
+      (this as unknown as { isInitialized: boolean }).isInitialized = true;
       return this;
     });
     vi.spyOn(DataSource.prototype, "destroy").mockImplementation(async function (this: DataSource) {
-      this.isInitialized = false;
+      // isInitialized is read-only in TypeORM types; the mock needs to set it.
+      (this as unknown as { isInitialized: boolean }).isInitialized = false;
     });
 
     const commitMock = vi.fn();

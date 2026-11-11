@@ -275,8 +275,8 @@ describe("printEnvDiagnostics()", () => {
     const lines: string[] = [];
     const spy = vi
       .spyOn(logger, "info")
-      .mockImplementation((msg: string) => {
-        lines.push(msg);
+      .mockImplementation((msg: object) => {
+        lines.push(String(msg));
         return logger;
       });
 

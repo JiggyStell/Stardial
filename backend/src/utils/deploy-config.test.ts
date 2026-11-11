@@ -4,7 +4,7 @@ import {
   resolveDeployTarget,
   validateDeployConfig,
   validateProductionSecrets,
-} from "./deploy-config";
+} from "./deploy-config.js";
 
 describe("deploy-config", () => {
   describe("normalizeDeployEnvironment", () => {

@@ -4,7 +4,7 @@ import type {
   PayoutHistoryEventSource,
   PayoutHistoryRecord,
   PayoutHistoryRepository,
-} from "./payoutHistoryBackfill.types";
+} from "./payoutHistoryBackfill.types.js";
 
 export class PayoutHistoryBackfillService {
   constructor(
