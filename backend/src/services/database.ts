@@ -21,6 +21,7 @@ export const ENTITIES = [
   ServiceState,
   AuditLog,
   LedgerBlock,
+  EmailVerificationToken,
   SplitCancellation,
   ProjectArchival,
   NotificationPreference,

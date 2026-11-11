@@ -47,6 +47,7 @@ vi.mock("../services/database.js", () => ({
       save: vi.fn(),
       create: (x: unknown) => x,
       exists: vi.fn(),
+      upsert: vi.fn(),
     }),
   }),
   withTransaction: async (cb: (qr: unknown) => unknown) =>
@@ -236,7 +237,8 @@ describe("email enumeration (#1449)", () => {
       const withUnknownEmail = await login(app, { walletAddress: WALLET_UNKNOWN, email: UNKNOWN });
       const withoutEmail = await login(app, { walletAddress: WALLET_UNKNOWN });
 
-      expect(withoutEmail.status).toBe(404);
+      // Sign-in answers every failure with the same vague 401 (#1449).
+      expect(withoutEmail.status).toBe(401);
       expect(observable(withKnownEmail)).toEqual(observable(withoutEmail));
       expect(observable(withUnknownEmail)).toEqual(observable(withoutEmail));
     });
