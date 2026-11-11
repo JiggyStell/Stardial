@@ -1,6 +1,6 @@
 import { getStellarRpcServer, loadStellarConfig, executeWithRetry } from "./stellar.js";
 import { getDataSource } from "./database.js";
-import { incrementDistributionsExecuted } from "./metrics.js";
+import { incrementDistributionsExecuted, incrementPayoutsConfirmed } from "./metrics.js";
 import { TransactionRecord } from "../entities/Transaction.js";
 import { ServiceState } from "../entities/ServiceState.js";
 import { logger } from "./logger.js";
@@ -321,12 +321,19 @@ interface CollectedEvents {
  * `skipExisting` avoids redundant token lookups during live polling. Backfill
  * leaves it off because the rows it replays are usually already present; the
  * txHash unique constraint makes the upsert idempotent instead.
+ *
+ * `recordPayoutMetrics` is off for backfill: a replay of historical events
+ * must not inflate the process-lifetime `payouts_confirmed_total` counter.
  */
 async function collectPayoutRecords(
   events: ContractEvent[],
   expectedContractId: string,
   repo: Repository<TransactionRecord>,
-  options: { skipExisting: boolean; tokenCache?: Map<string, string> } = { skipExisting: true },
+  options: {
+    skipExisting: boolean;
+    tokenCache?: Map<string, string>;
+    recordPayoutMetrics?: boolean;
+  } = { skipExisting: true },
 ): Promise<CollectedEvents> {
   const records: TransactionRecord[] = [];
   let distributionsCompleted = 0;
@@ -366,12 +373,17 @@ async function collectPayoutRecords(
         }
       }
 
+      const token = await resolveProjectToken(projectId, options.tokenCache);
+      if (options.recordPayoutMetrics) {
+        incrementPayoutsConfirmed(token);
+      }
+
       records.push(
         repo.create({
           roundId: projectId,
           recipient,
           amount,
-          token: await resolveProjectToken(projectId, options.tokenCache),
+          token,
           timestamp,
           txHash: event.txHash,
           status: "completed",
@@ -478,7 +490,7 @@ export async function pollEvents() {
       responseEvents,
       config.contractId,
       repo,
-      { skipExisting: true }
+      { skipExisting: true, recordPayoutMetrics: true }
     );
     const newRecords = collected.records;
 

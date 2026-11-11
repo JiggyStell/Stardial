@@ -189,6 +189,7 @@ export function resetRequestMetrics(): void {
   payloadSizesByGroup.clear();
   payloadRejectionsByGroup.clear();
 
+  payoutsConfirmedByToken.clear();
   projectsCreatedTotal = 0;
   distributionsExecutedTotal = 0;
   depositsReceivedTotal = 0;
@@ -423,6 +424,24 @@ export function getRpcRetryBudgetSnapshots(): Array<{ operation: string; endpoin
     const [operation, endpoint] = key.split("||");
     return { operation, endpoint, ...metrics };
   });
+}
+
+// ── Payout confirmation counter ─────────────────────────────────────────────
+//
+// `payouts_confirmed_total{token}` counts individual payouts the backend
+// observed settling on-chain, labelled by the project's token address. The
+// token set is bounded by the contract's admin token allowlist, so cardinality
+// stays low. See docs/metrics-inventory.md §6 for why the matching
+// `initiated` and `failed` series cannot be observed from the backend.
+const payoutsConfirmedByToken = new Map<string, number>();
+
+export function incrementPayoutsConfirmed(token: string): void {
+  const label = token || "Native";
+  payoutsConfirmedByToken.set(label, (payoutsConfirmedByToken.get(label) ?? 0) + 1);
+}
+
+export function getPayoutsConfirmedSnapshots(): Array<{ token: string; count: number }> {
+  return Array.from(payoutsConfirmedByToken.entries()).map(([token, count]) => ({ token, count }));
 }
 
 let projectsCreatedTotal = 0;
