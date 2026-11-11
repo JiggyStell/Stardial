@@ -6,6 +6,7 @@ import {
   getRequestDurationSnapshots,
   getProjectsCreatedTotal,
   getDistributionsExecutedTotal,
+  getPayoutsConfirmedSnapshots,
   getDepositsReceivedTotal,
   getSseConnectionsActive,
   getSseDisconnectsTotal,
@@ -119,6 +120,12 @@ lines.push(`projects_created_total ${getProjectsCreatedTotal()}`);
 lines.push("# HELP distributions_executed_total Total distributions executed.");
 lines.push("# TYPE distributions_executed_total counter");
 lines.push(`distributions_executed_total ${getDistributionsExecutedTotal()}`);
+
+lines.push("# HELP payouts_confirmed_total Payouts observed settling on-chain (payment_sent / collaborator_claimed), by token address.");
+lines.push("# TYPE payouts_confirmed_total counter");
+for (const { token, count } of getPayoutsConfirmedSnapshots()) {
+  lines.push(`payouts_confirmed_total{token=${quoteLabelValue(token)}} ${count}`);
+}
 
 lines.push("# HELP deposits_received_total Total deposits received.");
 lines.push("# TYPE deposits_received_total counter");

@@ -172,6 +172,27 @@ describe("EventListenerService - valid payout events (#1494)", () => {
     expect(mod.getLedgerLag()).toMatchObject({ latestLedger: 1300, lastProcessedLedger: 1300, lag: 0 });
   });
 
+  it("counts a confirmed payout against its token", async () => {
+    const metrics = await import("../services/metrics.js");
+    mocks.getEvents.mockResolvedValue(page([payoutEvent()]));
+
+    await mod.pollEvents();
+
+    expect(metrics.getPayoutsConfirmedSnapshots()).toEqual([
+      { token: CONTRACT_ID, count: 1 },
+    ]);
+  });
+
+  it("does not count a payout that was already indexed", async () => {
+    const metrics = await import("../services/metrics.js");
+    mocks.repo.findOneBy.mockResolvedValueOnce({ txHash: "ab".repeat(32) });
+    mocks.getEvents.mockResolvedValue(page([payoutEvent()]));
+
+    await mod.pollEvents();
+
+    expect(metrics.getPayoutsConfirmedSnapshots()).toEqual([]);
+  });
+
   it("tolerates unknown extra fields on the response and events", async () => {
     mocks.getEvents.mockResolvedValue(
       page([{ ...payoutEvent(), someNewRpcField: { nested: true } }], { oldestLedger: 1, newTopLevelField: "x" })
@@ -218,6 +239,17 @@ describe("EventListenerService - operator event backfill", () => {
     );
     // First request anchors on the requested ledger, not the live cursor.
     expect(mocks.getEvents.mock.calls[0][0]).toMatchObject({ startLedger: 1200 });
+  });
+
+  it("does not count replayed history as newly confirmed payouts", async () => {
+    const metrics = await import("../services/metrics.js");
+    mocks.getEvents
+      .mockResolvedValueOnce(page([payoutEvent()]))
+      .mockResolvedValueOnce(page([]));
+
+    await mod.backfillEvents(1200);
+
+    expect(metrics.getPayoutsConfirmedSnapshots()).toEqual([]);
   });
 
   it("leaves the live listener cursor untouched", async () => {

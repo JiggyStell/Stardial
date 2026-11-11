@@ -154,7 +154,7 @@ Source: `services/PayoutHistoryService.ts`, `services/EventListenerService.ts`.
 | Metric | Type | Labels | Owner | Alert Threshold | Status |
 |--------|------|--------|-------|----------------|--------|
 | `payouts_initiated_total` | counter | `token` | Backend | — | ❌ Missing |
-| `payouts_confirmed_total` | counter | `token` | Backend | < `initiated` in 30m | ❌ Missing |
+| `payouts_confirmed_total` | counter | `token` | Backend | Flat while settlement requests continue (see note) | ✅ Live |
 | `payouts_failed_total` | counter | `token`, `reason` | Backend | Any >0 | ❌ Missing |
 | `tx_submit_duration_seconds` | histogram | — | Backend | P99 > 30s | ❌ Missing |
 | `tx_poll_cycles_total` | counter | `status` | Backend | — | ❌ Missing |
@@ -184,18 +184,21 @@ require an extra RPC read per request.
 Confirmation *is* observable, because the listener sees `payment_sent` and
 `collaborator_claimed`:
 
-- `payouts_confirmed_total{token}` could be implemented in
-  `EventListenerService` at the point a payout record is built.
+- `payouts_confirmed_total{token}` is now emitted from `EventListenerService`,
+  once per payout record the listener writes (and not for a record it already
+  had, nor during a `/ops/backfill` replay of history). It is labelled by the
+  project's token address, whose cardinality is bounded by the contract's
+  admin token allowlist.
 - `payouts_failed_total{token,reason}` would have to come from a client
   submission report or from Horizon, not from the payout preparation path.
 
-Until then, use `distributions_executed_total` and
-`stardial_split_lifecycle_operations_total` for payout triage, as the payout
-severity matrix does.
+The `< initiated` alert threshold above cannot be evaluated until
+`payouts_initiated_total` exists. Until then, read confirmed against
+`distributions_executed_total` and
+`stardial_split_lifecycle_operations_total`, as the severity matrix does.
 
 ### TODO (follow-up)
 - Instrument `submitSorobanTransactionAndPoll()` with duration histogram and status counters.
-- Implement `payouts_confirmed_total{token}` in `EventListenerService`.
 - Decide on a client submission report to enable `payouts_failed_total{token,reason}`.
 
 ---

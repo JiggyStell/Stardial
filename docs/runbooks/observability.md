@@ -97,6 +97,7 @@ Exposed series:
 - `stardial_info{version="..."}`
 - `projects_created_total` — total projects created
 - `distributions_executed_total` — total distributions executed
+- `payouts_confirmed_total{token}` — payouts observed settling on-chain (`payment_sent` / `collaborator_claimed`), by token address; not incremented for already-indexed records or for `/ops/backfill` replays
 - `deposits_received_total` — total deposits received
 - `sse_connections_active` — active SSE connections (#1166 — now actually wired to connect/disconnect events; previously defined but never incremented)
 - `sse_disconnects_total` — cumulative SSE client disconnects (#1166); a rate spike indicates client churn even when the active gauge looks flat

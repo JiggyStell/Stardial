@@ -222,10 +222,13 @@ Metrics that feed directly into severity classification:
 | `stardial_rpc_retry_outcomes_total{outcome="timeout"}` | — | rate > 0.1/s on `simulateTransaction` | — |
 | `stardial_rpc_retry_duration_ms_total` | Spike > 2x baseline | Increase > 60 000 ms / 15 min | Moderate increase |
 | `stardial_event_listener_ledger_lag` | — | > 100 for 10 min | > 20 for 5 min |
+| `payouts_confirmed_total{token}` | — (no `initiated` denominator yet) | Flat while settlement requests for that token continue | — |
 
-> **Instrumentation gap (November 2026).** `stardial_payouts_failed_total`, `stardial_payouts_confirmed_total` and `stardial_payouts_initiated_total` are specified in `docs/metrics-inventory.md` §6 but are **not emitted**. The matrix therefore keys off the settlement-failure and execution counters above, which do exist. Note that `stardial_split_lifecycle_operations_total` observes *unsigned XDR preparation* on `POST /splits/:projectId/distribute` (and counts every non-2xx response, including 4xx validation rejections as `failure`), while `distributions_executed_total` counts `distribution_complete` events actually settled on-chain — read them together, not as a matched initiated/confirmed pair.
+> **Instrumentation status (November 2026).** `payouts_confirmed_total{token}` is live: the event listener increments it once per payout it observes settling on-chain (never for an already-indexed record, and not during `/ops/backfill` replays). `stardial_payouts_failed_total` and `stardial_payouts_initiated_total` are specified in `docs/metrics-inventory.md` §6 but are **not emitted** — the backend only builds unsigned XDR and never sees a payout's submit, confirm or abort, so nothing can honestly count an *initiated* or *failed* payout today. The matrix therefore keys off the settlement-failure and execution counters above, which do exist.
 >
-> When the payout counters are implemented, restore them here and delete this note. See `docs/metrics-inventory.md` §6 for why `initiated` and `failed` cannot be observed from the backend today.
+> Note that `stardial_split_lifecycle_operations_total` observes *unsigned XDR preparation* on `POST /splits/:projectId/distribute` (and counts every non-2xx response, including 4xx validation rejections, as `failure`), while `distributions_executed_total` counts `distribution_complete` events actually settled on-chain — read them together, not as a matched initiated/confirmed pair.
+>
+> When `initiated` and `failed` are implemented, restore the `< initiated` ratio rule here and delete this note. See `docs/metrics-inventory.md` §6 for why they cannot be observed from the backend.
 
 ---
 
