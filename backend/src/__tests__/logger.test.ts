@@ -34,10 +34,14 @@ const sensitiveFields = [
 ] as const;
 
 describe("Winston logger — structured sensitive-field redaction", () => {
+  // Winston's Console transport writes to the stream behind `console`, not to
+  // `console.log`, so that stream is the sink to capture.
   let consoleSpy: ReturnType<typeof vi.spyOn>;
 
   beforeEach(() => {
-    consoleSpy = vi.spyOn(console, "log").mockImplementation(() => undefined);
+    const sink = (console as unknown as { _stdout: { write: (...args: unknown[]) => boolean } })
+      ._stdout;
+    consoleSpy = vi.spyOn(sink, "write").mockImplementation(() => true);
   });
 
   afterEach(() => {
