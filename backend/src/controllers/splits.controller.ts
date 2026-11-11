@@ -6,21 +6,6 @@ import {
   listProjectsSchema,
 } from "../schemas/splits.js";
 import { AppError, ErrorCode, ErrorType } from "../lib/errors.js";
-import { serializeBigInts, listProjects, fetchProjectById, buildLockProjectUnsignedXdr, buildDepositUnsignedXdr, encodeCursor, decodeCursor, simulateReadOnlyContractCall } from "../services/splits.service.js";
-import { recordProjectEdit } from "../services/project-history.js";
-import { contractU32Schema } from "../schemas/stellar-rpc.schemas.js";
-import { decodeContractValue } from "../services/rpc-response-validation.js";
-import { deriveParticipantStatuses } from "../lib/split-lifecycle.js";
-import { createPayoutHistoryService } from "../services/PayoutHistoryService.js";
-import { logger } from "../services/logger.js";
-
-import {
-  depositSchema,
-  listProjectsSchema,
-  lockProjectSchema,
-  projectIdParamSchema,
-} from "../schemas/splits.js";
-
 import {
   buildDepositUnsignedXdr,
   buildLockProjectUnsignedXdr,
@@ -31,8 +16,13 @@ import {
   serializeBigInts,
   simulateReadOnlyContractCall,
 } from "../services/splits.service.js";
-
-import { AppError, ErrorCode, ErrorType } from "../lib/errors.js";
+import { recordProjectEdit } from "../services/project-history.js";
+import { contractU32Schema } from "../schemas/stellar-rpc.schemas.js";
+import { decodeContractValue } from "../services/rpc-response-validation.js";
+import { deriveParticipantStatuses, type Collaborator } from "../lib/split-lifecycle.js";
+import { createPayoutHistoryService } from "../services/PayoutHistoryService.js";
+import { logger } from "../services/logger.js";
+import { invalidateCache, invalidateCacheByPrefix } from "../services/stellar.js";
 
 export class SplitsController {
   private readonly payoutHistoryService = createPayoutHistoryService();
@@ -114,22 +104,29 @@ export class SplitsController {
     next: NextFunction,
   ): Promise<Response | void> {
     try {
-      const { projectId } = projectIdParamSchema.parse(req.params);
+      const projectId = projectIdParamSchema.parse(req.params.projectId);
 
       const project = await fetchProjectById(projectId);
       if (!project)
         throw new AppError(ErrorType.RPC, ErrorCode.NOT_FOUND, `Project ${projectId} not found.`);
 
+      // fetchProjectById decodes the contract response into an untyped record;
+      // collaborators are only present once the project has been read on-chain.
+      const projectRecord = project as Record<string, unknown> & { collaborators?: Collaborator[] };
+
       let participantPaymentStatuses = null;
       try {
         const payments = await this.payoutHistoryService.getPayoutsByRound(projectId);
-        participantPaymentStatuses = deriveParticipantStatuses(project.collaborators, payments);
+        participantPaymentStatuses = deriveParticipantStatuses(
+          projectRecord.collaborators ?? [],
+          payments,
+        );
       } catch (error) {
         logger.warn("Participant payment statuses unavailable", { projectId, error });
       }
 
       return res.status(200).json(
-        serializeBigInts({ ...project, participantPaymentStatuses }),
+        serializeBigInts({ ...projectRecord, participantPaymentStatuses }),
       );
     } catch (error) {
       return next(error);
