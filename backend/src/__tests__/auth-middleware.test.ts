@@ -23,13 +23,14 @@ function createMockResponse(overrides: Partial<Response> = {}): Response {
   } as unknown as Response;
 }
 
-// A vitest mock is callable with any signature, so it doubles as NextFunction
-// while still exposing `.mock.calls` for assertions. (Typing it via
-// ReturnType<NextFunction> collapses to `void`, which is not callable.)
-type MockNext = ReturnType<typeof vi.fn>;
+// Typed with an explicit plain-function signature: bare vi.fn() is
+// Mock<Procedure | Constructable>, whose construct signature cannot stand in
+// for NextFunction. Typing it via ReturnType<NextFunction> collapses to
+// `void` instead, which is not callable at all.
+type MockNext = ReturnType<typeof vi.fn<(...args: unknown[]) => void>>;
 
 function createMockNext(): MockNext {
-  return vi.fn();
+  return vi.fn<(...args: unknown[]) => void>();
 }
 
 const VALID_STELLAR_ADDRESS = "GAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAWHF";

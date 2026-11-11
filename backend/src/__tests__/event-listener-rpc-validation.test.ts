@@ -15,7 +15,9 @@ const OTHER_CONTRACT_ID = StrKey.encodeContract(Buffer.alloc(32, 9));
 const I128_MAX = (1n << 127n) - 1n;
 
 const mocks = vi.hoisted(() => {
-  const manager = { upsert: vi.fn(async () => undefined) };
+  // Declared params (unused) so `.mock.calls` is typed as argument tuples
+  // instead of `[]`, keeping the assertion helpers below type-safe.
+  const manager = { upsert: vi.fn(async (_entity?: unknown, _rows?: unknown) => undefined) };
   return {
     getEvents: vi.fn(),
     getLatestLedger: vi.fn(),
@@ -24,7 +26,7 @@ const mocks = vi.hoisted(() => {
     repo: {
       findOneBy: vi.fn(async () => null),
       create: vi.fn((record: Record<string, unknown>) => record),
-      upsert: vi.fn(async () => undefined),
+      upsert: vi.fn(async (_entity?: unknown, _row?: unknown) => undefined),
     },
     publishSseEvent: vi.fn(),
   };
