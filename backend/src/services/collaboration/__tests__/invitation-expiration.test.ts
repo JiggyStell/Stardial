@@ -97,9 +97,9 @@ describe("invitation expiration (#1298)", () => {
     expect(() => acceptInvitationByTokenJti("jti-pending-old")).toThrow(
       /invitation_cancelled/,
     );
-    expect(acceptInvitationByTokenJti("jti-pending-new").status).toBe(
-      "accepted",
-    );
+    expect(
+      acceptInvitationByTokenJti("jti-pending-new", new Date(now.getTime() + 2000)).status,
+    ).toBe("accepted");
   });
 
   it("excludes expired invites from pending list", () => {
