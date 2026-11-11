@@ -1,5 +1,5 @@
 import { describe, it, expect, vi, beforeEach } from "vitest";
-import type { Request, Response, NextFunction } from "express";
+import type { Request, Response } from "express";
 import {
   requireStellarAddress,
   requireProjectAccess,
@@ -23,9 +23,13 @@ function createMockResponse(overrides: Partial<Response> = {}): Response {
   } as unknown as Response;
 }
 
-function createMockNext(): ReturnType<NextFunction> & { calls: unknown[] } {
-  const next: ReturnType<NextFunction> & { calls: unknown[] } = vi.fn() as never;
-  return next;
+// A vitest mock is callable with any signature, so it doubles as NextFunction
+// while still exposing `.mock.calls` for assertions. (Typing it via
+// ReturnType<NextFunction> collapses to `void`, which is not callable.)
+type MockNext = ReturnType<typeof vi.fn>;
+
+function createMockNext(): MockNext {
+  return vi.fn();
 }
 
 const VALID_STELLAR_ADDRESS = "GAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAWHF";
@@ -35,7 +39,7 @@ const INVALID_ADDRESS = "not-a-stellar-address";
 describe("requireStellarAddress", () => {
   let req: Request;
   let res: Response;
-  let next: ReturnType<NextFunction> & { calls: unknown[] };
+  let next: MockNext;
 
   beforeEach(() => {
     req = createMockRequest();
@@ -117,7 +121,7 @@ describe("requireStellarAddress", () => {
 describe("requireProjectAccess", () => {
   let req: Request;
   let res: Response;
-  let next: ReturnType<NextFunction> & { calls: unknown[] };
+  let next: MockNext;
 
   beforeEach(() => {
     req = createMockRequest();

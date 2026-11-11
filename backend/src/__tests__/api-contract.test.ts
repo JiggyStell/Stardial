@@ -183,7 +183,7 @@ describe("Issue #1461: API contract against generated OpenAPI", () => {
   });
 
   it("documents the operations the API is expected to serve", () => {
-    const spec = generateOpenApi() as Spec;
+    const spec = generateOpenApi() as unknown as Spec;
     const expected: Array<[string, string]> = [
       ["get", "/splits"],
       ["post", "/splits"],
@@ -213,7 +213,7 @@ describe("Issue #1461: API contract against generated OpenAPI", () => {
   });
 
   it("every documented operation declares at least one success response", () => {
-    const spec = generateOpenApi() as Spec;
+    const spec = generateOpenApi() as unknown as Spec;
 
     for (const [path, pathItem] of Object.entries(spec.paths ?? {})) {
       for (const [method, operation] of Object.entries(pathItem)) {
@@ -259,7 +259,7 @@ describe("Issue #1461: API contract against generated OpenAPI", () => {
 
     for (const contract of contracts) {
       it(`GET ${contract.requestPath} matches its documented schema`, async () => {
-        const spec = generateOpenApi() as Spec;
+        const spec = generateOpenApi() as unknown as Spec;
         const res = await request(app).get(contract.requestPath);
 
         expect(res.status).toBe(Number(contract.status));
@@ -280,7 +280,7 @@ describe("Issue #1461: API contract against generated OpenAPI", () => {
   });
 
   it("serves the stable unknown-route 404 contract", async () => {
-    const spec = generateOpenApi() as Spec;
+    const spec = generateOpenApi() as unknown as Spec;
     const res = await request(app).get("/this/route/is/not/documented");
 
     expect(res.status).toBe(404);

@@ -126,7 +126,7 @@ describe("Request Body Size Limit (Issue #840)", () => {
   it("handles a deeply nested but small payload", async () => {
     // Deeply nested objects can also be a DoS vector, but should be
     // accepted if within the size limit
-    let nested = { value: "leaf" };
+    let nested: Record<string, unknown> = { value: "leaf" };
     for (let i = 0; i < 20; i++) {
       nested = { nested };
     }

@@ -45,13 +45,15 @@ describe("database connection pool exhaustion", () => {
 
     vi.spyOn(DataSource.prototype, "initialize").mockImplementation(
       async function (this: DataSource) {
-        this.isInitialized = true;
+        // isInitialized is read-only in TypeORM types; the mock needs to set it.
+        (this as unknown as { isInitialized: boolean }).isInitialized = true;
         return this;
       }
     );
     vi.spyOn(DataSource.prototype, "destroy").mockImplementation(
       async function (this: DataSource) {
-        this.isInitialized = false;
+        // isInitialized is read-only in TypeORM types; the mock needs to set it.
+        (this as unknown as { isInitialized: boolean }).isInitialized = false;
       }
     );
     vi.spyOn(DataSource.prototype, "createQueryRunner").mockImplementation(
@@ -97,13 +99,15 @@ describe("database connection pool exhaustion", () => {
 
     vi.spyOn(DataSource.prototype, "initialize").mockImplementation(
       async function (this: DataSource) {
-        this.isInitialized = true;
+        // isInitialized is read-only in TypeORM types; the mock needs to set it.
+        (this as unknown as { isInitialized: boolean }).isInitialized = true;
         return this;
       }
     );
     vi.spyOn(DataSource.prototype, "destroy").mockImplementation(
       async function (this: DataSource) {
-        this.isInitialized = false;
+        // isInitialized is read-only in TypeORM types; the mock needs to set it.
+        (this as unknown as { isInitialized: boolean }).isInitialized = false;
       }
     );
     vi.spyOn(DataSource.prototype, "createQueryRunner").mockImplementation(
@@ -138,13 +142,15 @@ describe("database connection pool exhaustion", () => {
   it("gives up after max deadlock retries", async () => {
     vi.spyOn(DataSource.prototype, "initialize").mockImplementation(
       async function (this: DataSource) {
-        this.isInitialized = true;
+        // isInitialized is read-only in TypeORM types; the mock needs to set it.
+        (this as unknown as { isInitialized: boolean }).isInitialized = true;
         return this;
       }
     );
     vi.spyOn(DataSource.prototype, "destroy").mockImplementation(
       async function (this: DataSource) {
-        this.isInitialized = false;
+        // isInitialized is read-only in TypeORM types; the mock needs to set it.
+        (this as unknown as { isInitialized: boolean }).isInitialized = false;
       }
     );
     vi.spyOn(DataSource.prototype, "createQueryRunner").mockImplementation(
@@ -178,13 +184,15 @@ describe("database connection pool exhaustion", () => {
 
     vi.spyOn(DataSource.prototype, "initialize").mockImplementation(
       async function (this: DataSource) {
-        this.isInitialized = true;
+        // isInitialized is read-only in TypeORM types; the mock needs to set it.
+        (this as unknown as { isInitialized: boolean }).isInitialized = true;
         return this;
       }
     );
     vi.spyOn(DataSource.prototype, "destroy").mockImplementation(
       async function (this: DataSource) {
-        this.isInitialized = false;
+        // isInitialized is read-only in TypeORM types; the mock needs to set it.
+        (this as unknown as { isInitialized: boolean }).isInitialized = false;
       }
     );
     vi.spyOn(DataSource.prototype, "createQueryRunner").mockImplementation(
@@ -217,13 +225,15 @@ describe("database connection pool exhaustion", () => {
 
     vi.spyOn(DataSource.prototype, "initialize").mockImplementation(
       async function (this: DataSource) {
-        this.isInitialized = true;
+        // isInitialized is read-only in TypeORM types; the mock needs to set it.
+        (this as unknown as { isInitialized: boolean }).isInitialized = true;
         return this;
       }
     );
     vi.spyOn(DataSource.prototype, "destroy").mockImplementation(
       async function (this: DataSource) {
-        this.isInitialized = false;
+        // isInitialized is read-only in TypeORM types; the mock needs to set it.
+        (this as unknown as { isInitialized: boolean }).isInitialized = false;
       }
     );
     vi.spyOn(DataSource.prototype, "createQueryRunner").mockImplementation(
