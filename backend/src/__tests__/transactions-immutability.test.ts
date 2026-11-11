@@ -49,7 +49,7 @@ async function insertRecord(): Promise<{ id: string; txHash: string }> {
 }
 
 async function readRecord(id: string): Promise<Record<string, unknown>> {
-  const rows = (await db().query(`SELECT * FROM "transactions" WHERE "id" = $1`, [id])) as Array
+  const rows = (await db().query(`SELECT * FROM "transactions" WHERE "id" = $1`, [id])) as Array<
     Record<string, unknown>
   >;
   return rows[0];
