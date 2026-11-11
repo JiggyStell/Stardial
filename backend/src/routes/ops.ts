@@ -2,17 +2,15 @@ import { Router } from "express";
 import { getEnvDiagnostics } from "../config/env.js";
 import { getDataSource } from "../services/database.js";
 import { getCacheStats } from "../services/stellar.js";
-import { getLedgerLag, getServiceHealth } from "../services/EventListenerService.js";
-import { createPayoutHistoryService } from "../services/PayoutHistoryService.js";
+import { backfillEvents, getLedgerLag, getServiceHealth } from "../services/EventListenerService.js";
 import { withResponseValidation } from "../middleware/validateResponse.js";
 import {
   OpsStatusResponseSchema,
+  OpsBackfillRequestSchema,
   OpsBackfillResponseSchema,
   MainnetReadinessResponseSchema,
 } from "../schemas/admin.schemas.js";
 import { getIdempotencyConflictsTotal, getIdempotencyReplaysTotal } from "../services/metrics.js";
-
-const payoutHistory = createPayoutHistoryService();
 
 export const opsRouter = Router();
 
@@ -46,16 +44,26 @@ export interface MainnetReadinessResponse {
 }
 
 opsRouter.post(
-  "/backfill",
-  withResponseValidation(OpsBackfillResponseSchema, async (req, res) => {
-    try {
-      const { fromLedger } = req.body;
+  "/backfill",      withResponseValidation(OpsBackfillResponseSchema, async (req, res) => {
+    const parsed = OpsBackfillRequestSchema.safeParse(req.body);
+    if (!parsed.success) {
+      res.status(400).json({
+        success: false,
+        error: "invalid_backfill_request",
+        message: "A positive integer `fromLedger` is required (the last known good ledger).",
+      });
+      return;
+    }
 
-      await payoutHistory.backfill(fromLedger);
+    try {
+      const result = await backfillEvents(parsed.data.fromLedger);
 
       res.json({
         success: true,
-        message: "Backfill completed",
+        message: result.caughtUp
+          ? `Backfill caught up: ${result.recordsIndexed} payout record(s) upserted from ledger ${result.fromLedger}.`
+          : `Backfill stopped at the page budget before catching up. Re-run from ledger ${result.lastLedgerScanned ?? result.fromLedger}.`,
+        ...result,
       });
     } catch (error) {
       res.status(500).json({

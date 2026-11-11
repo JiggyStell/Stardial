@@ -435,8 +435,9 @@ export function incrementProjectsCreated(): void {
   projectsCreatedTotal += 1;
 }
 
-export function incrementDistributionsExecuted(): void {
-  distributionsExecutedTotal += 1;
+export function incrementDistributionsExecuted(count = 1): void {
+  if (count <= 0) return;
+  distributionsExecutedTotal += count;
 }
 
 export function incrementDepositsReceived(): void {

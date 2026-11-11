@@ -5,8 +5,18 @@ partial completion.
 
 ## 1. Triage
 - [ ] Note the split ID, round ID, and timestamp of the failure.
-- [ ] Check contract state: is the round marked `failed`, `partial`, or
-      still `in_progress` on-chain?
+- [ ] Check contract state. There is no per-round status field on-chain: a
+      round is identified only by the project's monotonic `distribution_round`
+      counter, so reconstruct what happened from `get_project` (balance,
+      `locked`, `total_distributed`, `distribution_round`) plus
+      `get_claimable(project_id, collaborator)` for each participant.
+      - `distribution_round` unchanged and the balance still held: nothing was
+        disbursed, the round did not execute.
+      - `distribution_round` advanced but a participant has no matching
+        payment record / unchanged claimable: partial disbursement — escalate.
+      - `is_distributions_paused()` is true: distributions are blocked at the
+        contract; follow the pause/unpause steps in
+        `docs/runbooks/stuck-payouts.md`.
 - [ ] Check Soroban RPC status/health for the network used by the round.
 - [ ] Check backend logs for the distribution job (errors, timeouts, retries).
 

@@ -24,6 +24,7 @@ const mocks = vi.hoisted(() => {
     repo: {
       findOneBy: vi.fn(async () => null),
       create: vi.fn((record: Record<string, unknown>) => record),
+      upsert: vi.fn(async () => undefined),
     },
     publishSseEvent: vi.fn(),
   };
@@ -193,6 +194,45 @@ describe("EventListenerService - valid payout events (#1494)", () => {
 
     expect(upsertedTransactions()).toHaveLength(1);
     expect(mod.getServiceHealth().consecutiveErrors).toBe(0);
+  });
+});
+
+describe("EventListenerService - operator event backfill", () => {
+  it("replays from the requested ledger, upserts records and reports counts", async () => {
+    mocks.getEvents
+      .mockResolvedValueOnce(page([payoutEvent()]))
+      .mockResolvedValueOnce(page([]));
+
+    const result = await mod.backfillEvents(1200);
+
+    expect(result).toEqual({
+      fromLedger: 1200,
+      recordsIndexed: 1,
+      pagesScanned: 2,
+      lastLedgerScanned: 1234,
+      caughtUp: true,
+    });
+    expect(mocks.repo.upsert).toHaveBeenCalledWith(
+      [expect.objectContaining({ txHash: "ab".repeat(32), status: "completed" })],
+      expect.objectContaining({ conflictPaths: ["txHash"] }),
+    );
+    // First request anchors on the requested ledger, not the live cursor.
+    expect(mocks.getEvents.mock.calls[0][0]).toMatchObject({ startLedger: 1200 });
+  });
+
+  it("leaves the live listener cursor untouched", async () => {
+    mocks.getEvents.mockResolvedValue(page([payoutEvent()]));
+
+    await mod.backfillEvents(1200);
+
+    expect(persistedCursor()).toBeUndefined();
+  });
+
+  it("rejects an invalid ledger without touching the RPC", async () => {
+    await expect(mod.backfillEvents(0)).rejects.toThrow(RangeError);
+    await expect(mod.backfillEvents(-5)).rejects.toThrow(RangeError);
+    await expect(mod.backfillEvents(Number.NaN)).rejects.toThrow(RangeError);
+    expect(mocks.getEvents).not.toHaveBeenCalled();
   });
 });
 

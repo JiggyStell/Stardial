@@ -44,7 +44,6 @@ export interface PayoutHistoryIndex {
     batchSize?: number,
   ): AsyncGenerator<PayoutRecord[], void, void>;
   reindex(): Promise<void>;
-  backfill(fromRound?: number): Promise<void>;
   /** Release in-memory resources. Call on graceful shutdown. */
   destroy(): void;
 }
@@ -296,10 +295,6 @@ export function createPayoutHistoryService(_config?: Partial<PayoutIndexConfig>)
 
     async reindex() {
       logger.info("Reindexing database payout history...");
-    },
-
-    async backfill(fromRound) {
-      logger.info(`Backfilling from round ${fromRound ?? 0}`);
     },
 
     destroy() {

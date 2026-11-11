@@ -26,7 +26,7 @@
 
 | # | Trigger | Detection Source |
 |---|---------|-----------------|
-| 1 | Systemic payout failure across **> 5 projects simultaneously** | Alert: `stardial_payouts_failed_total` spike; user reports |
+| 1 | Systemic payout failure across **> 5 projects simultaneously** | `stardial_split_lifecycle_operations_total{operation="settlement",outcome="failure"}` spiking across projects while `distributions_executed_total` stays flat; user reports |
 | 2 | Smart contract state corruption — on-chain balance ≠ sum of `get_claimable` for all collaborators | Manual audit; contract state check |
 | 3 | Confirmed double-spend or funds sent to wrong addresses | On-chain investigation; Horizon query |
 | 4 | Admin private key or `PAYMENTS_ADMIN_API_KEY` compromise | Security alert; audit log `ADMIN_ACCESS_DENIED` spike |
@@ -37,8 +37,8 @@
 
 | # | Trigger | Detection Source |
 |---|---------|-----------------|
-| 1 | Single project payout failure **unresolvable by retry** after 3 attempts | Payout retry logs; manual check |
-| 2 | RPC degradation causing p99 latency > 10 s or retry rate > 20 % for > 10 min | `stardial_rpc_retry_duration_ms_total` spike |
+| 1 | Single project payout failure **unresolvable by retry** after 3 attempts | Winston `RPC retries exhausted` logs (`operation`, `errorKind`, `errorMessage`); `stardial_rpc_retry_outcomes_total{outcome="exhausted"}`; manual Horizon check |
+| 2 | RPC degradation causing p99 latency > 10 s or retry rate > 20 % for > 10 min | `increase(stardial_rpc_retry_duration_ms_total[15m])` > 60 000 ms together with a rising `stardial_rpc_retry_budget_used_total` / `stardial_rpc_retry_budget_allowed_total` ratio |
 | 3 | Event listener stream disconnected > 30 minutes | `stardial_event_listener_ledger_lag` > 100 |
 | 4 | Partial distribution failure requiring manual backfill (multi-beneficiary `distribute` reverted after partial transfers) | On-chain event analysis |
 | 5 | Database writes for payout records failing (`PayoutHistoryService` errors) | Winston error logs |
@@ -49,10 +49,10 @@
 | # | Trigger | Detection Source |
 |---|---------|-----------------|
 | 1 | Single project payout delayed > 3 min but < 15 min (possible transient RPC issue) | User report; tx status check |
-| 2 | RPC 429 (rate-limit) responses on payout submission | `stardial_rpc_retry_outcomes_total{outcome="transient_failure"}` |
+| 2 | RPC 429 (rate-limit) responses on payout submission | `stardial_rpc_retry_outcomes_total{operation="prepareTransaction",outcome="exhausted"}` plus 429 entries in the Winston `RPC retry attempt failed` logs. `outcome="transient_failure"` is a reserved label that is never emitted: a 429 that survives the retry budget is reported as `exhausted`. |
 | 3 | Backend payout status showing "pending" while Horizon shows `txSUCCESS` (data sync lag < 30 min) | Event listener lag metric |
 | 4 | Payout history backfill script needed for isolated historical ledger | Ops request |
-| 5 | Elevated `stardial_payouts_failed_total` for a single token type | Business metrics dashboard |
+| 5 | Repeated settlement build failures for one project | `stardial_split_lifecycle_operations_total{operation="settlement",outcome="failure"}` elevated for one project; user reports |
 
 ### P3 — Minor
 
@@ -207,11 +207,16 @@ Metrics that feed directly into severity classification:
 
 | Metric | P0 Trigger | P1 Trigger | P2 Trigger |
 |--------|-----------|-----------|-----------|
-| `stardial_payouts_failed_total` | > 0 across > 5 projects in 5 min | > 0 for single project (unresolvable) | Elevated for single token type |
+| `stardial_split_lifecycle_operations_total{operation="settlement",outcome="failure"}` | Failures across > 5 distinct projects in 5 min | Failures persisting for one project after retries | Elevated for a single project |
+| `distributions_executed_total` | No increase for 15 min while settlement requests keep arriving | No increase for 30 min for a single project | — |
 | `stardial_rpc_retry_outcomes_total{outcome="exhausted"}` | > 0 sustained 15 min | > 0 for 10 min | — |
-| `stardial_rpc_retry_duration_ms_total` | Spike > 2x baseline | Increase > 60 s / 15 min | Moderate increase |
+| `stardial_rpc_retry_outcomes_total{outcome="timeout"}` | — | rate > 0.1/s on `simulateTransaction` | — |
+| `stardial_rpc_retry_duration_ms_total` | Spike > 2x baseline | Increase > 60 000 ms / 15 min | Moderate increase |
 | `stardial_event_listener_ledger_lag` | — | > 100 for 10 min | > 20 for 5 min |
-| `stardial_payouts_confirmed_total` | < `initiated` in 15 min (systemic) | < `initiated` in 30 min (single) | — |
+
+> **Instrumentation gap (November 2026).** `stardial_payouts_failed_total`, `stardial_payouts_confirmed_total` and `stardial_payouts_initiated_total` are specified in `docs/metrics-inventory.md` §6 but are **not emitted**. The matrix therefore keys off the settlement-failure and execution counters above, which do exist. Note that `stardial_split_lifecycle_operations_total` observes *unsigned XDR preparation* on `POST /splits/:projectId/distribute` (and counts every non-2xx response, including 4xx validation rejections as `failure`), while `distributions_executed_total` counts `distribution_complete` events actually settled on-chain — read them together, not as a matched initiated/confirmed pair.
+>
+> When the payout counters are implemented, restore them here and delete this note. See `docs/metrics-inventory.md` §6 for why `initiated` and `failed` cannot be observed from the backend today.
 
 ---
 

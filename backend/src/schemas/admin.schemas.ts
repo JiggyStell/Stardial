@@ -103,10 +103,25 @@ export const OpsStatusResponseSchema = z.object({
 
 export type OpsStatusResponse = z.infer<typeof OpsStatusResponseSchema>;
 
+export const OpsBackfillRequestSchema = z.object({
+  fromLedger: z
+    .number()
+    .int()
+    .positive()
+    .describe("First ledger to replay events from (the last known good ledger)"),
+});
+
+export type OpsBackfillRequest = z.infer<typeof OpsBackfillRequestSchema>;
+
 export const OpsBackfillResponseSchema = z.object({
   success: z.boolean().describe("Whether backfill operation completed"),
   message: z.string().optional().describe("Human-readable status message"),
   error: z.string().optional().describe("Error details if backfill failed"),
+  fromLedger: z.number().int().optional().describe("Ledger the replay started from"),
+  recordsIndexed: z.number().int().optional().describe("Payout records upserted by the replay"),
+  pagesScanned: z.number().int().optional().describe("Event pages read from the RPC"),
+  lastLedgerScanned: z.number().int().nullable().optional().describe("Highest ledger observed in the replay"),
+  caughtUp: z.boolean().optional().describe("False when the page budget was exhausted before the replay caught up"),
 });
 
 export type OpsBackfillResponse = z.infer<typeof OpsBackfillResponseSchema>;

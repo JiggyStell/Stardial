@@ -193,26 +193,13 @@ Before re-enabling admin writes or unpausing contract distributions:
 
 ## Escalation Criteria & Matrix
 
-Incidents are classified into three severity levels with strict response time SLAs and escalation paths.
+Classification is defined in exactly one place: **[`runbooks/payout-failure-severity-matrix.md`](../../runbooks/payout-failure-severity-matrix.md)**.
 
-```
-       Severity Matrix
-┌───────────────────────────────┐
-│ P1 CRITICAL (SLA: 15 mins)    │  --> Incident Commander, Lead Blockchain Eng, Security Lead
-├───────────────────────────────┤
-│ P2 MAJOR    (SLA: 30 mins)    │  --> On-call Backend / DevOps Engineer
-├───────────────────────────────┤
-│ P3 MINOR    (SLA: 2 hours)    │  --> Customer Support / Tier 2 Triage
-└───────────────────────────────┘
-```
+That matrix defines four levels (P0 Catastrophic, P1 Critical, P2 Major, P3 Minor) with their trigger conditions, response and resolution SLAs, escalation paths, and post-incident requirements. Use it for every payout incident.
 
-### Escalation Matrix
-
-| Severity | Criteria | Response SLA | Escalation Target |
-|----------|----------|--------------|-------------------|
-| **P1 Critical** | • Systemic payout failure across > 5 projects<br>• Smart contract state corruption or accounting discrepancy<br>• Compromise of admin private keys or API keys<br>• Total Soroban RPC outage lasting > 15 mins | **15 minutes** | • Incident Commander<br>• Lead Blockchain/Soroban Engineer<br>• Security Officer<br>• Operations Lead |
-| **P2 Major** | • Single project payout failure unresolvable by retry<br>• RPC degradation causing high latency (> 10s) or retry rate > 20%<br>• Event listener stream disconnected > 30 mins<br>• Partial distribution failure requiring manual backfill | **30 minutes** | • On-call Backend Engineer<br>• DevOps / Infrastructure Lead |
-| **P3 Minor** | • Transient UI payout status sync delay (< 15 mins)<br>• Single user query regarding pending transaction<br>• Backfill script needed for isolated historical ledger | **2 hours** | • Tier 2 Support<br>• Backend Engineer (Business Hours) |
+> **Why this section no longer repeats the rules.** The three-level table that used to live here classified a systemic failure across more than five projects as **P1 with a 15-minute SLA**. The authoritative matrix makes it **P0** (5-minute SLA, Security Officer and CTO in the escalation path). Two conflicting tables meant an operator reading this runbook could under-escalate a catastrophic incident. This runbook keeps the triage protocol, safety controls and recovery steps; the matrix owns classification.
+>
+> **Signal availability.** The payout-outcome counters the matrix would prefer (`stardial_payouts_failed_total`, `stardial_payouts_confirmed_total`, `stardial_payouts_initiated_total`) are not instrumented yet — see `docs/metrics-inventory.md` §6. Until then, triage from `distributions_executed_total`, `stardial_split_lifecycle_operations_total{operation="settlement",outcome="failure"}`, the RPC retry series, `GET /ops/status`, and the Winston payout error logs.
 
 ---
 

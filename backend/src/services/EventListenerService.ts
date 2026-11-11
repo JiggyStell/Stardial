@@ -1,5 +1,6 @@
 import { getStellarRpcServer, loadStellarConfig, executeWithRetry } from "./stellar.js";
 import { getDataSource } from "./database.js";
+import { incrementDistributionsExecuted } from "./metrics.js";
 import { TransactionRecord } from "../entities/Transaction.js";
 import { ServiceState } from "../entities/ServiceState.js";
 import { logger } from "./logger.js";
@@ -20,6 +21,7 @@ import {
   parseRpcResponse,
   rpcResponseValidationError,
 } from "./rpc-response-validation.js";
+import type { Repository } from "typeorm";
 
 // Polling cadence. Under normal operation we poll every 5s. After a streak of
 // consecutive RPC failures we back off to 30s to avoid hammering an RPC that is
@@ -33,6 +35,12 @@ export const ERROR_THRESHOLD = 3;
 // outage cannot flood the RPC with thousands of catch-up requests.
 export const MAX_CATCHUP_LEDGERS = 10_000;
 const STARTUP_LOOKBACK_LEDGERS = 100;
+
+// Upper bound on pages an operator-triggered backfill will scan in one call.
+// A replay that would need more than this is a job for a narrower ledger range,
+// not a single HTTP request. 200 pages x 100 events bounds the work while still
+// covering a multi-day gap in normal traffic.
+export const MAX_BACKFILL_PAGES = 200;
 
 // Key under which the polling cursor is persisted in ServiceState so it
 // survives process restarts.
@@ -254,6 +262,137 @@ function decodePayoutEvent(
   };
 }
 
+const PAYOUT_EVENT_NAMES: ReadonlySet<string> = new Set([
+  "payment_sent",
+  "collaborator_claimed",
+  "distribution_complete",
+]);
+
+/** Reads event topics as strings; an undecodable topic becomes "". */
+function readEventTopics(event: ContractEvent): string[] {
+  return (event.topic ?? []).map((topic) => {
+    try {
+      return String(scValToNative(topic));
+    } catch {
+      return "";
+    }
+  });
+}
+
+/** Resolves a project's token address, falling back to "Native". */
+async function resolveProjectToken(
+  projectId: string,
+  cache?: Map<string, string>,
+): Promise<string> {
+  const cached = cache?.get(projectId);
+  if (cached !== undefined) return cached;
+
+  let token = "Native";
+  try {
+    const project = await fetchProjectById(projectId);
+    if (project && typeof project === "object" && "token" in project) {
+      token = String(project.token);
+    }
+  } catch (err) {
+    logger.warn(
+      `Could not resolve token address for project ${projectId}. Using fallback.`,
+      { err }
+    );
+  }
+
+  cache?.set(projectId, token);
+  return token;
+}
+
+interface CollectedEvents {
+  records: TransactionRecord[];
+  /** `distribution_complete` milestones observed in the batch. */
+  distributionsCompleted: number;
+}
+
+/**
+ * Turns a page of contract events into payout transaction records.
+ *
+ * Shared by the live poll and the operator-driven backfill so both paths decode
+ * exactly the same events the same way. A malformed payout event fails the
+ * whole batch (#1494): skipping it would leave money unrecorded while the
+ * cursor still advanced.
+ *
+ * `skipExisting` avoids redundant token lookups during live polling. Backfill
+ * leaves it off because the rows it replays are usually already present; the
+ * txHash unique constraint makes the upsert idempotent instead.
+ */
+async function collectPayoutRecords(
+  events: ContractEvent[],
+  expectedContractId: string,
+  repo: Repository<TransactionRecord>,
+  options: { skipExisting: boolean; tokenCache?: Map<string, string> } = { skipExisting: true },
+): Promise<CollectedEvents> {
+  const records: TransactionRecord[] = [];
+  let distributionsCompleted = 0;
+
+  for (const event of events) {
+    try {
+      const topics = readEventTopics(event);
+      const eventName = topics[0] || "";
+      if (!PAYOUT_EVENT_NAMES.has(eventName)) {
+        continue;
+      }
+
+      if (eventName === "distribution_complete") {
+        distributionsCompleted += 1;
+        logger.info("Indexed milestone event", {
+          eventName,
+          projectId: topics[1] || "",
+          txHash: event.txHash,
+          ledgerClosedAt: event.ledgerClosedAt,
+        });
+        continue;
+      }
+
+      const { projectId, recipient, amount, timestamp } = decodePayoutEvent(
+        event,
+        eventName,
+        topics[1],
+        expectedContractId
+      );
+
+      // Skip already-indexed transactions during live polling. The DB also
+      // enforces uniqueness on txHash, but this avoids redundant work.
+      if (options.skipExisting) {
+        const existing = await repo.findOneBy({ txHash: event.txHash });
+        if (existing) {
+          continue;
+        }
+      }
+
+      records.push(
+        repo.create({
+          roundId: projectId,
+          recipient,
+          amount,
+          token: await resolveProjectToken(projectId, options.tokenCache),
+          timestamp,
+          txHash: event.txHash,
+          status: "completed",
+        })
+      );
+    } catch (eventError) {
+      // Fail the whole batch: skipping would advance the cursor past a
+      // payment that was never recorded.
+      if (eventError instanceof RpcResponseValidationError) {
+        throw eventError;
+      }
+      logger.error("Error processing polled Soroban event", {
+        event,
+        error: eventError,
+      });
+    }
+  }
+
+  return { records, distributionsCompleted };
+}
+
 /** Records a failed poll and backs off the cadence once the threshold is hit. */
 function recordPollFailure(error: unknown): void {
   consecutiveErrors += 1;
@@ -335,87 +474,19 @@ export async function pollEvents() {
       responseEvents.length === 0 ? response.latestLedger ?? latestObservedLedger ?? 0 : 0,
     );
 
-    const newRecords: TransactionRecord[] = [];
+    const collected = await collectPayoutRecords(
+      responseEvents,
+      config.contractId,
+      repo,
+      { skipExisting: true }
+    );
+    const newRecords = collected.records;
 
-    for (const event of responseEvents) {
-      try {
-        const topics = (event.topic ?? []).map((topic) => {
-          try {
-            return String(scValToNative(topic));
-          } catch {
-            return "";
-          }
-        });
-
-        const eventName = topics[0] || "";
-        if (
-          eventName !== "payment_sent" &&
-          eventName !== "collaborator_claimed" &&
-          eventName !== "distribution_complete"
-        ) {
-          continue;
-        }
-        const txHash = event.txHash;
-
-        if (eventName === "distribution_complete") {
-          logger.info("Indexed milestone event", {
-            eventName,
-            projectId: topics[1] || "",
-            txHash,
-            ledgerClosedAt: event.ledgerClosedAt,
-          });
-          continue;
-        }
-        const { projectId, recipient, amount, timestamp } = decodePayoutEvent(
-          event,
-          eventName,
-          topics[1],
-          config.contractId
-        );
-
-        // Skip already-indexed transactions. The DB also enforces uniqueness
-        // on txHash, but this avoids redundant work during polling.
-        const existing = await repo.findOneBy({ txHash });
-        if (existing) {
-          continue;
-        }
-
-        // Resolve the project's token address; fall back to "Native".
-        let token = "Native";
-        try {
-          const project = await fetchProjectById(projectId);
-          if (project && typeof project === "object" && "token" in project) {
-            token = String(project.token);
-          }
-        } catch (err) {
-          logger.warn(
-            `Could not resolve token address for project ${projectId}. Using fallback.`,
-            { err }
-          );
-        }
-
-        newRecords.push(
-          repo.create({
-            roundId: projectId,
-            recipient,
-            amount,
-            token,
-            timestamp,
-            txHash,
-            status: "completed",
-          })
-        );
-      } catch (eventError) {
-        // Fail the whole batch: skipping would advance the cursor past a
-        // payment that was never recorded.
-        if (eventError instanceof RpcResponseValidationError) {
-          throw eventError;
-        }
-        logger.error("Error processing polled Soroban event", {
-          event,
-          error: eventError,
-        });
-      }
+    // `distribution_complete` is the only event that means an actual
+    // distribution round settled on-chain, so it is what the
+    // `distributions_executed_total` counter counts.
+    if (collected.distributionsCompleted > 0) {
+      incrementDistributionsExecuted(collected.distributionsCompleted);
     }
 
     if (response.latestLedger !== undefined) {
@@ -495,4 +566,114 @@ export async function pollEvents() {
   } finally {
     isPolling = false;
   }
+}
+
+export interface EventBackfillResult {
+  fromLedger: number;
+  /** Payout records upserted; already-indexed rows are updated in place. */
+  recordsIndexed: number;
+  pagesScanned: number;
+  lastLedgerScanned: number | null;
+  /** False when the page budget ran out before the replay caught up. */
+  caughtUp: boolean;
+}
+
+/**
+ * Replays contract events from `fromLedger` forward, upserting payout records.
+ *
+ * This backs the `POST /ops/backfill` recovery step in the payout runbooks: it
+ * closes gaps left by an event-listener outage. It deliberately leaves the live
+ * cursor and the listener's health state alone, and it is safe to run while
+ * polling is active because records are keyed by txHash, so an overlapping
+ * range is a replay rather than a duplicate.
+ *
+ * Rejecting an invalid `fromLedger` matters: this runs under incident
+ * pressure, and silently ignoring the range would look like a successful
+ * backfill while nothing was indexed.
+ */
+export async function backfillEvents(fromLedger: number): Promise<EventBackfillResult> {
+  if (!Number.isSafeInteger(fromLedger) || fromLedger <= 0) {
+    throw new RangeError("fromLedger must be a positive integer ledger sequence.");
+  }
+
+  const config = loadStellarConfig();
+  const server = getStellarRpcServer();
+  const repo = getDataSource().getRepository(TransactionRecord);
+  const filters = [{ type: "contract" as const, contractIds: [config.contractId] }];
+  const tokenCache = new Map<string, string>();
+
+  let startLedger: number | null = fromLedger;
+  let cursor: string | null = null;
+  let pagesScanned = 0;
+  let recordsIndexed = 0;
+  let lastLedgerScanned: number | null = null;
+  let caughtUp = false;
+
+  for (let page = 0; page < MAX_BACKFILL_PAGES; page += 1) {
+    const response = parseRpcResponse(
+      "getEvents",
+      getEventsResponseSchema,
+      await executeWithRetry(
+        () =>
+          server.getEvents(
+            cursor
+              ? { filters, cursor, limit: 100 }
+              : { filters, startLedger: startLedger ?? fromLedger, limit: 100 }
+          ),
+        { operation: "getEvents" }
+      )
+    );
+
+    pagesScanned += 1;
+
+    const collected = await collectPayoutRecords(response.events, config.contractId, repo, {
+      skipExisting: false,
+      tokenCache,
+    });
+    if (collected.records.length > 0) {
+      await repo.upsert(collected.records, {
+        conflictPaths: ["txHash"],
+        skipUpdateIfNoValuesChanged: true,
+      });
+      recordsIndexed += collected.records.length;
+    }
+
+    for (const event of response.events) {
+      if (event.ledger === undefined) continue;
+      lastLedgerScanned = Math.max(lastLedgerScanned ?? 0, event.ledger);
+    }
+
+    // Stop on an empty page (caught up), when the RPC stops advancing the
+    // cursor, or when it cannot advance any further. Without the cursor check
+    // a non-advancing response would spin until the page budget ran out.
+    if (
+      response.events.length === 0 ||
+      !response.cursor ||
+      response.cursor === cursor
+    ) {
+      caughtUp = true;
+      break;
+    }
+
+    cursor = response.cursor;
+    startLedger = null;
+  }
+
+  if (!caughtUp) {
+    logger.warn("Event backfill stopped at the page budget before catching up", {
+      fromLedger,
+      pagesScanned,
+      lastLedgerScanned,
+    });
+  }
+
+  logger.info("Event backfill completed", {
+    fromLedger,
+    recordsIndexed,
+    pagesScanned,
+    lastLedgerScanned,
+    caughtUp,
+  });
+
+  return { fromLedger, recordsIndexed, pagesScanned, lastLedgerScanned, caughtUp };
 }

@@ -167,10 +167,36 @@ Source: `services/PayoutHistoryService.ts`, `services/EventListenerService.ts`.
 - Payout history service logs errors via Winston logger.
 - Listener ledger position is persisted alongside its cursor and exposed through
   `/metrics`; see the [observability runbook](./runbooks/observability.md#background-listener-ledger-lag).
+- `distributions_executed_total` (section 3) is incremented when the event
+  listener indexes a `distribution_complete` event, so it counts settlements
+  the backend actually observed rather than requests it merely prepared.
+- `POST /ops/backfill` replays a ledger range through the same decoding path,
+  so a recovery run indexes payout records the listener missed.
+
+### Why the payout counters are still missing
+
+The backend builds **unsigned** XDR and hands it to the client, which signs and
+submits it. It therefore never observes submit/confirm/abort for a given
+payout, and `payouts_initiated_total` / `payouts_failed_total` cannot be
+incremented honestly from the API layer. A `token` label on them would also
+require an extra RPC read per request.
+
+Confirmation *is* observable, because the listener sees `payment_sent` and
+`collaborator_claimed`:
+
+- `payouts_confirmed_total{token}` could be implemented in
+  `EventListenerService` at the point a payout record is built.
+- `payouts_failed_total{token,reason}` would have to come from a client
+  submission report or from Horizon, not from the payout preparation path.
+
+Until then, use `distributions_executed_total` and
+`stardial_split_lifecycle_operations_total` for payout triage, as the payout
+severity matrix does.
 
 ### TODO (follow-up)
 - Instrument `submitSorobanTransactionAndPoll()` with duration histogram and status counters.
-- Track confirmed vs. failed payout ratio.
+- Implement `payouts_confirmed_total{token}` in `EventListenerService`.
+- Decide on a client submission report to enable `payouts_failed_total{token,reason}`.
 
 ---
 

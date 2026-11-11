@@ -96,12 +96,17 @@ vi.mock("../services/EventListenerService.js", () => ({
   getLedgerLag: vi.fn(() => 0),
   startEventListenerService: vi.fn().mockResolvedValue(undefined),
   stopEventListenerService: vi.fn(),
+  backfillEvents: vi.fn(async (fromLedger: number) => ({
+    fromLedger,
+    recordsIndexed: 0,
+    pagesScanned: 1,
+    lastLedgerScanned: null,
+    caughtUp: true,
+  })),
 }));
 
 vi.mock("../services/PayoutHistoryService.js", () => ({
-  createPayoutHistoryService: vi.fn(() => ({
-    backfill: vi.fn().mockResolvedValue({}),
-  })),
+  createPayoutHistoryService: vi.fn(() => ({})),
 }));
 
 import { splitsRouter } from "../routes/splits.js";
