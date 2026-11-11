@@ -23,6 +23,9 @@ function hasMatchingApiKey(expected: string, provided: string): boolean {
 
 function logBlockedAdminRequest(req: Request, res: Response, reason: string): void {
   logger.warn("Blocked payments admin request", {
+    // Structured event name so security detection can match on a field rather
+    // than the prose message (see runbooks/payout-failure-severity-matrix.md).
+    event: "ADMIN_ACCESS_DENIED",
     reason,
     method: req.method,
     path: req.originalUrl,

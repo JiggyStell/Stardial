@@ -18,7 +18,12 @@ partial completion.
         contract; follow the pause/unpause steps in
         `docs/runbooks/stuck-payouts.md`.
 - [ ] Check Soroban RPC status/health for the network used by the round.
-- [ ] Check backend logs for the distribution job (errors, timeouts, retries).
+- [ ] Check backend logs for the distribute request that failed: errors
+      preparing `POST /splits/:projectId/distribute`, `RPC retries exhausted`
+      warnings, and `distributions_paused` 409s. There is no server-side
+      distribution job — the backend returns unsigned XDR and the client
+      submits it, so submission, fee and sequence failures appear on Horizon
+      rather than in these logs.
 
 ## 2. Decide: retry or escalate
 - [ ] Retry if the failure is a transient RPC/network error and no funds
@@ -33,5 +38,9 @@ partial completion.
 - [ ] Record the incident summary once resolved for postmortem.
 
 ## 4. Resolution
-- [ ] Confirm final on-chain round status matches backend records.
+- [ ] Confirm the on-chain result matches backend records:
+      `distribution_round` and `total_distributed` on `get_project`, the
+      `payment_sent` events for the round, and the per-recipient payout rows
+      (`GET /transactions`, filtered by round). There is no round status field
+      to compare.
 - [ ] Link this checklist run in the incident ticket.

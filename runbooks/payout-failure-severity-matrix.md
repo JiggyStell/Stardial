@@ -29,7 +29,7 @@
 | 1 | Systemic payout failure across **> 5 projects simultaneously** | `stardial_split_lifecycle_operations_total{operation="settlement",outcome="failure"}` spiking across projects while `distributions_executed_total` stays flat; user reports |
 | 2 | Smart contract state corruption — on-chain balance ≠ sum of `get_claimable` for all collaborators | Manual audit; contract state check |
 | 3 | Confirmed double-spend or funds sent to wrong addresses | On-chain investigation; Horizon query |
-| 4 | Admin private key or `PAYMENTS_ADMIN_API_KEY` compromise | Security alert; audit log `ADMIN_ACCESS_DENIED` spike |
+| 4 | Admin private key or `PAYMENTS_ADMIN_API_KEY` compromise | Security alert; spike in backend Winston warnings carrying `event="ADMIN_ACCESS_DENIED"` (`"Blocked payments admin request"`, `reason="invalid_api_key"`), or in the frontend audit log's `ADMIN_ACCESS_DENIED` entries |
 | 5 | Total Soroban RPC outage lasting > 15 minutes | `stardial_rpc_retry_outcomes_total{outcome="exhausted"}` > 0 sustained |
 | 6 | Contract accounting discrepancy detected (e.g., `total_distributed` out of sync) | Backfill script anomaly; manual check |
 
