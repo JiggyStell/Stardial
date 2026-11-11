@@ -84,7 +84,7 @@ class ConsoleEmailProvider implements EmailProvider {
     const subjects = getLocalizedSubjects(input.locale);
     logger.info("Password reset email queued", {
       to: input.to,
-      resetUrl: input.resetUrl,
+      resetUrl: redactUrlForLog(input.resetUrl),
       subject: subjects.reset,
       locale: input.locale || "en",
       tokenHash: crypto.createHash("sha256").update(input.token).digest("hex"),
@@ -101,7 +101,7 @@ class ConsoleEmailProvider implements EmailProvider {
     const subjects = getLocalizedSubjects(input.locale);
     logger.info("Invitation email queued", {
       to: input.to,
-      inviteUrl: input.inviteUrl,
+      inviteUrl: redactUrlForLog(input.inviteUrl),
       subject: subjects.invite,
       locale: input.locale || "en",
       inviterWalletAddress: input.inviterWalletAddress,
