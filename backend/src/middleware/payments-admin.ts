@@ -33,6 +33,23 @@ function logBlockedAdminRequest(req: Request, res: Response, reason: string): vo
   });
 }
 
+/**
+ * Records a successfully authenticated admin request.
+ *
+ * This exists because the secret-rotation runbooks verify a rotated
+ * `PAYMENTS_ADMIN_API_KEY` by grepping pod logs for `ADMIN_ACCESS_GRANTED`.
+ * Without this line that verification step could never succeed. Like the
+ * denial log, it records no header or key material.
+ */
+function logAuthorizedAdminRequest(req: Request): void {
+  logger.info("Payments admin request authorized", {
+    event: "ADMIN_ACCESS_GRANTED",
+    method: req.method,
+    path: req.originalUrl,
+    ip: hashIp(req.ip)
+  });
+}
+
 export function requirePaymentsAdminAccess(
   req: Request,
   res: Response,
@@ -58,6 +75,7 @@ export function requirePaymentsAdminAccess(
     return;
   }
 
+  logAuthorizedAdminRequest(req);
   next();
 }
 
