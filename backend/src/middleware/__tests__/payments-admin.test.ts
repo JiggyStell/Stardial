@@ -326,7 +326,7 @@ describe("admin write-disable switch: real middleware chain (Issue #940)", () =>
       .expect(503);
 
     expect(warnSpy).toHaveBeenCalledTimes(1);
-    const [message, meta] = warnSpy.mock.calls[0] as [string, Record<string, unknown>];
+    const [message, meta] = warnSpy.mock.calls[0] as unknown as [string, Record<string, unknown>];
     expect(message).toBe("Blocked payments admin request");
 
     expect(meta.reason).toBe("writes_disabled");
@@ -449,7 +449,7 @@ describe("requirePaymentsAdminAccess: credential verification logging", () => {
 
     expect(next).toHaveBeenCalledTimes(1);
     expect(infoSpy).toHaveBeenCalledTimes(1);
-    const [message, meta] = infoSpy.mock.calls[0] as [string, Record<string, unknown>];
+    const [message, meta] = infoSpy.mock.calls[0] as unknown as [string, Record<string, unknown>];
     expect(message).toBe("Payments admin request authorized");
     expect(meta.event).toBe("ADMIN_ACCESS_GRANTED");
     expect(meta.method).toBe("POST");

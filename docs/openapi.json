@@ -475,13 +475,34 @@
       },
       "OpsBackfillResponse": {
         "properties": {
+          "caughtUp": {
+            "description": "False when the page budget was exhausted before the replay caught up",
+            "type": "boolean"
+          },
           "error": {
             "description": "Error details if backfill failed",
             "type": "string"
           },
+          "fromLedger": {
+            "description": "Ledger the replay started from",
+            "type": "integer"
+          },
+          "lastLedgerScanned": {
+            "description": "Highest ledger observed in the replay",
+            "nullable": true,
+            "type": "integer"
+          },
           "message": {
             "description": "Human-readable status message",
             "type": "string"
+          },
+          "pagesScanned": {
+            "description": "Event pages read from the RPC",
+            "type": "integer"
+          },
+          "recordsIndexed": {
+            "description": "Payout records upserted by the replay",
+            "type": "integer"
           },
           "success": {
             "description": "Whether backfill operation completed",

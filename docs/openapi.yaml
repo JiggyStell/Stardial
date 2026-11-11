@@ -527,6 +527,22 @@ components:
         error:
           type: string
           description: Error details if backfill failed
+        fromLedger:
+          type: integer
+          description: Ledger the replay started from
+        recordsIndexed:
+          type: integer
+          description: Payout records upserted by the replay
+        pagesScanned:
+          type: integer
+          description: Event pages read from the RPC
+        lastLedgerScanned:
+          type: integer
+          nullable: true
+          description: Highest ledger observed in the replay
+        caughtUp:
+          type: boolean
+          description: False when the page budget was exhausted before the replay caught up
       required:
         - success
   parameters: {}

@@ -311,7 +311,7 @@ describe("Issue #1031: Audit log does not leak sensitive headers", () => {
 
     // Check the warn log calls
     const blockedCalls = warnSpy.mock.calls.filter(
-      ([msg]) => msg === "Blocked payments admin request"
+      ([msg]) => String(msg) === "Blocked payments admin request"
     );
     expect(blockedCalls.length).toBeGreaterThan(0);
     const serialized = JSON.stringify(blockedCalls);
