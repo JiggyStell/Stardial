@@ -40,7 +40,7 @@ partial completion.
 ## 4. Resolution
 - [ ] Confirm the on-chain result matches backend records:
       `distribution_round` and `total_distributed` on `get_project`, the
-      `payment_sent` events for the round, and the per-recipient payout rows
-      (`GET /transactions`, filtered by round). There is no round status field
-      to compare.
+      `payment_sent` events for the round (`GET /splits/:projectId/history`),
+      and the per-recipient payout rows. There is no round status field to
+      compare.
 - [ ] Link this checklist run in the incident ticket.

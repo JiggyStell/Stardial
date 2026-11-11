@@ -340,9 +340,11 @@ describe("admin write-disable switch: real middleware chain (Issue #940)", () =>
     expect(meta.ip).not.toBe("::1");
     expect(meta.ip).not.toBe("::ffff:127.0.0.1");
 
-    // The logged payload only ever contains reason/method/path/ip -- no
-    // header values (like the API key sent above) leak into it.
-    expect(Object.keys(meta).sort()).toEqual(["ip", "method", "path", "reason"]);
+    // The logged payload only ever contains event/reason/method/path/ip -- no
+    // header values (like the API key sent above) leak into it. `event` is a
+    // constant structured name (ADMIN_ACCESS_DENIED), not request data.
+    expect(meta.event).toBe("ADMIN_ACCESS_DENIED");
+    expect(Object.keys(meta).sort()).toEqual(["event", "ip", "method", "path", "reason"]);
     const serialized = JSON.stringify(meta);
     expect(serialized).not.toContain("super-secret-key-value");
 
