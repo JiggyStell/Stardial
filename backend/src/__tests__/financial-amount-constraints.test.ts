@@ -2,7 +2,7 @@ import "reflect-metadata";
 import { randomUUID } from "node:crypto";
 import { DataSource, type QueryRunner } from "typeorm";
 import { afterAll, beforeAll, describe, expect, it } from "vitest";
-import { AddFinancialAmountCheckConstraints1760000000010 } from "../migrations/1760000000010-AddFinancialAmountCheckConstraints";
+import { AddFinancialAmountCheckConstraints1760000000010 } from "../migrations/1760000000010-AddFinancialAmountCheckConstraints.js";
 
 /**
  * Issue #1337: database check constraint for financial amounts.

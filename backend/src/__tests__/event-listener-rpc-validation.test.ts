@@ -24,7 +24,7 @@ const mocks = vi.hoisted(() => {
     manager,
     transaction: vi.fn(async (work: (m: typeof manager) => Promise<void>) => work(manager)),
     repo: {
-      findOneBy: vi.fn(async () => null),
+      findOneBy: vi.fn(async (): Promise<Record<string, unknown> | null> => null),
       create: vi.fn((record: Record<string, unknown>) => record),
       upsert: vi.fn(async (_entity?: unknown, _row?: unknown) => undefined),
     },
@@ -289,7 +289,12 @@ describe("EventListenerService - fails closed on malformed RPC data (#1494)", ()
     ["a missing amount", { ...payoutEvent(), value: xdr.ScVal.scvVec([Address.fromString(Keypair.random().publicKey()).toScVal()]) }],
     ["a project topic that is not a symbol", payoutEvent({ projectId: nativeToScVal("bad project id!", { type: "string" }) })],
     ["an event from a different contract", payoutEvent({ contractId: OTHER_CONTRACT_ID })],
-    ["an event with no contract id", { ...payoutEvent(), contractId: undefined }],
+    [
+      "an event with no contract id",
+      // `contractId` is required on the contract type; the malformed RPC payload
+      // this test feeds the listener deliberately drops it.
+      { ...payoutEvent(), contractId: undefined } as unknown as ReturnType<typeof payoutEvent>,
+    ],
   ];
 
   async function expectNothingRecorded() {

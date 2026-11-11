@@ -22,7 +22,11 @@ describe("OpenAPI specification", () => {
       }
     }
 
-    await expect(SwaggerParser.validate(spec)).resolves.toBeDefined();
+    // generateOpenApi() is typed with openapi3-ts while swagger-parser expects
+    // openapi-types; the two define structurally identical documents.
+    await expect(
+      SwaggerParser.validate(spec as unknown as Parameters<typeof SwaggerParser.validate>[0]),
+    ).resolves.toBeDefined();
   });
 
   it("matches the committed docs/openapi.yaml (run `cd backend && npm run generate:openapi` if this fails)", () => {

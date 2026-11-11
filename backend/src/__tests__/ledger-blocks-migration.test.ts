@@ -2,7 +2,7 @@ import "reflect-metadata";
 import { randomUUID } from "node:crypto";
 import { DataSource, type QueryRunner } from "typeorm";
 import { afterAll, beforeAll, describe, expect, it } from "vitest";
-import { CreateLedgerBlocks1760000000011 } from "../migrations/1760000000011-CreateLedgerBlocks";
+import { CreateLedgerBlocks1760000000011 } from "../migrations/1760000000011-CreateLedgerBlocks.js";
 
 /**
  * ledger_blocks must exist on a migrated database. Runs against a migrated
