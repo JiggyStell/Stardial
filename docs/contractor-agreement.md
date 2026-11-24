@@ -267,6 +267,193 @@ written change order approved by both parties.
   in section 2 of
   [`Contractor Terms: Scope, Compliance, Disputes, and Exit`](./contractor-terms-commercial-and-legal.md).
 
+<<<<<<< Updated upstream
+=======
+## 8. Termination Rights
+
+### 8.1 Termination for Convenience
+
+Either party may terminate the engagement without cause by giving **30 calendar
+days' written notice** to the other party. During the notice period the
+contractor continues to perform and Stardial continues to pay for accepted work.
+
+### 8.2 Termination for Cause
+
+Either party may terminate immediately for a material breach if:
+
+1. The non-breaching party delivers written notice describing the breach in
+   reasonable detail; and
+2. The breaching party fails to cure the breach within **10 business days** of
+   receiving that notice (the "cure period").
+
+Examples of material breach include persistent failure to meet the quality
+standards in section 1, repeated security violations under section 3, and
+failure to pay undisputed invoices by the due date. If the breach is not
+reasonably capable of being cured, the non-breaching party may terminate
+immediately on written notice without a cure period.
+
+### 8.3 Wind-Down Obligations
+
+On termination or expiry of the engagement, regardless of the reason:
+
+- **Work product hand-over.** The contractor delivers all completed and
+  in-progress work product, source code, documentation, credentials, and
+  materials belonging to Stardial within **5 business days** of the termination
+  date.
+- **Access revocation.** The contractor revokes its own access and the access
+  of any subcontractors to Stardial systems, repositories, and accounts within
+  **5 business days** of the termination date, consistent with the obligation in
+  section 3.
+- **Payment for accepted work.** Stardial pays for all work accepted before the
+  termination date at the agreed rates, including a pro-rated amount for any
+  milestone that was substantially complete and accepted in writing at
+  termination. Work that was not accepted is not payable unless the parties
+  agree otherwise in writing.
+- **Confidentiality and security.** The obligations in sections 3 and 5 survive
+  termination.
+
+## 9. Intellectual Property Ownership
+
+### 9.1 Work Product Created for the Engagement
+
+All work product that the contractor creates, develops, or produces specifically
+for this engagement — including software, code, documentation, designs, and
+other deliverables described in the statement of work — is a work made for hire
+to the maximum extent permitted by applicable law. Where work-made-for-hire
+treatment does not apply, the contractor irrevocably assigns all right, title,
+and interest (including all intellectual property rights) in that work product
+to Stardial upon creation, without additional consideration.
+
+### 9.2 Contractor Pre-Existing IP
+
+The contractor retains full ownership of tools, libraries, frameworks,
+methodologies, and other intellectual property that the contractor owned or
+developed independently before the engagement or outside the scope of the
+engagement ("Pre-Existing IP"). The contractor must identify any Pre-Existing IP
+incorporated into a deliverable in the statement of work or in a written notice
+to Stardial before incorporating it.
+
+### 9.3 Derivative Works Based on Pre-Existing IP
+
+Where a deliverable is a derivative work of the contractor's Pre-Existing IP,
+the contractor grants Stardial a perpetual, irrevocable, worldwide,
+royalty-free, sublicensable license to use, reproduce, modify, distribute, and
+create further derivative works of that deliverable, to the extent necessary for
+Stardial to use the deliverable as intended.
+
+### 9.4 Deviations Require Written Agreement
+
+Any arrangement that deviates from the ownership and license terms above —
+including joint ownership, a narrower license, or retention of work product by
+the contractor — must be agreed by both parties in a signed written amendment to
+the statement of work before the relevant work starts. Informal communications
+do not constitute a deviation.
+
+## 10. Indemnification
+
+### 10.1 Covered Claims
+
+The contractor will indemnify, defend, and hold harmless Stardial and its
+affiliates, officers, employees, and agents against any third-party claim,
+demand, action, suit, or proceeding ("Claim") arising from or related to:
+
+- the contractor's breach of any obligation under this agreement or the
+  statement of work;
+- the contractor's negligence or wilful misconduct in performing the engagement;
+  or
+- the contractor's infringement or alleged infringement of a third party's
+  intellectual property rights through any deliverable or Pre-Existing IP
+  incorporated into a deliverable.
+
+### 10.2 Scope of Indemnity
+
+The contractor's indemnity obligation covers all reasonable defence costs
+(including legal fees), settlements, and final judgments attributable to a
+covered Claim. Stardial will promptly notify the contractor in writing of any
+Claim for which indemnification may be sought.
+
+### 10.3 Defense Obligations
+
+The contractor has the right to control the defence of a covered Claim,
+including the choice of counsel, provided that:
+
+- Stardial may participate in the defence at its own expense with counsel of its
+  choice;
+- the contractor may not settle a Claim in a way that admits liability on
+  Stardial's behalf, imposes obligations on Stardial, or restricts Stardial's
+  business without Stardial's prior written consent; and
+- Stardial cooperates reasonably with the contractor's defence efforts and does
+  not take actions that prejudice the defence.
+
+### 10.4 Mutual Indemnification
+
+Stardial will indemnify, defend, and hold harmless the contractor against
+third-party Claims arising from Stardial's own breach of this agreement,
+negligence, or wilful misconduct, on the same defence and settlement terms
+described in section 10.3 (with the roles reversed). Each party's indemnity
+obligation applies only to Claims attributable to its own acts or omissions; a
+Claim attributable to both parties' acts is handled on an equitable basis
+proportionate to each party's responsibility.
+
+## 11. Warranties
+
+The contractor warrants that, for **90 calendar days** after sign-off on each
+deliverable (the "warranty period"):
+
+- The deliverable conforms to all acceptance criteria in the applicable statement
+  of work.
+- The deliverable is free from material defects in workmanship.
+- The deliverable does not infringe the intellectual property rights of any
+  third party.
+
+If Stardial reports a warranty defect in writing during the warranty period, the
+contractor must correct it within **10 business days** at no additional cost to
+Stardial. If the defect cannot be corrected within that window, the contractor
+must provide a written remediation plan with a revised timeline before the window
+expires. These warranty obligations are in addition to, and do not limit, any
+other remedies available to Stardial.
+
+## 12. Change Order Procedure
+
+No change to the scope, deliverables, timeline, or fees of an engagement takes
+effect unless both parties agree to it in writing through the process below.
+
+1. **Written request.** The party requesting the change submits a written change
+   request describing: (a) the proposed change to scope or deliverables, (b) the
+   estimated additional effort and cost, and (c) the impact on existing timelines
+   and milestones.
+2. **Review period.** The receiving party has **5 business days** to approve,
+   reject, or request clarification in writing. If clarification is requested,
+   the 5-business-day clock restarts when the clarification is provided.
+3. **Approval required before work starts.** The contractor must not begin work
+   on a change until both parties have signed (or confirmed in writing via email)
+   an approved change order. Work performed without approval is not payable.
+4. **Impact on existing obligations.** An approved change order supersedes the
+   specific terms it modifies; all other terms of the engagement remain in force.
+
+## 13. Limitation of Liability
+
+Each party's total cumulative liability to the other under or in connection with
+an engagement — whether in contract, tort, or otherwise — is limited to the total
+fees paid or payable by Stardial under the applicable statement of work in the
+**12 months preceding the event giving rise to the claim**.
+
+Neither party is liable to the other for indirect, incidental, special,
+punitive, or consequential losses, including loss of profit, loss of revenue,
+loss of data, or business interruption, even if advised of the possibility of
+such losses.
+
+The limits above do not apply to, and nothing in this section excludes or
+restricts liability for:
+
+- Fraud or fraudulent misrepresentation.
+- Wilful misconduct or gross negligence.
+- Breach of the confidentiality obligations in this document or the applicable
+  contract.
+- The contractor's intellectual property indemnification obligations.
+- Any liability that cannot be excluded or limited by applicable law.
+
+>>>>>>> Stashed changes
 ## Questions
 
 Open an issue or contact the maintainers if any term here is unclear or conflicts
