@@ -2,8 +2,7 @@
 
 This document defines the baseline terms Stardial expects in contractor agreements.
 It covers quality standards, acceptance and sign-off, payment, security obligations,
-data protection, subcontractor management, confidentiality duration, and ongoing
-service levels.
+subcontractor management, confidentiality duration, and ongoing service levels.
 Individual contracts may add stricter terms, but should not weaken the ones below.
 
 ## 1. Quality Standards
@@ -20,7 +19,7 @@ deliverable is only complete when all of the following hold:
 | Style         | Existing lint, format, and repository conventions are followed         |
 | Security      | No new high or critical findings from dependency or secret scanning    |
 
-The ongoing service targets in section 7 apply whenever the statement of work
+The ongoing service targets in section 5 apply whenever the statement of work
 includes operating or supporting a production service. Other numeric targets
 (such as test coverage) must be listed explicitly in the statement of work.
 
@@ -77,199 +76,7 @@ Stardial may audit access and repository activity related to the engagement.
 - Stardial may object to a subcontractor for security or conflict-of-interest
   reasons, and the contractor must replace them.
 
-## 5. Data Protection
-
-This section applies whenever the contractor can access, store, transmit, or
-otherwise process personal data in the course of the engagement, including
-testing, debugging, and support. It operates alongside section 3 (Security
-Obligations); if the two overlap, the stricter requirement applies. The
-statement of work must record any additional processing instructions, the
-duration and purpose of processing, and the categories of personal data and
-data subjects involved before work starts.
-
-### 5.1 Definitions and roles
-
-- **Personal data** means any information relating to an identified or
-  identifiable individual, including a name, email address, IP address, account
-  identifier, or wallet address that can be linked to a person.
-- **Sensitive data** means special-category data such as health, biometric,
-  genetic, political, religious, or financial-account data, and any data a
-  reasonable person would treat as highly sensitive.
-- **Processing** means any operation performed on personal data, including
-  collection, storage, use, disclosure, transfer, and deletion.
-- **Data subject** means the individual the personal data relates to.
-- For personal data the contractor processes on Stardial's behalf, Stardial is
-  the **controller** and the contractor is the **processor**. Where the
-  contractor determines the purpose and means of processing, the contractor is
-  a controller for that processing and is responsible for its own compliance.
-
-The categories of personal data Stardial processes, their purposes, legal
-bases, and default retention periods are listed in
-[`PERSONAL_DATA_INVENTORY.md`](./PERSONAL_DATA_INVENTORY.md). The contractor must
-not process personal data outside those purposes without written approval.
-
-### 5.2 Scope and permitted processing
-
-- The contractor processes personal data only as necessary to perform the
-  statement of work, only on Stardial's documented instructions, and only for
-  the duration of the engagement.
-- The contractor must not sell, rent, share, or use personal data for its own
-  purposes, marketing, profiling, or training models, and must not combine it
-  with data from other clients.
-- The contractor must not introduce new categories of personal data, new
-  processing purposes, or new systems that hold personal data without Stardial's
-  prior written approval and, where required, a change order.
-- Sensitive data must not be processed under this engagement unless the
-  statement of work expressly permits it and the parties record the additional
-  safeguards and legal basis. Stardial does not expect contractors to process
-  sensitive data in the ordinary course.
-
-### 5.3 Contractor obligations
-
-- **Lawful basis and transparency.** The contractor must not do anything that
-  would undermine the legal basis recorded in the personal data inventory or
-  that would require a new privacy notice.
-- **Data minimisation and accuracy.** Collect only the personal data needed for
-  the task, keep it accurate for its purpose, and use pseudonymised or synthetic
-  data wherever the task allows.
-- **Purpose limitation.** Do not repurpose data collected for one task for
-  another, and do not copy production data into local environments, notebooks,
-  or third-party tools.
-- **Storage limitation.** Keep personal data only for the period stated in the
-  statement of work or this document, whichever is shorter, and delete it when
-  the purpose is met.
-- **Confidentiality.** Limit access to personnel and subcontractors who need it
-  for the engagement, bind them to confidentiality and data-protection terms at
-  least as strict as these, and keep a record of who has access.
-- **Access control.** Use individual accounts, least-privilege roles, and
-  multi-factor authentication. Do not share credentials or use production
-  credentials outside production.
-- **Training and awareness.** Ensure personnel handling personal data understand
-  these obligations and report suspected incidents promptly.
-- **Compliance with law.** Comply with the Nigeria Data Protection Act 2023 and
-  the NDPR, and with any other data-protection law that applies to the
-  contractor's processing, including the GDPR where relevant.
-
-### 5.4 Security expectations
-
-At a minimum, the contractor must apply the following technical and
-organisational measures, and any stricter measure the parties agree:
-
-| Area                    | Requirement                                                                                                                                                                     |
-| ----------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| Encryption in transit   | Encrypt personal data using current TLS versions; never send personal data over unencrypted channels                                                                            |
-| Encryption at rest      | Encrypt devices, backups, and any store holding personal data, consistent with Stardial's AES-256-GCM approach for sensitive fields                                             |
-| Credentials and secrets | Keep secrets out of code, logs, screenshots, tickets, and prompts; use a secret manager where available and rotate any credential that may have been exposed                    |
-| Logging and telemetry   | Do not log personal data; rely on Stardial's existing redaction (hashed IPs, wallet-address scrubbing) and never disable it without written approval                            |
-| Test and development    | Use synthetic or anonymised data; if production data is unavoidable, obtain written approval, minimise it, and delete it as soon as the task ends                               |
-| Device and network      | Keep devices patched, use full-disk encryption, screen locks, and a trusted network; do not store personal data on removable media                                              |
-| Vulnerability handling  | Patch known critical and high vulnerabilities in contractor-controlled systems within **14 calendar days** of a fix being available, and report unresolved exposure to Stardial |
-| Disposal                | Delete or securely wipe personal data and decommission storage so it cannot be recovered, and confirm destruction in writing on request                                         |
-
-### 5.5 Retention, return, and deletion
-
-- On request, and in any event within **10 business days** of the engagement
-  ending, the contractor must return all personal data and work product to
-  Stardial and delete every copy it holds, including backups, caches, and local
-  copies, and confirm deletion in writing.
-- One archival copy may be retained only where a law requires it or for
-  defending legal claims, for no longer than that purpose requires, and subject
-  to these terms.
-- The contractor must follow the deletion and anonymisation rules in
-  [`data-deletion-and-account-closure.md`](./data-deletion-and-account-closure.md).
-  In particular, do not delete or alter financial records, audit records, or
-  on-chain data: audit logs follow the retention in
-  [`audit-log-retention.md`](./audit-log-retention.md), transaction records are
-  retained for reconciliation, and Stellar/Soroban state is immutable and
-  outside either party's control.
-- Deletion of personal data does not remove obligations that survive under this
-  document or under law.
-
-### 5.6 International transfers
-
-- Stardial data stays in the systems and region Stardial designates. The
-  contractor must not transfer personal data to another country, provider, or
-  region without Stardial's prior written approval.
-- Where a transfer is approved, the contractor must use a lawful transfer
-  mechanism (such as an adequacy decision, standard contractual clauses, or
-  another approved safeguard), keep the data within the approved location, and
-  notify Stardial of any change in subprocessor or hosting location.
-- The contractor remains responsible for personal data transferred to its
-  subcontractors and must ensure equivalent protection flows down to them.
-- Where local law compels disclosure of personal data to a public authority,
-  the contractor must, unless legally prohibited, notify Stardial before
-  disclosing and disclose only the minimum required.
-
-### 5.7 Subcontractors and subprocessors
-
-Section 4 applies to subcontractors generally. Any subcontractor that processes
-personal data must additionally be disclosed in writing before access is
-granted, be bound by written terms at least as protective as this section, and
-be listed in the statement of work or an approved subprocessor list. The
-contractor remains fully liable to Stardial for its subcontractors' processing.
-
-### 5.8 Data subject requests
-
-If a data subject contacts the contractor about access, correction, deletion,
-portability, or objection, the contractor must forward the request to the
-Stardial maintainers within **5 business days**, must not respond substantively
-unless instructed, and must assist Stardial in meeting the applicable deadline
-at no additional charge. The support process in
-[`data-deletion-and-account-closure.md`](./data-deletion-and-account-closure.md)
-governs account closure and erasure requests.
-
-### 5.9 Personal data breach notification
-
-- **Discovery and initial notice.** The contractor must notify the Stardial
-  maintainers **without undue delay and in any event within 24 hours** of
-  discovering a personal data breach. This is the same deadline as the security
-  reporting in section 3 and applies even where the breach is suspected rather
-  than confirmed. Notification must be made by email to the contract contact
-  and, where one is named, the security contact, and must not wait for a full
-  investigation.
-- **Content of the notice.** State what happened, when it was discovered, the
-  categories and approximate volume of data and data subjects affected, the
-  likely consequences, the containment steps taken, and the contact leading the
-  response. If details are unknown, provide what is available and update it as
-  the investigation progresses.
-- **Containment and cooperation.** Immediately contain the breach, preserve
-  evidence, cooperate with Stardial's investigation and remediation, and follow
-  reasonable instructions. Do not delete logs or other evidence relating to the
-  breach.
-- **No independent notification.** Do not notify regulators, data subjects,
-  affected customers, or the public about a breach affecting Stardial data
-  unless Stardial instructs it or a law requires it. Where a law requires
-  notification, tell Stardial first where lawful.
-- **Records and follow-up.** Record the breach, its timeline, affected data,
-  decisions, and remedial actions, and provide a written post-incident report
-  with root-cause analysis and corrective actions within **5 business days** of
-  containment. Corrective work is at no additional charge.
-- **Costs.** The contractor bears the reasonable costs of containment,
-  notification, credit monitoring, and remediation for a breach caused by its
-  acts or omissions, without prejudice to the liability terms in
-  [`contractor-terms-breach-and-exit.md`](./contractor-terms-breach-and-exit.md).
-
-### 5.10 Audit, records, and compliance
-
-- The contractor must keep records of its processing, access grants, subprocessors,
-  and security measures sufficient to demonstrate compliance with this section,
-  and provide them to Stardial on request within **10 business days**.
-- Stardial may audit or request an independent assessment of the contractor's
-  handling of Stardial personal data on reasonable notice, and the contractor
-  must cooperate. Audits must not unreasonably disrupt the engagement.
-- The contractor must tell Stardial within **2 business days** if it can no
-  longer meet these obligations, if a law prevents it from following an
-  instruction, or if an instruction would breach applicable data-protection
-  law.
-
-### 5.11 Survival and priority
-
-This section survives termination or expiry of the engagement for as long as the
-contractor holds Stardial personal data. If a statement of work, subcontract, or
-other term conflicts with this section, the stricter protection for personal
-data applies.
-
-## 6. Confidentiality Duration
+## 5. Confidentiality Duration
 
 - Confidential information disclosed under an engagement remains protected for
   **5 years** after the date of disclosure, regardless of when the engagement
@@ -282,8 +89,7 @@ data applies.
 - On exit, the contractor returns or destroys confidential material within
   **10 business days** on request, except for one archival copy retained solely
   to meet legal or audit obligations.
-
-## 7. Ongoing Service Levels
+## 5. Ongoing Service Levels
 
 ### Scope and responsibilities
 
@@ -417,7 +223,7 @@ Service credits do not replace those breach rights or the existing liability
 limits. Disputes about measurements or credits follow the dispute process linked
 below; undisputed credits and service obligations remain due.
 
-## 8. Fees, Invoicing, and Payment
+## 6. Fees, Invoicing, and Payment
 
 The parties must sign a statement of work before work starts. It must state the
 payment currency and either:
@@ -460,6 +266,129 @@ written change order approved by both parties.
   required by law. Any withholding and tax documentation are handled as stated
   in section 2 of
   [`Contractor Terms: Scope, Compliance, Disputes, and Exit`](./contractor-terms-commercial-and-legal.md).
+
+## 7. Renewal and Extension
+
+### 7.1 Initial term
+
+Each engagement runs for the period stated in the statement of work (the
+"initial term"). If the statement of work does not state a term, the engagement
+continues until all deliverables have been accepted and any post-acceptance
+support period has elapsed.
+
+### 7.2 Renewal
+
+An engagement does not renew automatically. If both parties wish to continue
+after the initial term they must agree a new or amended statement of work in
+writing before the initial term ends. The new statement of work must set a fresh
+start date, deliverables, budget, and term.
+
+### 7.3 Notice period for renewal discussions
+
+Either party that wishes to renew should give written notice of its intent at
+least **20 business days** before the initial term ends, to allow time for
+negotiation. Missing this window does not create an obligation to renew — it
+only means less time for negotiation.
+
+### 7.4 Extension
+
+Either party may request an extension of the initial term in writing at least
+**10 business days** before the term ends. An extension must state:
+
+- The new end date.
+- Any change to deliverables, milestones, or budget.
+- Whether rates or fees carry over from the original statement of work.
+
+An extension is effective only when both parties confirm it in writing. A
+contractor who continues work after the initial term without a signed extension
+does so at their own risk; Stardial is not obliged to pay for work performed
+outside the agreed term unless it approves an extension in writing.
+
+### 7.5 Price adjustments on renewal
+
+Unless the new statement of work states otherwise, rates from the previous
+engagement carry over into the renewal. Either party may propose revised rates
+at least **20 business days** before the renewal start date. If the parties do
+not agree revised rates before the renewal start date, the previous rates apply
+until the parties agree otherwise or either party terminates under section 8 of
+[`contractor-terms-commercial-and-legal.md`](./contractor-terms-commercial-and-legal.md#4-exit-and-transition).
+
+## 8. Confidentiality
+
+### 8.1 Definition of confidential information
+
+"Confidential information" means any non-public information that one party
+(the "disclosing party") discloses to the other (the "receiving party") in
+connection with the engagement, whether in writing, orally, electronically, or
+by inspection, and that:
+
+- is marked or identified as confidential at the time of disclosure; or
+- a reasonable person in the receiving party's position would understand to be
+  confidential given the nature of the information and the circumstances of
+  disclosure.
+
+Confidential information includes, without limitation: business plans, pricing,
+financial data, unreleased product features, source code, security
+configurations, personal data, customer information, and the terms of any
+statement of work.
+
+### 8.2 Exclusions
+
+Information is not confidential to the extent it:
+
+1. is or becomes publicly available without the receiving party's breach;
+2. was already known to the receiving party before disclosure without an
+   obligation of confidence;
+3. is independently developed by the receiving party without use of or reference
+   to the disclosing party's confidential information; or
+4. is received from a third party who had the right to disclose it without
+   restriction.
+
+### 8.3 Permitted use
+
+The receiving party may use confidential information only to perform its
+obligations or exercise its rights under the engagement. It must not use
+confidential information for any other purpose, including developing competing
+products or services, without the disclosing party's prior written consent.
+
+### 8.4 Handling and protection
+
+The receiving party must:
+
+- Keep confidential information at least as secure as its own confidential
+  information of similar sensitivity, and in any event apply reasonable security
+  measures.
+- Disclose confidential information only to its own personnel and approved
+  subcontractors who need it to perform the engagement and who are bound by
+  confidentiality obligations at least as strict as those in this section.
+- Not copy, extract, or summarise confidential information beyond what is
+  reasonably necessary for the engagement.
+- Notify the disclosing party promptly (and in any event within **48 hours**) on
+  becoming aware of any unauthorised access to or disclosure of confidential
+  information.
+
+### 8.5 Duration
+
+Confidential information remains protected for the period stated in section 5
+(Confidentiality Duration) of this document, which runs from the date of each
+disclosure and survives termination or expiry of the engagement.
+
+### 8.6 Return and destruction
+
+On request or within **10 business days** of the engagement ending, the
+receiving party must return or securely destroy all confidential information and
+any copies, except for one archival copy retained solely to meet legal or audit
+obligations. The receiving party must certify compliance in writing on request.
+
+### 8.7 Compelled disclosure
+
+If the receiving party is required by law, regulation, or court order to
+disclose confidential information, it must, to the extent permitted by law:
+
+1. Give the disclosing party prompt written notice before disclosure.
+2. Cooperate with the disclosing party in seeking a protective order or other
+   appropriate relief.
+3. Disclose only the minimum amount of information required.
 
 ## Questions
 
