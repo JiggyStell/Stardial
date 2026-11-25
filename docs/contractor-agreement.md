@@ -63,18 +63,29 @@ Stardial may audit access and repository activity related to the engagement.
 
 ## 4. Subcontractors
 
+Before engaging any subcontractor, the contractor must submit a written approval
+request to Stardial identifying the subcontractor, the scope of work, and any
+access to Stardial systems or confidential information the subcontractor will
+require. Stardial has **5 business days** to approve or reject the request in
+writing; silence past that window does not constitute approval. The contractor
+must not start any subcontractor on work until written approval is received.
+
+Once approved:
+
 - The contractor remains fully responsible to Stardial for all work performed
   by a subcontractor.
-- Subcontractors must be disclosed in writing before they start work, and must
-  accept the security and confidentiality terms in this document (flow-down
-  obligations).
+- Subcontractors must accept, in writing, all security and confidentiality
+  obligations in this document before starting work (flow-down obligations). The
+  contractor must supply Stardial with a copy of each executed flow-down
+  agreement on request.
 - The contractor must oversee subcontractor output, review it before submission,
   and ensure it meets the quality standards in section 1.
 - If a subcontractor fails to deliver or introduces a defect, the contractor
   must provide a remediation plan within **5 business days** and fix the issue
   at no additional cost to Stardial.
-- Stardial may object to a subcontractor for security or conflict-of-interest
-  reasons, and the contractor must replace them.
+- Stardial may withdraw approval for a subcontractor at any time for security,
+  conflict-of-interest, or performance reasons, and the contractor must
+  transition that work away within a reasonable period agreed in writing.
 
 ## 5. Confidentiality Duration
 
