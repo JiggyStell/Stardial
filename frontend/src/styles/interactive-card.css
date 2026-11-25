@@ -1,0 +1,48 @@
+/* Opt in only on a native button/link that makes the whole card actionable.
+ * Keep these unlayered, like .glass-card: layered utility hover backgrounds
+ * otherwise lose to the unlayered glass background in Tailwind v4.
+ */
+.interactive-card {
+  cursor: pointer;
+  transition:
+    background-color var(--card-interaction-duration) ease,
+    border-color var(--card-interaction-duration) ease,
+    box-shadow var(--card-interaction-duration) ease;
+}
+
+/* Avoid sticky hover feedback on touch-only devices. */
+@media (hover: hover) and (pointer: fine) {
+  .interactive-card:hover:not(:disabled) {
+    background: var(--card-hover-bg);
+    border-color: var(--card-interaction-border);
+  }
+}
+
+.interactive-card:focus-visible {
+  outline: 3px solid var(--card-focus-ring);
+  outline-offset: 3px;
+  border-color: var(--card-interaction-border);
+}
+
+/* Native :active also covers touch presses and Space on a focused button. */
+.interactive-card:active:not(:disabled),
+.interactive-card[aria-pressed="true"] {
+  background: var(--card-active-bg);
+  border-color: var(--card-interaction-border);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .interactive-card {
+    transition: none;
+  }
+}
+
+@media (forced-colors: active) {
+  .interactive-card:focus-visible {
+    outline-color: Highlight;
+  }
+
+  .interactive-card[aria-pressed="true"] {
+    border-color: Highlight;
+  }
+}

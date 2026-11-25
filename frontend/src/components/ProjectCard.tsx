@@ -33,9 +33,12 @@ export function ProjectCard({
   const Compact = Boolean(userEarnings);
   const pausedNoteId = useId();
 
-  const outerClass = Compact
-    ? "bg-white/5 rounded-2xl p-5 border border-white/5 flex justify-between items-center"
-    : "glass-card rounded-[2.5rem] p-8 text-left hover:bg-white/5 transition-all";
+  const outerClass = clsx(
+    Compact
+      ? "bg-white/5 rounded-2xl p-5 border border-white/5 flex justify-between items-center"
+      : "glass-card rounded-[2.5rem] p-8 text-left",
+    onSelect && "interactive-card",
+  );
 
   const Content = (
     <>
