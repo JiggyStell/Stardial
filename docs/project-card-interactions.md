@@ -12,7 +12,9 @@ utility alone loses to the unlayered `.glass-card` background in Tailwind v4.
 - Mouse/trackpad hover changes the background and border only when the device
   reports a fine pointer with hover support.
 - Keyboard focus has an offset, high-contrast outline that remains visible
-  while pressed. Native Enter and Space activation remain unchanged.
+  while pressed. Native Enter and Space activation remain unchanged. A local
+  `data-pressed` state normalizes keyboard feedback across engines and clears
+  on key release or blur.
 - Pressing changes the background without moving or resizing the card. Touch
   receives this pressed state without a lingering simulated hover state.
 - `aria-pressed="true"` retains the selected appearance when callers supply

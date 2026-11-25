@@ -24,8 +24,10 @@
   border-color: var(--card-interaction-border);
 }
 
-/* Native :active also covers touch presses and Space on a focused button. */
+/* Native :active handles pointer/touch; data-pressed normalizes keyboard
+ * feedback on engines that do not apply :active for Space/Enter. */
 .interactive-card:active:not(:disabled),
+.interactive-card[data-pressed="true"],
 .interactive-card[aria-pressed="true"] {
   background: var(--card-active-bg);
   border-color: var(--card-interaction-border);

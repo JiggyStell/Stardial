@@ -1,6 +1,6 @@
 "use client";
 
-import { useId } from "react";
+import { useId, useState } from "react";
 import { clsx } from "clsx";
 import { sanitizeText } from "@/lib/security";
 import type { SplitProject } from "@/lib/stellar";
@@ -32,6 +32,7 @@ export function ProjectCard({
 }: ProjectCardProps) {
   const Compact = Boolean(userEarnings);
   const pausedNoteId = useId();
+  const [keyboardPressed, setKeyboardPressed] = useState(false);
 
   const outerClass = clsx(
     Compact
@@ -115,6 +116,14 @@ export function ProjectCard({
         type="button"
         onClick={onSelect}
         aria-pressed={isSelected}
+        data-pressed={keyboardPressed || undefined}
+        onKeyDown={(event) => {
+          if (event.target === event.currentTarget && (event.key === " " || event.key === "Enter")) {
+            setKeyboardPressed(true);
+          }
+        }}
+        onKeyUp={() => setKeyboardPressed(false)}
+        onBlur={() => setKeyboardPressed(false)}
         className={outerClass}
       >
         {Content}
