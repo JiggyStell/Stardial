@@ -40,15 +40,24 @@ this document wins for process.
   machine, general-purpose software).
 - Open-source dependencies must use licenses compatible with the project's
   license. The contractor must flag any new dependency that is not.
-- The contractor owns the integration work they write; the third-party vendor
-  owns the tool itself and is responsible for its own support.
+- Third-party vendors retain ownership of their tools. Ownership of integration
+  work created specifically as an engagement deliverable follows section 4;
+  approved pre-existing materials and third-party components remain subject to
+  the ownership and licence terms in
+  [Contractor Terms: Scope, Compliance, Disputes, and Exit](./contractor-terms-commercial-and-legal.md#16-pre-existing-materials-and-intellectual-property).
+  The vendor is responsible for support of its own tool.
 - If a third-party tool fails or changes terms, the contractor must propose a
   replacement or workaround within **5 business days** at no extra cost.
 
 ## 4. Data and Access Portability
 
-- All work product (code, designs, documents, credentials created for the
-  engagement) belongs to Stardial.
+- Work product created specifically for the engagement (including code, designs,
+  documents, and credentials created for it) belongs to Stardial, subject to the
+  retained ownership and licences for approved Background Materials and
+  third-party components in
+  [Contractor Terms: Scope, Compliance, Disputes, and Exit](./contractor-terms-commercial-and-legal.md#16-pre-existing-materials-and-intellectual-property).
+  The contractor assigns to Stardial all rights it holds in that work product
+  and must obtain equivalent assignments from its personnel and subcontractors.
 - Stardial keeps administrator access to every system used for the engagement
   and can export its data at any time, including during the engagement.
 - On request or within **10 business days** of the engagement ending, the
