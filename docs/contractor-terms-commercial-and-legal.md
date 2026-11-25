@@ -81,6 +81,33 @@ that is not in the deliverables list does not count toward or against success.
 - Once the not-to-exceed budget is reached, the contractor stops unless a new
   change request is approved. Unapproved overruns are not payable.
 
+### 1.6 Pre-existing Materials and Intellectual Property
+
+- Each party retains ownership of materials and intellectual property it owned
+  or developed independently before the engagement, or develops independently
+  outside its scope ("Background Materials"). The engagement does not assign
+  either party's Background Materials to the other.
+- Before work starts, the statement of work must identify each Background
+  Material the contractor proposes to include in a deliverable, its owner, the
+  relevant deliverable, and its applicable licence and restrictions. It must
+  also identify third-party and open-source materials and their licences.
+  Stardial's written approval is required before incorporating any such material
+  that is not already approved in the statement of work.
+- For each approved contractor-owned Background Material included in, or needed
+  to use, maintain, modify, or distribute, a deliverable, the contractor grants
+  Stardial a worldwide, perpetual, irrevocable, royalty-free, non-exclusive,
+  transferable, and sublicensable licence to use, reproduce, modify, maintain,
+  distribute, display, perform, and otherwise exploit that material as part of,
+  or in connection with, the deliverable. This licence does not transfer
+  ownership of the Background Material.
+- Work created specifically as a deliverable under the statement of work is
+  work product, not Background Material, and belongs to Stardial under section 4
+  of
+  [Contractor Terms: Balance, Breach, Third-Party Tools, and Exit](./contractor-terms-breach-and-exit.md#4-data-and-access-portability).
+  The contractor must obtain any rights from its personnel or subcontractors
+  needed to give effect to that ownership. Third-party and open-source material
+  remains subject to its applicable licence and is not assigned to Stardial.
+
 ## 1A. Invoicing and Payment
 
 This section sets what an invoice must contain, how Stardial approves it, when it
