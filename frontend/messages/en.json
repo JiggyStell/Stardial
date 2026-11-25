@@ -6,6 +6,22 @@
     "home": "Back to home",
     "context": "You were on:"
   },
+  "Metadata": {
+    "home": {
+      "title": "Stardial",
+      "description": "Create, manage, and distribute royalty splits for creative collaborators on Stellar."
+    },
+    "settings": {
+      "title": "Settings",
+      "description": "Manage your Stardial account, wallet, and notification preferences."
+    },
+    "receipt": {
+      "title": "Transaction receipt",
+      "description": "View the status, amount, token, and network for a Stardial transaction receipt.",
+      "titleWithReference": "Receipt {reference}",
+      "descriptionWithReference": "View status, amount, token, and network for Stardial transaction {reference}."
+    }
+  },
   "SplitApp": {
     "header": {
       "subtitle": "Premium royalty management on Stellar."

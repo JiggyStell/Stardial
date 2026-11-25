@@ -60,6 +60,15 @@ const frontendEnvSchema = z.object({
     )
     .default("http://localhost:3001"),
 
+  NEXT_PUBLIC_SITE_URL: z
+    .string()
+    .url("NEXT_PUBLIC_SITE_URL must be a valid URL, e.g. https://stardial.example")
+    .refine(
+      (url) => url.startsWith("http://") || url.startsWith("https://"),
+      "Must use http:// or https:// scheme",
+    )
+    .default("http://localhost:3000"),
+
   /**
    * The deployed Soroban contract address.  Left optional here because the app
    * can still render pages that don't require contract interaction; however a
@@ -98,6 +107,7 @@ export function validateEnv(): FrontendEnv {
     NEXT_PUBLIC_SOROBAN_RPC_URL: process.env.NEXT_PUBLIC_SOROBAN_RPC_URL,
     NEXT_PUBLIC_HORIZON_URL: process.env.NEXT_PUBLIC_HORIZON_URL,
     NEXT_PUBLIC_API_BASE_URL: process.env.NEXT_PUBLIC_API_BASE_URL,
+    NEXT_PUBLIC_SITE_URL: process.env.NEXT_PUBLIC_SITE_URL,
     NEXT_PUBLIC_CONTRACT_ID: process.env.NEXT_PUBLIC_CONTRACT_ID,
     NEXT_PUBLIC_TX_POLL_TIMEOUT: process.env.NEXT_PUBLIC_TX_POLL_TIMEOUT
   });

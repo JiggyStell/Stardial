@@ -1,4 +1,12 @@
+import type { Metadata } from "next";
+
 import { NotFoundRecovery } from "@/components/not-found-recovery";
+
+export const metadata: Metadata = {
+  title: "Page not found",
+  description: "The page you're looking for doesn't exist or has been moved.",
+  robots: { index: false, follow: false },
+};
 
 export default function NotFound() {
   return (

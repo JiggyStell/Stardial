@@ -9,6 +9,7 @@ import { RouteContextTracker } from "@/components/route-context-tracker";
 import { QueryProvider } from "@/components/query-provider";
 import { LoadingBar } from "@/components/LoadingBar";
 import { CookieBanner } from "@/components/CookieBanner";
+import { defaultMetadata } from "@/lib/metadata";
 
 const dmSans = DM_Sans({
   subsets: ["latin"],
@@ -22,14 +23,7 @@ const syne = Syne({
   display: "swap",
 });
 
-export const metadata: Metadata = {
-  title: "Stardial",
-  description: "Royalty splitting for creative collaborators on Stellar.",
-  icons: {
-    icon: "/favicon.ico",
-    apple: "/logo.svg",
-  },
-};
+export const metadata: Metadata = defaultMetadata;
 
 export default async function RootLayout({
   children,

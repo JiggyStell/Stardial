@@ -1,4 +1,28 @@
+import type { Metadata } from "next";
+import { getTranslations, setRequestLocale } from "next-intl/server";
+
 import { SettingsView } from "@/components/settings/SettingsView";
+import { createPageMetadata, isSupportedLocale } from "@/lib/metadata";
+
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ locale: string }>;
+}): Promise<Metadata> {
+  const { locale } = await params;
+
+  if (!isSupportedLocale(locale)) return {};
+
+  setRequestLocale(locale);
+  const t = await getTranslations({ locale, namespace: "Metadata.settings" });
+
+  return createPageMetadata({
+    locale,
+    title: t("title"),
+    description: t("description"),
+    pathname: "/dashboard/settings",
+  });
+}
 
 export default function SettingsPage() {
   return (
