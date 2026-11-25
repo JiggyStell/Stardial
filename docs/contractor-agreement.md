@@ -472,6 +472,9 @@ written change order approved by both parties.
   in section 2 of
   [`Contractor Terms: Scope, Compliance, Disputes, and Exit`](./contractor-terms-commercial-and-legal.md).
 
+## 8. Termination Rights
+
+### 8.1 Termination for Convenience
 ## 7. Termination Rights
 
 ### 7.1 Termination for Convenience
@@ -480,6 +483,7 @@ Either party may terminate the engagement without cause by giving **30 calendar
 days' written notice** to the other party. During the notice period the
 contractor continues to perform and Stardial continues to pay for accepted work.
 
+### 8.2 Termination for Cause
 ### 7.2 Termination for Cause
 
 Either party may terminate immediately for a material breach if:
@@ -495,6 +499,7 @@ failure to pay undisputed invoices by the due date. If the breach is not
 reasonably capable of being cured, the non-breaching party may terminate
 immediately on written notice without a cure period.
 
+### 8.3 Wind-Down Obligations
 ### 7.3 Wind-Down Obligations
 
 On termination or expiry of the engagement, regardless of the reason:
@@ -515,6 +520,9 @@ On termination or expiry of the engagement, regardless of the reason:
 - **Confidentiality and security.** The obligations in sections 3 and 5 survive
   termination.
 
+## 9. Intellectual Property Ownership
+
+### 9.1 Work Product Created for the Engagement
 ## 8. Intellectual Property Ownership
 
 ### 8.1 Work Product Created for the Engagement
@@ -527,6 +535,7 @@ treatment does not apply, the contractor irrevocably assigns all right, title,
 and interest (including all intellectual property rights) in that work product
 to Stardial upon creation, without additional consideration.
 
+### 9.2 Contractor Pre-Existing IP
 ### 8.2 Contractor Pre-Existing IP
 
 The contractor retains full ownership of tools, libraries, frameworks,
@@ -536,6 +545,7 @@ engagement ("Pre-Existing IP"). The contractor must identify any Pre-Existing IP
 incorporated into a deliverable in the statement of work or in a written notice
 to Stardial before incorporating it.
 
+### 9.3 Derivative Works Based on Pre-Existing IP
 ### 8.3 Derivative Works Based on Pre-Existing IP
 
 Where a deliverable is a derivative work of the contractor's Pre-Existing IP,
@@ -544,6 +554,7 @@ royalty-free, sublicensable license to use, reproduce, modify, distribute, and
 create further derivative works of that deliverable, to the extent necessary for
 Stardial to use the deliverable as intended.
 
+### 9.4 Deviations Require Written Agreement
 ### 8.4 Deviations Require Written Agreement
 
 Any arrangement that deviates from the ownership and license terms above —
@@ -552,6 +563,9 @@ the contractor — must be agreed by both parties in a signed written amendment 
 the statement of work before the relevant work starts. Informal communications
 do not constitute a deviation.
 
+## 10. Indemnification
+
+### 10.1 Covered Claims
 ## 9. Indemnification
 
 ### 9.1 Covered Claims
@@ -568,14 +582,15 @@ demand, action, suit, or proceeding ("Claim") arising from or related to:
   intellectual property rights through any deliverable or Pre-Existing IP
   incorporated into a deliverable.
 
-### 9.2 Scope of Indemnity
+### 10.2 Scope of Indemnity
+
 
 The contractor's indemnity obligation covers all reasonable defence costs
 (including legal fees), settlements, and final judgments attributable to a
 covered Claim. Stardial will promptly notify the contractor in writing of any
 Claim for which indemnification may be sought.
 
-### 9.3 Defense Obligations
+### 10.3 Defense Obligations
 
 The contractor has the right to control the defence of a covered Claim,
 including the choice of counsel, provided that:
@@ -588,17 +603,17 @@ including the choice of counsel, provided that:
 - Stardial cooperates reasonably with the contractor's defence efforts and does
   not take actions that prejudice the defence.
 
-### 9.4 Mutual Indemnification
+### 10.4 Mutual Indemnification
 
 Stardial will indemnify, defend, and hold harmless the contractor against
 third-party Claims arising from Stardial's own breach of this agreement,
 negligence, or wilful misconduct, on the same defence and settlement terms
-described in section 9.3 (with the roles reversed). Each party's indemnity
+described in section 10.3 (with the roles reversed). Each party's indemnity
 obligation applies only to Claims attributable to its own acts or omissions; a
 Claim attributable to both parties' acts is handled on an equitable basis
 proportionate to each party's responsibility.
 
-## 7. Warranties
+## 11. Warranties
 
 The contractor warrants that, for **90 calendar days** after sign-off on each
 deliverable (the "warranty period"):
@@ -616,7 +631,7 @@ must provide a written remediation plan with a revised timeline before the windo
 expires. These warranty obligations are in addition to, and do not limit, any
 other remedies available to Stardial.
 
-## 8. Change Order Procedure
+## 12. Change Order Procedure
 
 No change to the scope, deliverables, timeline, or fees of an engagement takes
 effect unless both parties agree to it in writing through the process below.
@@ -634,7 +649,7 @@ effect unless both parties agree to it in writing through the process below.
 4. **Impact on existing obligations.** An approved change order supersedes the
    specific terms it modifies; all other terms of the engagement remain in force.
 
-## 9. Limitation of Liability
+## 13. Limitation of Liability
 
 Each party's total cumulative liability to the other under or in connection with
 an engagement — whether in contract, tort, or otherwise — is limited to the total
@@ -655,6 +670,8 @@ restricts liability for:
   contract.
 - The contractor's intellectual property indemnification obligations.
 - Any liability that cannot be excluded or limited by applicable law.
+
+
 
 ## Questions
 
