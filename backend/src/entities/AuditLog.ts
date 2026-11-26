@@ -24,6 +24,12 @@ export class AuditLog {
   @Column({ name: "request_id", type: "varchar", length: 64 })
   requestId!: string;
 
+  @Column({ name: "actor_identity", type: "varchar", length: 255, nullable: true })
+  actorIdentity!: string | null;
+
+  @Column({ name: "old_values", type: "jsonb", nullable: true })
+  oldValues!: Record<string, unknown> | null;
+
   @Column({ type: "jsonb", nullable: true })
   payload!: Record<string, unknown> | null;
 }
