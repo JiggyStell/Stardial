@@ -19,10 +19,13 @@ function sanitizeObject(obj: unknown): unknown {
   }
   const sanitized: Record<string, unknown> = {};
   for (const [key, val] of Object.entries(obj as Record<string, unknown>)) {
-    if (typeof key !== "string" || key.startsWith("__") || key === "constructor" || key === "prototype") {
+    if (typeof key !== "string" || !Object.prototype.hasOwnProperty.call(obj, key)) {
       continue;
     }
-    if (!Object.prototype.hasOwnProperty.call(obj, key)) {
+    if (key.startsWith("__") || key === "constructor" || key === "prototype" || key === "__proto__") {
+      continue;
+    }
+    if (/[\[\]\.\/\\]/.test(key)) {
       continue;
     }
     if (SENSITIVE_KEYS.has(key) || /key|token|password|secret/i.test(key)) {

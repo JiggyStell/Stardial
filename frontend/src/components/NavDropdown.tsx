@@ -1,4 +1,4 @@
-"use client";
+"client";
 
 /**
  * NavDropdown — Issue #52
@@ -153,17 +153,11 @@ export function NavDropdown({
         <div
           role="menu"
           aria-label={label}
-          /**
-           * The panel intentionally extends slightly above its top edge (via a
-           * transparent pseudo-gap created by negative top offset) so the
-           * pointer can move from the trigger into the panel without leaving the
-           * hover zone and triggering the close timer.
-           */
+          tabIndex={-1}
           className={clsx(
             "absolute left-0 top-full z-50 mt-1 min-w-[180px]",
             "rounded-xl border border-white/10 bg-[var(--brand-card)] shadow-xl",
             "py-1",
-            /* Entrance animation */
             "animate-in fade-in slide-in-from-top-1 duration-150",
           )}
           onMouseEnter={cancelClose}
@@ -174,6 +168,7 @@ export function NavDropdown({
               key={item.href}
               href={item.href}
               role="menuitem"
+              tabIndex={0}
               className={clsx(
                 "flex items-center gap-2 px-4 py-2.5 text-sm",
                 "text-[var(--brand-muted)] hover:text-[var(--brand-text)] hover:bg-white/5",
