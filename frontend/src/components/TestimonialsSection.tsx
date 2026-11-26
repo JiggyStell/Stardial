@@ -54,7 +54,6 @@ export function TestimonialsSection() {
       {/* Responsive grid: 1 col → 2 col → 3 col.
           gap-6 on mobile, gap-8 on md+ keeps breathing room consistent. */}
       <ul
-        role="list"
         className="grid grid-cols-1 gap-6 sm:grid-cols-2 md:gap-8 lg:grid-cols-3"
       >
         {TESTIMONIALS.map((item) => (

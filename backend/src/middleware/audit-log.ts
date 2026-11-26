@@ -19,6 +19,9 @@ function sanitizeObject(obj: unknown): unknown {
   }
   const sanitized: Record<string, unknown> = {};
   for (const [key, val] of Object.entries(obj as Record<string, unknown>)) {
+    if (typeof key !== "string" || key.startsWith("__") || key === "constructor" || key === "prototype") {
+      continue;
+    }
     if (SENSITIVE_KEYS.has(key) || /key|token|password|secret/i.test(key)) {
       sanitized[key] = "[REDACTED]";
     } else {
@@ -69,7 +72,7 @@ async function persistAuditLog(
       ipHash: hashIp(req.ip),
       requestId: String(res.locals.requestId ?? ""),
       actorIdentity,
-      oldValues: req.method === "PUT" || req.method === "PATCH" ? sanitizeObject(req.body) : null,
+      oldValues: req.method === "PUT" || req.method === "PATCH" ? (sanitizeObject(req.body) as Record<string, unknown>) : null,
       payload: outcome === "success" ? buildPayload(req) : buildFailureMetadata(req, res)
     });
     await repository.save(entry);

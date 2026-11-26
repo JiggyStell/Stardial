@@ -91,7 +91,7 @@ export function SocialLinks({
 
   return (
     <nav aria-label={ariaLabel} className="social-links">
-      <ul className="social-links__list" role="list">
+      <ul className="social-links__list">
         {links.map(({ platform, href, label }) => {
           const name = label ?? DEFAULT_LABELS[platform];
           return (
