@@ -2,6 +2,7 @@
 
 import { fireEvent, render, screen } from "@testing-library/react";
 import { describe, it, expect, vi } from "vitest";
+import userEvent from "@testing-library/user-event";
 
 import { ProjectCard } from "../ProjectCard";
 import type { SplitProject } from "@/lib/stellar";
@@ -102,5 +103,46 @@ describe("ProjectCard paused distribution badge", () => {
     expect(screen.getByTestId("project-card-paused-badge")).toHaveTextContent(
       "Paused",
     );
+  });
+});
+
+
+describe("ProjectCard interaction", () => {
+  it.each([undefined, "25"])("supports keyboard selection with earnings %s", async (userEarnings) => {
+    const user = userEvent.setup();
+    const onSelect = vi.fn();
+    const { rerender } = render(
+      <ProjectCard project={baseProject()} userEarnings={userEarnings} onSelect={onSelect} isSelected={false} />,
+    );
+    const card = screen.getByRole("button", { name: /Test Project/ });
+    expect(card).toHaveClass("interactive-card");
+    expect(card).toHaveAttribute("aria-pressed", "false");
+    await user.tab();
+    expect(card).toHaveFocus();
+    await user.keyboard("{Enter>}");
+    expect(card).toHaveAttribute("data-pressed", "true");
+    await user.keyboard("{/Enter}");
+    expect(card).not.toHaveAttribute("data-pressed");
+    await user.keyboard("[Space>]");
+    expect(card).toHaveAttribute("data-pressed", "true");
+    await user.keyboard("[/Space]");
+    expect(card).not.toHaveAttribute("data-pressed");
+    expect(onSelect).toHaveBeenCalledTimes(2);
+    fireEvent.keyDown(card, { key: " " });
+    expect(card).toHaveAttribute("data-pressed", "true");
+    fireEvent.blur(card);
+    expect(card).not.toHaveAttribute("data-pressed");
+    rerender(
+      <ProjectCard project={baseProject()} userEarnings={userEarnings} onSelect={onSelect} isSelected />,
+    );
+    expect(card).toHaveAttribute("aria-pressed", "true");
+  });
+
+  it.each([undefined, "25"])("keeps read-only cards out of the tab order with earnings %s", async (userEarnings) => {
+    const { container } = render(<ProjectCard project={baseProject()} userEarnings={userEarnings} />);
+    expect(screen.queryByRole("button")).not.toBeInTheDocument();
+    expect(container.querySelector(".interactive-card")).toBeNull();
+    await userEvent.setup().tab();
+    expect(document.body).toHaveFocus();
   });
 });

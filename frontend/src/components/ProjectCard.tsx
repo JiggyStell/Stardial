@@ -1,6 +1,6 @@
 "use client";
 
-import { useId } from "react";
+import { useId, useState } from "react";
 import { clsx } from "clsx";
 import { sanitizeText } from "@/lib/security";
 import type { SplitProject } from "@/lib/stellar";
@@ -32,10 +32,14 @@ export function ProjectCard({
 }: ProjectCardProps) {
   const Compact = Boolean(userEarnings);
   const pausedNoteId = useId();
+  const [keyboardPressed, setKeyboardPressed] = useState(false);
 
-  const outerClass = Compact
-    ? "bg-white/5 rounded-2xl p-5 border border-white/5 flex justify-between items-center"
-    : "glass-card rounded-[2.5rem] p-8 text-left hover:bg-white/5 transition-all";
+  const outerClass = clsx(
+    Compact
+      ? "bg-white/5 rounded-2xl p-5 border border-white/5 flex justify-between items-center"
+      : "glass-card rounded-[2.5rem] p-8 text-left",
+    onSelect && "interactive-card",
+  );
 
   const Content = (
     <>
@@ -112,6 +116,14 @@ export function ProjectCard({
         type="button"
         onClick={onSelect}
         aria-pressed={isSelected}
+        data-pressed={keyboardPressed || undefined}
+        onKeyDown={(event) => {
+          if (event.target === event.currentTarget && (event.key === " " || event.key === "Enter")) {
+            setKeyboardPressed(true);
+          }
+        }}
+        onKeyUp={() => setKeyboardPressed(false)}
+        onBlur={() => setKeyboardPressed(false)}
         className={outerClass}
       >
         {Content}
