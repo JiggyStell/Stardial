@@ -57,11 +57,12 @@ Guards: the command refuses to run when `NODE_ENV=production`, and refuses any d
 
 ## OpenAPI
 
-The API documentation is defined using Zod schemas and generated into an OpenAPI 3.0 specification.
+The API documentation is defined using Zod schemas and generated into OpenAPI 3.0 YAML and JSON specifications.
 
 - Source: `src/openapi.ts`
-- Output: `openapi/openapi.yaml`
+- Output: `../docs/openapi.yaml` and `../docs/openapi.json`
 - Command: `npm run generate:openapi`
+- Drift check: `npm run drift:openapi` (from repository root)
 
 ## API surface contracts
 

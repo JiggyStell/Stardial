@@ -57,7 +57,7 @@ export const transactionReceiptSchema = z.object({
   reference: z.string(),
   amount: z.string(),
   token: z.string(),
-  date: z.iso.datetime(),
+  date: z.iso.datetime().nullable(),
   network: z.string(),
   status: z.enum(["pending", "completed", "failed"]),
   recipient: z.string(),

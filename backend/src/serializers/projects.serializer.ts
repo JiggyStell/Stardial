@@ -68,6 +68,9 @@ export const projectDetailSchema = projectSummarySchema.extend({
 export const projectListResponseSchema = z.object({
   projects: z.array(projectSummarySchema),
   total: z.number().int().nonnegative(),
+  start: z.number().int().nonnegative().optional(),
+  limit: z.number().int().positive().optional(),
+  hasMore: z.boolean().optional(),
   nextCursor: z.string().nullable(),
 });
 
@@ -151,10 +154,12 @@ export function serializeProjectList(
   projects: readonly unknown[],
   total: number,
   nextCursor: string | null,
+  pagination?: { start: number; limit: number; hasMore: boolean },
 ): ProjectListResponse {
   return projectListResponseSchema.parse({
     projects: projects.map(serializeProjectSummary),
     total,
+    ...(pagination ?? {}),
     nextCursor,
   });
 }
