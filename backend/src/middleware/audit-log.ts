@@ -22,6 +22,9 @@ function sanitizeObject(obj: unknown): unknown {
     if (typeof key !== "string" || key.startsWith("__") || key === "constructor" || key === "prototype") {
       continue;
     }
+    if (!Object.prototype.hasOwnProperty.call(obj, key)) {
+      continue;
+    }
     if (SENSITIVE_KEYS.has(key) || /key|token|password|secret/i.test(key)) {
       sanitized[key] = "[REDACTED]";
     } else {
