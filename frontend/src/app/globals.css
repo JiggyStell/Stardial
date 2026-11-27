@@ -1,5 +1,6 @@
 @import "tailwindcss";
 @import "../styles/tokens.css";
+@import "../styles/interactive-card.css";
 
 /* Legacy aliases for backwards compatibility - prefer var(--brand-*) */
 :root {

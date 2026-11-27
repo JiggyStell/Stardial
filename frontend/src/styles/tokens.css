@@ -22,6 +22,13 @@
   /* Interactive States */
   --brand-highlight: #34d399; /* Success/active state */
 
+  /* Shared selectable-card feedback */
+  --card-hover-bg: #202820;
+  --card-active-bg: #173b2b;
+  --card-interaction-border: var(--brand-highlight);
+  --card-focus-ring: var(--brand-highlight);
+  --card-interaction-duration: 160ms;
+
   /* Glass Effects */
   --glass-border: rgba(255, 255, 255, 0.08);
 
