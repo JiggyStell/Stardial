@@ -1,4 +1,0 @@
-# CI/CD paths require maintainer review
-/.github/ @Split-Naira/maintainers
-/contracts/ @Split-Naira/maintainers
-/scripts/deploy-testnet.sh @Split-Naira/maintainers

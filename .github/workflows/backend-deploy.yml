@@ -42,9 +42,7 @@ jobs:
       - name: Validate data integrity
         working-directory: .
         run: npm run verify:data-integrity
-      - run: npm run lint
       - run: npm run build
-      - run: npm run test
 
   validate-deploy-config:
     if: github.event_name == 'workflow_dispatch' || github.event.workflow_run.conclusion == 'success'

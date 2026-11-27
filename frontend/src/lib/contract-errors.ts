@@ -32,7 +32,9 @@ export const CONTRACT_ERROR_MESSAGES: Record<ContractErrorCode, string> = {
   [ContractErrors.AccountingDiscrepancy]:
     "Contract accounting detected a balance mismatch. Pause and review before retrying.",
   [ContractErrors.InvalidMaxCollaborators]:
-    "Maximum collaborators must stay within the contract bounds."
+    "Maximum collaborators must stay within the contract bounds.",
+  [ContractErrors.AlreadyClaimed]:
+    "This payment has already been claimed.",
 };
 
 const ERROR_CODE_BY_NAME = Object.fromEntries(

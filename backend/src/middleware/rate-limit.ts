@@ -130,7 +130,7 @@ function clientKey(req: Request): string {
   const user = (req as Request & { user?: { id?: string } }).user;
   if (user?.id) return `user:${user.id}`;
   // Use ipKeyGenerator for IPv6-safe IP extraction (express-rate-limit v8+ requirement).
-  return `ip:${ipKeyGenerator(req) ?? "unknown"}`;
+  return `ip:${ipKeyGenerator(req.ip ?? "unknown")}`;
 }
 
 function rateLimitHandler(req: Request, res: Response) {

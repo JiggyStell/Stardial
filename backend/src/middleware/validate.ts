@@ -1,6 +1,5 @@
 import type { RequestHandler } from "express";
 import { ZodError, type ZodTypeAny } from "zod";
-import { type ZodTypeAny } from "zod";
 import { AppError, ErrorCode, ErrorType } from "../lib/errors.js";
 
 interface ValidationSchemas {
@@ -30,6 +29,8 @@ function clientSafeValidationError(error: ZodError): ZodError {
  * because Node defines `req.query` as a getter-only accessor. Failures are
  * forwarded to the central error handler, which returns the standard 400
  * validation envelope with `details.fieldErrors` / `details.formErrors`.
+ */
+
 /** Methods whose requests may carry a body that must satisfy a schema. */
 const BODY_METHODS = new Set(["POST", "PUT", "PATCH"]);
 

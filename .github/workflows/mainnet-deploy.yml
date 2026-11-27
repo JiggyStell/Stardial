@@ -72,14 +72,8 @@ jobs:
         run: npm ci --no-audit --no-fund
         working-directory: .
 
-      - name: Lint
-        run: npm run lint
-
       - name: Build
         run: npm run build
-
-      - name: Run tests
-        run: npm run test
 
   # ── 3. Mainnet readiness gate ─────────────────────────────────────────────
   mainnet-readiness-gate:

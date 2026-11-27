@@ -79,7 +79,7 @@ export function NotFoundRecovery() {
         <p className="text-xs uppercase tracking-widest text-[var(--brand-muted)]">
           Or jump to a section
         </p>
-        <ul className="flex flex-wrap justify-center gap-2" role="list">
+        <ul className="flex flex-wrap justify-center gap-2">
           {NAV_LINKS.map(({ label, href }) => (
             <li key={href}>
               <Link

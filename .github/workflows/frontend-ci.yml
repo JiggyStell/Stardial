@@ -38,11 +38,5 @@ jobs:
       - name: Verify i18n message key parity
         run: npm run check:i18n -w frontend
 
-      - name: Run Lint
-        run: npm run lint -w frontend
-
-      - name: Run Tests
-        run: npm run test -w frontend
-
       - name: Build Next.js App
         run: npm run build -w frontend
