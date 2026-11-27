@@ -17,7 +17,7 @@ function sanitizeObject(obj: unknown): unknown {
   if (Array.isArray(obj)) {
     return obj.map(sanitizeObject);
   }
-  const sanitized: Record<string, unknown> = {};
+  const sanitized: Record<string, unknown> = Object.create(null);
   const rawObj = obj as Record<string, unknown>;
   for (const key of Object.keys(rawObj)) {
     if (typeof key !== "string") {
