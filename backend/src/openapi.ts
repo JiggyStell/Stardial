@@ -21,7 +21,6 @@ import {
   listProjectsSchema,
   distributeSchema,
   historyQuerySchema,
-  projectIdParamSchema,
   stellarAddressSchema,
   allowlistQuerySchema,
   adminTokenSchema,
@@ -31,9 +30,11 @@ import {
   withdrawUnallocatedSchema,
   claimSchema,
 } from "./routes/splits.js";
+import { updateExpirationSchema } from "./schemas/splits.js";
 import {
   userRegistrationSchema,
   userResponseSchema,
+  userUpdateSchema,
 } from "./schemas/user.schemas.js";
 import {
   transactionHistoryQuerySchema,
@@ -77,13 +78,15 @@ const exampleProjectIdParam = z
   .regex(/^[a-zA-Z0-9_]+$/)
   .openapi({ example: EXAMPLE_PROJECT_ID, description: "Project ID" });
 
-function xdrExample(operation: string) {
+function xdrExample(operation: string, sourceAccount: string = EXAMPLE_OWNER) {
   return {
     xdr: "AAAAAgAAAAC5tRUXpDqRcTvpvKF...(truncated unsigned transaction envelope)",
     metadata: {
       contractId: EXAMPLE_CONTRACT_ID,
       networkPassphrase: "Test SDF Network ; September 2015",
-      sourceAccount: EXAMPLE_OWNER,
+      sourceAccount,
+      sequenceNumber: "1",
+      fee: "100",
       operation,
     },
   };
@@ -259,6 +262,8 @@ const XdrResponseSchema = registry.register(
       contractId: z.string(),
       networkPassphrase: z.string(),
       sourceAccount: z.string(),
+      sequenceNumber: z.string().optional(),
+      fee: z.string().optional(),
       operation: z.string(),
     }),
   })
@@ -277,10 +282,29 @@ registry.registerPath({
   },
   responses: {
     200: {
-      description: "List of projects",
+      description: "Paginated list of projects",
       content: {
         "application/json": {
           schema: ProjectListSchema,
+          example: {
+            projects: [
+              {
+                projectId: EXAMPLE_PROJECT_ID,
+                title: "Afrobeats Collective Vol. 1",
+                projectType: "music",
+                owner: EXAMPLE_OWNER,
+                token: EXAMPLE_TOKEN,
+                locked: false,
+                totalDistributed: "0",
+                distributionRound: 0,
+              },
+            ],
+            total: 1,
+            start: 0,
+            limit: 10,
+            hasMore: false,
+            nextCursor: null,
+          },
         },
       },
     },
@@ -358,7 +382,7 @@ registry.registerPath({
   description: "Fetches the current on-chain state for a single split project including collaborators and balances.",
   tags: ["Splits"],
   request: {
-    params: z.object({ projectId: projectIdParamSchema }),
+    params: z.object({ projectId: exampleProjectIdParam }),
   },
   responses: {
     200: {
@@ -366,6 +390,40 @@ registry.registerPath({
       content: {
         "application/json": {
           schema: ProjectSchema,
+          example: {
+            projectId: EXAMPLE_PROJECT_ID,
+            title: "Afrobeats Collective Vol. 1",
+            projectType: "music",
+            owner: EXAMPLE_OWNER,
+            token: EXAMPLE_TOKEN,
+            locked: false,
+            totalDistributed: "0",
+            distributionRound: 0,
+            balance: "50000000",
+            expiresAt: null,
+            collaborators: [
+              { address: EXAMPLE_COLLAB_A, alias: "Producer", basisPoints: 6000 },
+              { address: EXAMPLE_COLLAB_B, alias: "Vocalist", basisPoints: 4000 },
+            ],
+            participantPaymentStatuses: [
+              {
+                address: EXAMPLE_COLLAB_A,
+                alias: "Producer",
+                basisPoints: 6000,
+                status: "unpaid",
+                roundId: null,
+                lastUpdated: null,
+              },
+              {
+                address: EXAMPLE_COLLAB_B,
+                alias: "Vocalist",
+                basisPoints: 4000,
+                status: "unpaid",
+                roundId: null,
+                lastUpdated: null,
+              },
+            ],
+          },
         },
       },
     },
@@ -389,11 +447,14 @@ registry.registerPath({
   description: "Builds an unsigned XDR to permanently lock a project, preventing further metadata or collaborator changes. Rejected with 401 UNAUTHORIZED when `owner` is not the on-chain project owner.",
   tags: ["Splits"],
   request: {
-    params: z.object({ projectId: projectIdParamSchema }),
+    params: z.object({ projectId: exampleProjectIdParam }),
     body: {
       content: {
         "application/json": {
           schema: lockProjectSchema,
+          example: {
+            owner: EXAMPLE_OWNER,
+          },
         },
       },
     },
@@ -404,6 +465,7 @@ registry.registerPath({
       content: {
         "application/json": {
           schema: XdrResponseSchema,
+          example: xdrExample("lock_project"),
         },
       },
     },
@@ -426,6 +488,7 @@ registry.registerPath({
           example: {
             from: EXAMPLE_COLLAB_A,
             amount: 50_000_000,
+            token: EXAMPLE_TOKEN,
           },
         },
       },
@@ -437,7 +500,7 @@ registry.registerPath({
       content: {
         "application/json": {
           schema: XdrResponseSchema,
-          example: xdrExample("deposit"),
+          example: xdrExample("deposit", EXAMPLE_COLLAB_A),
         },
       },
     },
@@ -464,11 +527,16 @@ registry.registerPath({
   description: "Builds an unsigned XDR to update a project's title and/or project type. At least one field is required; omitted fields keep their current on-chain values. Text fields are server-side sanitized. Rejected with 401 UNAUTHORIZED when `owner` is not the on-chain project owner.",
   tags: ["Splits"],
   request: {
-    params: z.object({ projectId: projectIdParamSchema }),
+    params: z.object({ projectId: exampleProjectIdParam }),
     body: {
       content: {
         "application/json": {
           schema: updateMetadataSchema,
+          example: {
+            owner: EXAMPLE_OWNER,
+            title: "Afrobeats Collective Vol. 1 (Deluxe)",
+            projectType: "music",
+          },
         },
       },
     },
@@ -479,10 +547,54 @@ registry.registerPath({
       content: {
         "application/json": {
           schema: XdrResponseSchema,
+          example: xdrExample("update_project_metadata"),
         },
       },
     },
     ...standardErrorResponses({ badRequest: true, unauthorized: true, unauthorizedExample: NOT_PROJECT_OWNER_EXAMPLE, notFound: true, badGateway: true, serverError: true }),
+  },
+});
+
+registry.registerPath({
+  method: "patch",
+  path: "/splits/{projectId}/expiration",
+  summary: "Configure or clear a project expiration timestamp",
+  description: "Sets or clears the expiration timestamp for a split project. Rejected with 401 UNAUTHORIZED when `owner` is not the on-chain project owner.",
+  tags: ["Splits"],
+  request: {
+    params: z.object({ projectId: exampleProjectIdParam }),
+    body: {
+      content: {
+        "application/json": {
+          schema: updateExpirationSchema,
+          example: {
+            owner: EXAMPLE_OWNER,
+            expiresAt: "2028-01-01T00:00:00.000Z",
+          },
+        },
+      },
+    },
+  },
+  responses: {
+    200: {
+      description: "Updated project expiration record",
+      content: {
+        "application/json": {
+          schema: z.object({
+            projectId: z.string(),
+            owner: z.string(),
+            expiresAt: z.string().nullable(),
+            updatedAt: z.string().optional(),
+          }),
+          example: {
+            projectId: EXAMPLE_PROJECT_ID,
+            owner: EXAMPLE_OWNER,
+            expiresAt: "2028-01-01T00:00:00.000Z",
+          },
+        },
+      },
+    },
+    ...standardErrorResponses({ badRequest: true, unauthorized: true, unauthorizedExample: NOT_PROJECT_OWNER_EXAMPLE, notFound: true, conflict: true, badGateway: true, serverError: true }),
   },
 });
 
@@ -586,27 +698,34 @@ registry.registerPath({
   },
 });
 
+const ClaimableInfoSchema = registry.register(
+  "ClaimableInfo",
+  z.object({
+    claimed: z.string().describe("Cumulative amount already claimed, in stroops"),
+    distribution_round: z.number().int().nonnegative().describe("Latest distribution round observed for this claim"),
+    last_claim_amount: z.string().describe("Amount claimed in the most recent self-service claim, in stroops"),
+  })
+);
+
 const ClaimableResponseSchema = registry.register(
   "ClaimableResponse",
   z.object({
     projectId: z.string().describe("The project ID"),
-    collaborator: z.string().describe("Stellar address of the collaborator"),
-    claimable: z.string().describe("Amount available to claim, in stroops"),
-    claimed: z.string().describe("Amount already claimed, in stroops"),
-    total: z.string().describe("Total allocated (claimed + claimable), in stroops"),
+    address: z.string().describe("Stellar address of the collaborator"),
+    claimable: ClaimableInfoSchema.describe("On-chain claimable payout state for the collaborator"),
   })
 );
 
 registry.registerPath({
   method: "get",
-  path: "/splits/{projectId}/claimable/{collaborator}",
+  path: "/splits/{projectId}/claimable/{address}",
   summary: "Get claimable payout information for a collaborator",
-  description: "Returns the claimable, claimed, and total allocated amounts for a collaborator on a project.",
+  description: "Returns the validated on-chain claimable payout state (`claimed`, `distribution_round`, `last_claim_amount`) for a collaborator on a project.",
   tags: ["Splits"],
   request: {
     params: z.object({
-      projectId: projectIdParamSchema,
-      collaborator: stellarAddressSchema.describe("Stellar address of the collaborator"),
+      projectId: exampleProjectIdParam,
+      address: stellarAddressSchema.describe("Stellar address of the collaborator"),
     }),
   },
   responses: {
@@ -615,6 +734,15 @@ registry.registerPath({
       content: {
         "application/json": {
           schema: ClaimableResponseSchema,
+          example: {
+            projectId: EXAMPLE_PROJECT_ID,
+            address: EXAMPLE_COLLAB_A,
+            claimable: {
+              claimed: "3000000",
+              distribution_round: 2,
+              last_claim_amount: "1500000",
+            },
+          },
         },
       },
     },
@@ -629,11 +757,14 @@ registry.registerPath({
   description: "Builds an unsigned XDR allowing a collaborator to claim their allocated share from a project.",
   tags: ["Splits"],
   request: {
-    params: z.object({ projectId: projectIdParamSchema }),
+    params: z.object({ projectId: exampleProjectIdParam }),
     body: {
       content: {
         "application/json": {
           schema: claimSchema,
+          example: {
+            claimer: EXAMPLE_COLLAB_A,
+          },
         },
       },
     },
@@ -644,6 +775,7 @@ registry.registerPath({
       content: {
         "application/json": {
           schema: XdrResponseSchema,
+          example: xdrExample("claim", EXAMPLE_COLLAB_A),
         },
       },
     },
@@ -809,14 +941,6 @@ registry.registerPath({
 
 // ─── Admin Endpoints ──────────────────────────────────────────────────────────
 
-const AdminStatusSchema = registry.register(
-  "AdminStatus",
-  z.object({
-    admin: z.string().nullable(),
-    isPaused: z.boolean(),
-  })
-);
-
 registry.registerPath({
   method: "get",
   path: "/splits/admin/allowlist",
@@ -835,193 +959,15 @@ registry.registerPath({
             count: z.number().int(),
             tokens: z.array(z.string()),
           }),
+          example: {
+            admin: EXAMPLE_OWNER,
+            count: 1,
+            tokens: [EXAMPLE_TOKEN],
+          },
         },
       },
     },
     ...standardErrorResponses({ badRequest: true, unauthorized: true, forbidden: true, badGateway: true, serverError: true }),
-  },
-});
-
-registry.registerPath({
-  method: "post",
-  path: "/splits/admin/allow-token",
-  summary: "Allow a payment token",
-  description: "Builds an unsigned XDR to add a token to the contract allowlist. Requires admin API key.",
-  tags: ["Admin"],
-  security: [{ adminApiKey: [] }],
-  request: {
-    body: { content: { "application/json": { schema: adminTokenSchema } } },
-  },
-  responses: {
-    200: { description: "Unsigned transaction XDR", content: { "application/json": { schema: XdrResponseSchema } } },
-    ...standardErrorResponses({ badRequest: true, unauthorized: true, forbidden: true, unavailable: true, badGateway: true, serverError: true }),
-  },
-});
-
-registry.registerPath({
-  method: "post",
-  path: "/splits/admin/disallow-token",
-  summary: "Disallow a payment token",
-  description: "Builds an unsigned XDR to remove a token from the contract allowlist. Requires admin API key.",
-  tags: ["Admin"],
-  security: [{ adminApiKey: [] }],
-  request: {
-    body: { content: { "application/json": { schema: adminTokenSchema } } },
-  },
-  responses: {
-    200: { description: "Unsigned transaction XDR", content: { "application/json": { schema: XdrResponseSchema } } },
-    ...standardErrorResponses({ badRequest: true, unauthorized: true, forbidden: true, unavailable: true, badGateway: true, serverError: true }),
-  },
-});
-
-registry.registerPath({
-  method: "post",
-  path: "/splits/admin/pause-distributions",
-  summary: "Pause all distributions",
-  description: "Builds an unsigned XDR to pause contract-wide fund distributions. Requires admin API key.",
-  tags: ["Admin"],
-  security: [{ adminApiKey: [] }],
-  request: {
-    body: { content: { "application/json": { schema: pauseDistributionsSchema } } },
-  },
-  responses: {
-    200: { description: "Unsigned transaction XDR", content: { "application/json": { schema: XdrResponseSchema } } },
-    ...standardErrorResponses({ badRequest: true, unauthorized: true, forbidden: true, unavailable: true, badGateway: true, serverError: true }),
-  },
-});
-
-registry.registerPath({
-  method: "post",
-  path: "/splits/admin/unpause-distributions",
-  summary: "Unpause distributions",
-  description: "Builds an unsigned XDR to resume contract-wide fund distributions. Requires admin API key.",
-  tags: ["Admin"],
-  security: [{ adminApiKey: [] }],
-  request: {
-    body: { content: { "application/json": { schema: pauseDistributionsSchema } } },
-  },
-  responses: {
-    200: { description: "Unsigned transaction XDR", content: { "application/json": { schema: XdrResponseSchema } } },
-    ...standardErrorResponses({ badRequest: true, unauthorized: true, forbidden: true, unavailable: true, badGateway: true, serverError: true }),
-  },
-});
-
-registry.registerPath({
-  method: "get",
-  path: "/splits/admin/status",
-  summary: "Get admin contract status",
-  description: "Returns the current contract admin address and whether distributions are paused.",
-  tags: ["Admin"],
-  security: [{ adminApiKey: [] }],
-  responses: {
-    200: {
-      description: "Admin status",
-      content: { "application/json": { schema: AdminStatusSchema } },
-    },
-    ...standardErrorResponses({ unauthorized: true, forbidden: true, badGateway: true, serverError: true }),
-  },
-});
-
-registry.registerPath({
-  method: "get",
-  path: "/splits/admin/is-token-allowed",
-  summary: "Check if a token is allowed",
-  description: "Returns whether a specific token contract address is on the allowlist.",
-  tags: ["Admin"],
-  security: [{ adminApiKey: [] }],
-  request: { query: isTokenAllowedQuerySchema },
-  responses: {
-    200: {
-      description: "Token allowlist check result",
-      content: {
-        "application/json": {
-          schema: z.object({ token: z.string(), isAllowed: z.boolean() }),
-        },
-      },
-    },
-    ...standardErrorResponses({ badRequest: true, unauthorized: true, forbidden: true, badGateway: true, serverError: true }),
-  },
-});
-
-registry.registerPath({
-  method: "get",
-  path: "/splits/admin/token-count",
-  summary: "Get allowed token count",
-  description: "Returns the total number of tokens on the contract allowlist.",
-  tags: ["Admin"],
-  security: [{ adminApiKey: [] }],
-  responses: {
-    200: {
-      description: "Allowed token count",
-      content: {
-        "application/json": {
-          schema: z.object({ count: z.number().int() }),
-        },
-      },
-    },
-    ...standardErrorResponses({ unauthorized: true, forbidden: true, badGateway: true, serverError: true }),
-  },
-});
-
-registry.registerPath({
-  method: "get",
-  path: "/splits/admin/unallocated",
-  summary: "Get unallocated token balance",
-  description: "Returns the unallocated balance held by the contract for a given token.",
-  tags: ["Admin"],
-  security: [{ adminApiKey: [] }],
-  request: { query: unallocatedQuerySchema },
-  responses: {
-    200: {
-      description: "Unallocated balance",
-      content: {
-        "application/json": {
-          schema: z.object({ token: z.string(), unallocated: z.string() }),
-        },
-      },
-    },
-    ...standardErrorResponses({ badRequest: true, unauthorized: true, forbidden: true, badGateway: true, serverError: true }),
-  },
-});
-
-registry.registerPath({
-  method: "post",
-  path: "/splits/admin/withdraw-unallocated",
-  summary: "Withdraw unallocated tokens",
-  description: "Builds an unsigned XDR to recover unallocated token balance from the contract. Requires admin API key.",
-  tags: ["Admin"],
-  security: [{ adminApiKey: [] }],
-  request: {
-    body: { content: { "application/json": { schema: withdrawUnallocatedSchema } } },
-  },
-  responses: {
-    200: { description: "Unsigned transaction XDR", content: { "application/json": { schema: XdrResponseSchema } } },
-    ...standardErrorResponses({ badRequest: true, unauthorized: true, unavailable: true, badGateway: true, serverError: true }),
-  },
-});
-
-registry.registerPath({
-  method: "get",
-  path: "/splits/admin/cache-stats",
-  summary: "Get read cache statistics",
-  description: "Returns internal read-cache hit/miss statistics for diagnostics.",
-  tags: ["Admin"],
-  security: [{ adminApiKey: [] }],
-  responses: {
-    200: {
-      description: "Cache statistics",
-      content: {
-        "application/json": {
-          schema: z.object({
-            hits: z.number().int(),
-            misses: z.number().int(),
-            evictions: z.number().int(),
-            ttlMs: z.number().int(),
-          }),
-        },
-      },
-    },
-    ...standardErrorResponses({ unauthorized: true, serverError: true }),
   },
 });
 
@@ -1034,12 +980,38 @@ registry.registerPath({
   description: "Creates a user profile linked to a Stellar wallet address.",
   tags: ["Users"],
   request: {
-    body: { content: { "application/json": { schema: userRegistrationSchema } } },
+    body: {
+      content: {
+        "application/json": {
+          schema: userRegistrationSchema,
+          example: {
+            walletAddress: EXAMPLE_OWNER,
+            email: "creator@example.com",
+            alias: "AfroCreator",
+            role: "customer",
+          },
+        },
+      },
+    },
   },
   responses: {
     201: {
       description: "Registered user profile",
-      content: { "application/json": { schema: userResponseSchema } },
+      content: {
+        "application/json": {
+          schema: userResponseSchema,
+          example: {
+            id: "11111111-1111-4111-8111-111111111111",
+            walletAddress: EXAMPLE_OWNER,
+            email: "creator@example.com",
+            alias: "AfroCreator",
+            role: "customer",
+            isActive: true,
+            createdAt: "2026-04-28T12:00:00.000Z",
+            updatedAt: "2026-04-28T12:00:00.000Z",
+          },
+        },
+      },
     },
     ...standardErrorResponses({ badRequest: true, conflict: true, serverError: true }),
   },
@@ -1048,14 +1020,21 @@ registry.registerPath({
 registry.registerPath({
   method: "post",
   path: "/users/login",
-  summary: "Log in by wallet address",
-  description: "Returns a JWT for an active registered wallet. Five failed attempts within 15 minutes lock that wallet for 15 minutes. Unknown, inactive, deleted, and locked wallets receive the same 401 response. The existing per-IP limiter may also return 429.",
+  summary: "Log in by wallet address or email and password",
+  description: "Returns a JWT (and refresh token) for an active registered account. Supports wallet-address login (with optional password if configured on the account) or email + password login. Five failed attempts within 15 minutes lock that account for 15 minutes. Unknown, inactive, deleted, and locked accounts receive the same 401 response. The per-IP limiter may also return 429.",
   tags: ["Users"],
   request: {
     body: {
       content: {
         "application/json": {
-          schema: z.object({ walletAddress: stellarAddressSchema }),
+          schema: z.object({
+            walletAddress: stellarAddressSchema.optional(),
+            email: z.string().email().optional(),
+            password: z.string().min(1).optional(),
+          }),
+          example: {
+            walletAddress: EXAMPLE_OWNER,
+          },
         },
       },
     },
@@ -1065,7 +1044,10 @@ registry.registerPath({
       description: "Authenticated user with JWT",
       content: {
         "application/json": {
-          schema: userResponseSchema.extend({ token: z.string() }),
+          schema: userResponseSchema.extend({
+            token: z.string(),
+            refreshToken: z.string().optional(),
+          }),
         },
       },
     },
@@ -1104,17 +1086,17 @@ registry.registerPath({
   method: "patch",
   path: "/users/me",
   summary: "Update authenticated user profile",
-  description: "Updates email or alias for the authenticated user.",
+  description: "Updates alias (or no-op current email) for the authenticated user. Changing to a new email address requires the confirmed email-change flow (`POST /auth/email-change/request`).",
   tags: ["Users"],
   security: [{ bearerAuth: [] }],
   request: {
     body: {
       content: {
         "application/json": {
-          schema: z.object({
-            email: z.string().email().optional(),
-            alias: z.string().min(1).max(64).optional(),
-          }),
+          schema: userUpdateSchema,
+          example: {
+            alias: "UpdatedAlias",
+          },
         },
       },
     },
@@ -1198,18 +1180,19 @@ registry.registerPath({
   path: "/transactions/history",
   summary: "Query payout transaction history",
   description:
-    "Returns payout records with optional wallet, date, and status filters. " +
+    "Returns payout records scoped to the authenticated wallet with optional date and status filters. " +
     "Use `cursor` with the `nextCursor` from the previous response for stable keyset pagination " +
     "(recommended for large result sets); `offset` remains supported for backward compatibility. " +
     "When both are supplied, `cursor` takes precedence. `limit` is capped at 100.",
   tags: ["Transactions"],
+  security: [{ bearerAuth: [] }],
   request: { query: transactionHistoryQuerySchema },
   responses: {
     200: {
       description: "Paginated transaction history",
       content: { "application/json": { schema: transactionHistoryResponseSchema } },
     },
-    ...standardErrorResponses({ badRequest: true, serverError: true }),
+    ...standardErrorResponses({ badRequest: true, unauthorized: true, serverError: true }),
   },
 });
 
@@ -1217,10 +1200,10 @@ registry.registerPath({
   method: "get",
   path: "/transactions/{txHash}",
   summary: "Get transaction by hash",
-  description: "Returns a single payout record matching the Stellar transaction hash.",
+  description: "Returns a single payout record matching the 64-character hex Stellar transaction hash.",
   tags: ["Transactions"],
   request: {
-    params: z.object({ txHash: z.string().min(1) }),
+    params: z.object({ txHash: z.string().regex(/^[a-fA-F0-9]{64}$/) }),
   },
   responses: {
     200: {
@@ -1295,7 +1278,7 @@ registry.register(
 const ComponentHealthSchema = registry.register(
   "ComponentHealth",
   z.object({
-    status: z.enum(["up", "degraded", "down"]),
+    status: z.enum(["up", "degraded", "down", "unknown"]),
     latencyMs: z.number().optional().describe("Round-trip latency of the underlying check, in milliseconds"),
     message: z
       .string()
@@ -1340,10 +1323,13 @@ const ReadinessResponseSchema = registry.register(
       "or in a non-fatal failure state - investigate, don't page); \"not_ready\" -> 503 " +
       "(env invalid or a dependency is fully down, unchanged from the legacy binary contract)."
     ),
-    error: z.string().optional().describe("Error code if not ready"),
+    version: z.string().optional().describe("Running service version"),
+    error: z.string().optional().describe("Lowercase error identifier if not ready"),
+    code: z.string().optional().describe("Uppercase error code if not ready"),
     message: z.string().optional().describe("Error message if not ready"),
     issues: z.array(z.string()).optional().describe("List of configuration issues"),
     requestId: z.string().optional().describe("Request ID for tracing"),
+    details: z.record(z.string(), z.unknown()).optional().describe("Additional diagnostic context"),
     components: ReadinessComponentsSchema.optional(),
   })
 );
@@ -1388,6 +1374,41 @@ registry.registerPath({
         "application/json": {
           schema: z.object({
             status: z.literal("ok"),
+          }),
+        },
+      },
+    },
+  },
+});
+
+registry.registerPath({
+  method: "get",
+  path: "/health/startup",
+  summary: "Startup check (Kubernetes compatible)",
+  description: "Returns 200 once initial database and background listener startup has completed, or 503 while still starting.",
+  tags: ["Health"],
+  responses: {
+    200: {
+      description: "Startup has completed",
+      content: {
+        "application/json": {
+          schema: z.object({
+            status: z.literal("started"),
+          }),
+        },
+      },
+    },
+    503: {
+      description: "Service is still starting",
+      content: {
+        "application/json": {
+          schema: z.object({
+            status: z.literal("starting"),
+            error: z.string(),
+            code: z.string(),
+            message: z.string(),
+            requestId: z.string(),
+            details: z.record(z.string(), z.unknown()),
           }),
         },
       },
@@ -1834,15 +1855,18 @@ registry.registerPath({
   method: "post",
   path: "/ops/backfill",
   summary: "Trigger event history backfill",
-  description: "Backfills missed ledger events starting from a given ledger sequence.",
+  description: "Backfills missed ledger events starting from a given positive ledger sequence.",
   tags: ["Operations"],
   request: {
     body: {
       content: {
         "application/json": {
           schema: z.object({
-            fromLedger: z.number().int().optional().describe("Starting ledger sequence number"),
+            fromLedger: z.number().int().positive().describe("First ledger to replay events from (the last known good ledger)"),
           }),
+          example: {
+            fromLedger: 1000,
+          },
         },
       },
     },
@@ -1852,7 +1876,7 @@ registry.registerPath({
       description: "Backfill outcome",
       content: { "application/json": { schema: OpsBackfillResponseSchema } },
     },
-    ...standardErrorResponses({ serverError: true }),
+    ...standardErrorResponses({ badRequest: true, serverError: true }),
   },
 });
 

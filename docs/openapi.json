@@ -56,22 +56,6 @@
         ],
         "type": "object"
       },
-      "AdminStatus": {
-        "properties": {
-          "admin": {
-            "nullable": true,
-            "type": "string"
-          },
-          "isPaused": {
-            "type": "boolean"
-          }
-        },
-        "required": [
-          "admin",
-          "isPaused"
-        ],
-        "type": "object"
-      },
       "AdminStatusResponse": {
         "properties": {
           "admin": {
@@ -220,35 +204,54 @@
         ],
         "type": "object"
       },
+      "ClaimableInfo": {
+        "properties": {
+          "claimed": {
+            "description": "Cumulative amount already claimed, in stroops",
+            "type": "string"
+          },
+          "distribution_round": {
+            "description": "Latest distribution round observed for this claim",
+            "minimum": 0,
+            "type": "integer"
+          },
+          "last_claim_amount": {
+            "description": "Amount claimed in the most recent self-service claim, in stroops",
+            "type": "string"
+          }
+        },
+        "required": [
+          "claimed",
+          "distribution_round",
+          "last_claim_amount"
+        ],
+        "type": "object"
+      },
       "ClaimableResponse": {
         "properties": {
-          "claimable": {
-            "description": "Amount available to claim, in stroops",
-            "type": "string"
-          },
-          "claimed": {
-            "description": "Amount already claimed, in stroops",
-            "type": "string"
-          },
-          "collaborator": {
+          "address": {
             "description": "Stellar address of the collaborator",
             "type": "string"
           },
+          "claimable": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/ClaimableInfo"
+              },
+              {
+                "description": "On-chain claimable payout state for the collaborator"
+              }
+            ]
+          },
           "projectId": {
             "description": "The project ID",
-            "type": "string"
-          },
-          "total": {
-            "description": "Total allocated (claimed + claimable), in stroops",
             "type": "string"
           }
         },
         "required": [
           "projectId",
-          "collaborator",
-          "claimable",
-          "claimed",
-          "total"
+          "address",
+          "claimable"
         ],
         "type": "object"
       },
@@ -266,7 +269,8 @@
             "enum": [
               "up",
               "degraded",
-              "down"
+              "down",
+              "unknown"
             ],
             "type": "string"
           }
@@ -707,6 +711,14 @@
       },
       "ProjectList": {
         "properties": {
+          "hasMore": {
+            "type": "boolean"
+          },
+          "limit": {
+            "exclusiveMinimum": true,
+            "minimum": 0,
+            "type": "integer"
+          },
           "nextCursor": {
             "nullable": true,
             "type": "string"
@@ -753,6 +765,10 @@
             },
             "type": "array"
           },
+          "start": {
+            "minimum": 0,
+            "type": "integer"
+          },
           "total": {
             "minimum": 0,
             "type": "integer"
@@ -793,11 +809,22 @@
       },
       "ReadinessResponse": {
         "properties": {
+          "code": {
+            "description": "Uppercase error code if not ready",
+            "type": "string"
+          },
           "components": {
             "$ref": "#/components/schemas/ReadinessComponents"
           },
+          "details": {
+            "additionalProperties": {
+              "nullable": true
+            },
+            "description": "Additional diagnostic context",
+            "type": "object"
+          },
           "error": {
-            "description": "Error code if not ready",
+            "description": "Lowercase error identifier if not ready",
             "type": "string"
           },
           "issues": {
@@ -823,6 +850,10 @@
               "not_ready"
             ],
             "type": "string"
+          },
+          "version": {
+            "description": "Running service version",
+            "type": "string"
           }
         },
         "required": [
@@ -837,10 +868,16 @@
               "contractId": {
                 "type": "string"
               },
+              "fee": {
+                "type": "string"
+              },
               "networkPassphrase": {
                 "type": "string"
               },
               "operation": {
+                "type": "string"
+              },
+              "sequenceNumber": {
                 "type": "string"
               },
               "sourceAccount": {
@@ -1127,19 +1164,103 @@
         ]
       }
     },
+    "/health/startup": {
+      "get": {
+        "description": "Returns 200 once initial database and background listener startup has completed, or 503 while still starting.",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "status": {
+                      "enum": [
+                        "started"
+                      ],
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "status"
+                  ],
+                  "type": "object"
+                }
+              }
+            },
+            "description": "Startup has completed"
+          },
+          "503": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "code": {
+                      "type": "string"
+                    },
+                    "details": {
+                      "additionalProperties": {
+                        "nullable": true
+                      },
+                      "type": "object"
+                    },
+                    "error": {
+                      "type": "string"
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "requestId": {
+                      "type": "string"
+                    },
+                    "status": {
+                      "enum": [
+                        "starting"
+                      ],
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "status",
+                    "error",
+                    "code",
+                    "message",
+                    "requestId",
+                    "details"
+                  ],
+                  "type": "object"
+                }
+              }
+            },
+            "description": "Service is still starting"
+          }
+        },
+        "summary": "Startup check (Kubernetes compatible)",
+        "tags": [
+          "Health"
+        ]
+      }
+    },
     "/ops/backfill": {
       "post": {
-        "description": "Backfills missed ledger events starting from a given ledger sequence.",
+        "description": "Backfills missed ledger events starting from a given positive ledger sequence.",
         "requestBody": {
           "content": {
             "application/json": {
+              "example": {
+                "fromLedger": 1000
+              },
               "schema": {
                 "properties": {
                   "fromLedger": {
-                    "description": "Starting ledger sequence number",
+                    "description": "First ledger to replay events from (the last known good ledger)",
+                    "exclusiveMinimum": true,
+                    "minimum": 0,
                     "type": "integer"
                   }
                 },
+                "required": [
+                  "fromLedger"
+                ],
                 "type": "object"
               }
             }
@@ -1155,6 +1276,16 @@
               }
             },
             "description": "Backfill outcome"
+          },
+          "400": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            },
+            "description": "Validation error"
           },
           "500": {
             "content": {
@@ -1303,12 +1434,31 @@
           "200": {
             "content": {
               "application/json": {
+                "example": {
+                  "hasMore": false,
+                  "limit": 10,
+                  "nextCursor": null,
+                  "projects": [
+                    {
+                      "distributionRound": 0,
+                      "locked": false,
+                      "owner": "GBJRKIYXAAFD3NZCWJXGUTNKYUQFZC2ANS6LRMBPJCE4IZSMJJMZPQBT",
+                      "projectId": "afrobeats_001",
+                      "projectType": "music",
+                      "title": "Afrobeats Collective Vol. 1",
+                      "token": "CDOVDY3MZDG7PHCGVP7EP2EKQ2ENV26DZW6FKLBRN42LOGIZGXZV3WX5",
+                      "totalDistributed": "0"
+                    }
+                  ],
+                  "start": 0,
+                  "total": 1
+                },
                 "schema": {
                   "$ref": "#/components/schemas/ProjectList"
                 }
               }
             },
-            "description": "List of projects"
+            "description": "Paginated list of projects"
           },
           "400": {
             "content": {
@@ -1497,8 +1647,10 @@
                 "example": {
                   "metadata": {
                     "contractId": "CAGR5U5IBEPFVJDZPZUXXNCPXAHNZ6TWVIUTI5RLRH3SZSU4O2VXDOPF",
+                    "fee": "100",
                     "networkPassphrase": "Test SDF Network ; September 2015",
                     "operation": "create_project",
+                    "sequenceNumber": "1",
                     "sourceAccount": "GBJRKIYXAAFD3NZCWJXGUTNKYUQFZC2ANS6LRMBPJCE4IZSMJJMZPQBT"
                   },
                   "xdr": "AAAAAgAAAAC5tRUXpDqRcTvpvKF...(truncated unsigned transaction envelope)"
@@ -1737,6 +1889,13 @@
           "200": {
             "content": {
               "application/json": {
+                "example": {
+                  "admin": "GBJRKIYXAAFD3NZCWJXGUTNKYUQFZC2ANS6LRMBPJCE4IZSMJJMZPQBT",
+                  "count": 1,
+                  "tokens": [
+                    "CDOVDY3MZDG7PHCGVP7EP2EKQ2ENV26DZW6FKLBRN42LOGIZGXZV3WX5"
+                  ]
+                },
                 "schema": {
                   "properties": {
                     "admin": {
@@ -2674,10 +2833,13 @@
         "description": "Fetches the current on-chain state for a single split project including collaborators and balances.",
         "parameters": [
           {
+            "description": "Project ID",
             "in": "path",
             "name": "projectId",
             "required": true,
             "schema": {
+              "description": "Project ID",
+              "example": "afrobeats_001",
               "maxLength": 32,
               "minLength": 1,
               "pattern": "^[a-zA-Z0-9_]+$",
@@ -2689,6 +2851,48 @@
           "200": {
             "content": {
               "application/json": {
+                "example": {
+                  "balance": "50000000",
+                  "collaborators": [
+                    {
+                      "address": "GCZTK3PNYXCVF7Z3ELVELEJZ7BVGPGPVJ3NVZNI7O6DVCHPA4JU6LXRV",
+                      "alias": "Producer",
+                      "basisPoints": 6000
+                    },
+                    {
+                      "address": "GBG234UA6RBPDD5K6FHMQXHUXB5ALOENQGH24Y3W4ERX2YJNQ4MK4V25",
+                      "alias": "Vocalist",
+                      "basisPoints": 4000
+                    }
+                  ],
+                  "distributionRound": 0,
+                  "expiresAt": null,
+                  "locked": false,
+                  "owner": "GBJRKIYXAAFD3NZCWJXGUTNKYUQFZC2ANS6LRMBPJCE4IZSMJJMZPQBT",
+                  "participantPaymentStatuses": [
+                    {
+                      "address": "GCZTK3PNYXCVF7Z3ELVELEJZ7BVGPGPVJ3NVZNI7O6DVCHPA4JU6LXRV",
+                      "alias": "Producer",
+                      "basisPoints": 6000,
+                      "lastUpdated": null,
+                      "roundId": null,
+                      "status": "unpaid"
+                    },
+                    {
+                      "address": "GBG234UA6RBPDD5K6FHMQXHUXB5ALOENQGH24Y3W4ERX2YJNQ4MK4V25",
+                      "alias": "Vocalist",
+                      "basisPoints": 4000,
+                      "lastUpdated": null,
+                      "roundId": null,
+                      "status": "unpaid"
+                    }
+                  ],
+                  "projectId": "afrobeats_001",
+                  "projectType": "music",
+                  "title": "Afrobeats Collective Vol. 1",
+                  "token": "CDOVDY3MZDG7PHCGVP7EP2EKQ2ENV26DZW6FKLBRN42LOGIZGXZV3WX5",
+                  "totalDistributed": "0"
+                },
                 "schema": {
                   "$ref": "#/components/schemas/Project"
                 }
@@ -2769,10 +2973,13 @@
         "description": "Builds an unsigned XDR allowing a collaborator to claim their allocated share from a project.",
         "parameters": [
           {
+            "description": "Project ID",
             "in": "path",
             "name": "projectId",
             "required": true,
             "schema": {
+              "description": "Project ID",
+              "example": "afrobeats_001",
               "maxLength": 32,
               "minLength": 1,
               "pattern": "^[a-zA-Z0-9_]+$",
@@ -2783,6 +2990,9 @@
         "requestBody": {
           "content": {
             "application/json": {
+              "example": {
+                "claimer": "GCZTK3PNYXCVF7Z3ELVELEJZ7BVGPGPVJ3NVZNI7O6DVCHPA4JU6LXRV"
+              },
               "schema": {
                 "additionalProperties": false,
                 "properties": {
@@ -2804,6 +3014,17 @@
           "200": {
             "content": {
               "application/json": {
+                "example": {
+                  "metadata": {
+                    "contractId": "CAGR5U5IBEPFVJDZPZUXXNCPXAHNZ6TWVIUTI5RLRH3SZSU4O2VXDOPF",
+                    "fee": "100",
+                    "networkPassphrase": "Test SDF Network ; September 2015",
+                    "operation": "claim",
+                    "sequenceNumber": "1",
+                    "sourceAccount": "GCZTK3PNYXCVF7Z3ELVELEJZ7BVGPGPVJ3NVZNI7O6DVCHPA4JU6LXRV"
+                  },
+                  "xdr": "AAAAAgAAAAC5tRUXpDqRcTvpvKF...(truncated unsigned transaction envelope)"
+                },
                 "schema": {
                   "$ref": "#/components/schemas/XdrResponse"
                 }
@@ -2879,15 +3100,18 @@
         ]
       }
     },
-    "/splits/{projectId}/claimable/{collaborator}": {
+    "/splits/{projectId}/claimable/{address}": {
       "get": {
-        "description": "Returns the claimable, claimed, and total allocated amounts for a collaborator on a project.",
+        "description": "Returns the validated on-chain claimable payout state (`claimed`, `distribution_round`, `last_claim_amount`) for a collaborator on a project.",
         "parameters": [
           {
+            "description": "Project ID",
             "in": "path",
             "name": "projectId",
             "required": true,
             "schema": {
+              "description": "Project ID",
+              "example": "afrobeats_001",
               "maxLength": 32,
               "minLength": 1,
               "pattern": "^[a-zA-Z0-9_]+$",
@@ -2897,7 +3121,7 @@
           {
             "description": "Stellar address of the collaborator",
             "in": "path",
-            "name": "collaborator",
+            "name": "address",
             "required": true,
             "schema": {
               "description": "Stellar address of the collaborator",
@@ -2910,6 +3134,15 @@
           "200": {
             "content": {
               "application/json": {
+                "example": {
+                  "address": "GCZTK3PNYXCVF7Z3ELVELEJZ7BVGPGPVJ3NVZNI7O6DVCHPA4JU6LXRV",
+                  "claimable": {
+                    "claimed": "3000000",
+                    "distribution_round": 2,
+                    "last_claim_amount": "1500000"
+                  },
+                  "projectId": "afrobeats_001"
+                },
                 "schema": {
                   "$ref": "#/components/schemas/ClaimableResponse"
                 }
@@ -3077,8 +3310,10 @@
                 "example": {
                   "metadata": {
                     "contractId": "CAGR5U5IBEPFVJDZPZUXXNCPXAHNZ6TWVIUTI5RLRH3SZSU4O2VXDOPF",
+                    "fee": "100",
                     "networkPassphrase": "Test SDF Network ; September 2015",
                     "operation": "update_collaborators",
+                    "sequenceNumber": "1",
                     "sourceAccount": "GBJRKIYXAAFD3NZCWJXGUTNKYUQFZC2ANS6LRMBPJCE4IZSMJJMZPQBT"
                   },
                   "xdr": "AAAAAgAAAAC5tRUXpDqRcTvpvKF...(truncated unsigned transaction envelope)"
@@ -3215,7 +3450,8 @@
             "application/json": {
               "example": {
                 "amount": 50000000,
-                "from": "GCZTK3PNYXCVF7Z3ELVELEJZ7BVGPGPVJ3NVZNI7O6DVCHPA4JU6LXRV"
+                "from": "GCZTK3PNYXCVF7Z3ELVELEJZ7BVGPGPVJ3NVZNI7O6DVCHPA4JU6LXRV",
+                "token": "CDOVDY3MZDG7PHCGVP7EP2EKQ2ENV26DZW6FKLBRN42LOGIZGXZV3WX5"
               },
               "schema": {
                 "additionalProperties": false,
@@ -3254,9 +3490,11 @@
                 "example": {
                   "metadata": {
                     "contractId": "CAGR5U5IBEPFVJDZPZUXXNCPXAHNZ6TWVIUTI5RLRH3SZSU4O2VXDOPF",
+                    "fee": "100",
                     "networkPassphrase": "Test SDF Network ; September 2015",
                     "operation": "deposit",
-                    "sourceAccount": "GBJRKIYXAAFD3NZCWJXGUTNKYUQFZC2ANS6LRMBPJCE4IZSMJJMZPQBT"
+                    "sequenceNumber": "1",
+                    "sourceAccount": "GCZTK3PNYXCVF7Z3ELVELEJZ7BVGPGPVJ3NVZNI7O6DVCHPA4JU6LXRV"
                   },
                   "xdr": "AAAAAgAAAAC5tRUXpDqRcTvpvKF...(truncated unsigned transaction envelope)"
                 },
@@ -3391,8 +3629,10 @@
                 "example": {
                   "metadata": {
                     "contractId": "CAGR5U5IBEPFVJDZPZUXXNCPXAHNZ6TWVIUTI5RLRH3SZSU4O2VXDOPF",
+                    "fee": "100",
                     "networkPassphrase": "Test SDF Network ; September 2015",
                     "operation": "distribute",
+                    "sequenceNumber": "1",
                     "sourceAccount": "GBJRKIYXAAFD3NZCWJXGUTNKYUQFZC2ANS6LRMBPJCE4IZSMJJMZPQBT"
                   },
                   "xdr": "AAAAAgAAAAC5tRUXpDqRcTvpvKF...(truncated unsigned transaction envelope)"
@@ -3478,6 +3718,198 @@
           }
         },
         "summary": "Distribute project funds to collaborators",
+        "tags": [
+          "Splits"
+        ]
+      }
+    },
+    "/splits/{projectId}/expiration": {
+      "patch": {
+        "description": "Sets or clears the expiration timestamp for a split project. Rejected with 401 UNAUTHORIZED when `owner` is not the on-chain project owner.",
+        "parameters": [
+          {
+            "description": "Project ID",
+            "in": "path",
+            "name": "projectId",
+            "required": true,
+            "schema": {
+              "description": "Project ID",
+              "example": "afrobeats_001",
+              "maxLength": 32,
+              "minLength": 1,
+              "pattern": "^[a-zA-Z0-9_]+$",
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "example": {
+                "expiresAt": "2028-01-01T00:00:00.000Z",
+                "owner": "GBJRKIYXAAFD3NZCWJXGUTNKYUQFZC2ANS6LRMBPJCE4IZSMJJMZPQBT"
+              },
+              "schema": {
+                "additionalProperties": false,
+                "properties": {
+                  "expiresAt": {
+                    "format": "date-time",
+                    "nullable": true,
+                    "type": "string"
+                  },
+                  "owner": {
+                    "description": "owner",
+                    "minLength": 1,
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "owner",
+                  "expiresAt"
+                ],
+                "type": "object"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "example": {
+                  "expiresAt": "2028-01-01T00:00:00.000Z",
+                  "owner": "GBJRKIYXAAFD3NZCWJXGUTNKYUQFZC2ANS6LRMBPJCE4IZSMJJMZPQBT",
+                  "projectId": "afrobeats_001"
+                },
+                "schema": {
+                  "properties": {
+                    "expiresAt": {
+                      "nullable": true,
+                      "type": "string"
+                    },
+                    "owner": {
+                      "type": "string"
+                    },
+                    "projectId": {
+                      "type": "string"
+                    },
+                    "updatedAt": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "projectId",
+                    "owner",
+                    "expiresAt"
+                  ],
+                  "type": "object"
+                }
+              }
+            },
+            "description": "Updated project expiration record"
+          },
+          "400": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            },
+            "description": "Validation error"
+          },
+          "401": {
+            "content": {
+              "application/json": {
+                "example": {
+                  "code": "UNAUTHORIZED",
+                  "details": {
+                    "remediation": {
+                      "action": "Switch Wallet",
+                      "message": "Only the project owner can perform this action."
+                    }
+                  },
+                  "error": "unauthorized",
+                  "message": "Caller is not the project owner",
+                  "requestId": "b6f1a2d4-8c3e-4a1b-9f2e-6d5c7a8b9c0d"
+                },
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            },
+            "description": "Authentication required"
+          },
+          "404": {
+            "content": {
+              "application/json": {
+                "example": {
+                  "code": "NOT_FOUND",
+                  "details": {},
+                  "error": "not_found",
+                  "message": "Project afrobeats_001 does not exist.",
+                  "requestId": "b6f1a2d4-8c3e-4a1b-9f2e-6d5c7a8b9c0d"
+                },
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            },
+            "description": "Resource not found"
+          },
+          "409": {
+            "content": {
+              "application/json": {
+                "example": {
+                  "code": "CONFLICT",
+                  "details": {},
+                  "error": "conflict",
+                  "message": "A project with ID \"afrobeats_001\" already exists.",
+                  "requestId": "b6f1a2d4-8c3e-4a1b-9f2e-6d5c7a8b9c0d"
+                },
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            },
+            "description": "Conflict with existing resource"
+          },
+          "500": {
+            "content": {
+              "application/json": {
+                "example": {
+                  "code": "INTERNAL_ERROR",
+                  "details": {},
+                  "error": "internal_error",
+                  "message": "An unexpected error occurred. Please try again later.",
+                  "requestId": "b6f1a2d4-8c3e-4a1b-9f2e-6d5c7a8b9c0d"
+                },
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            },
+            "description": "Internal server error"
+          },
+          "502": {
+            "content": {
+              "application/json": {
+                "example": {
+                  "code": "RPC_ERROR",
+                  "details": {},
+                  "error": "rpc_error",
+                  "message": "The Stellar network RPC call failed. Please retry.",
+                  "requestId": "b6f1a2d4-8c3e-4a1b-9f2e-6d5c7a8b9c0d"
+                },
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            },
+            "description": "Upstream RPC or contract error"
+          }
+        },
+        "summary": "Configure or clear a project expiration timestamp",
         "tags": [
           "Splits"
         ]
@@ -3652,10 +4084,13 @@
         "description": "Builds an unsigned XDR to permanently lock a project, preventing further metadata or collaborator changes. Rejected with 401 UNAUTHORIZED when `owner` is not the on-chain project owner.",
         "parameters": [
           {
+            "description": "Project ID",
             "in": "path",
             "name": "projectId",
             "required": true,
             "schema": {
+              "description": "Project ID",
+              "example": "afrobeats_001",
               "maxLength": 32,
               "minLength": 1,
               "pattern": "^[a-zA-Z0-9_]+$",
@@ -3666,6 +4101,9 @@
         "requestBody": {
           "content": {
             "application/json": {
+              "example": {
+                "owner": "GBJRKIYXAAFD3NZCWJXGUTNKYUQFZC2ANS6LRMBPJCE4IZSMJJMZPQBT"
+              },
               "schema": {
                 "additionalProperties": false,
                 "properties": {
@@ -3687,6 +4125,17 @@
           "200": {
             "content": {
               "application/json": {
+                "example": {
+                  "metadata": {
+                    "contractId": "CAGR5U5IBEPFVJDZPZUXXNCPXAHNZ6TWVIUTI5RLRH3SZSU4O2VXDOPF",
+                    "fee": "100",
+                    "networkPassphrase": "Test SDF Network ; September 2015",
+                    "operation": "lock_project",
+                    "sequenceNumber": "1",
+                    "sourceAccount": "GBJRKIYXAAFD3NZCWJXGUTNKYUQFZC2ANS6LRMBPJCE4IZSMJJMZPQBT"
+                  },
+                  "xdr": "AAAAAgAAAAC5tRUXpDqRcTvpvKF...(truncated unsigned transaction envelope)"
+                },
                 "schema": {
                   "$ref": "#/components/schemas/XdrResponse"
                 }
@@ -3789,10 +4238,13 @@
         "description": "Builds an unsigned XDR to update a project's title and/or project type. At least one field is required; omitted fields keep their current on-chain values. Text fields are server-side sanitized. Rejected with 401 UNAUTHORIZED when `owner` is not the on-chain project owner.",
         "parameters": [
           {
+            "description": "Project ID",
             "in": "path",
             "name": "projectId",
             "required": true,
             "schema": {
+              "description": "Project ID",
+              "example": "afrobeats_001",
               "maxLength": 32,
               "minLength": 1,
               "pattern": "^[a-zA-Z0-9_]+$",
@@ -3803,6 +4255,11 @@
         "requestBody": {
           "content": {
             "application/json": {
+              "example": {
+                "owner": "GBJRKIYXAAFD3NZCWJXGUTNKYUQFZC2ANS6LRMBPJCE4IZSMJJMZPQBT",
+                "projectType": "music",
+                "title": "Afrobeats Collective Vol. 1 (Deluxe)"
+              },
               "schema": {
                 "additionalProperties": false,
                 "properties": {
@@ -3830,6 +4287,17 @@
           "200": {
             "content": {
               "application/json": {
+                "example": {
+                  "metadata": {
+                    "contractId": "CAGR5U5IBEPFVJDZPZUXXNCPXAHNZ6TWVIUTI5RLRH3SZSU4O2VXDOPF",
+                    "fee": "100",
+                    "networkPassphrase": "Test SDF Network ; September 2015",
+                    "operation": "update_project_metadata",
+                    "sequenceNumber": "1",
+                    "sourceAccount": "GBJRKIYXAAFD3NZCWJXGUTNKYUQFZC2ANS6LRMBPJCE4IZSMJJMZPQBT"
+                  },
+                  "xdr": "AAAAAgAAAAC5tRUXpDqRcTvpvKF...(truncated unsigned transaction envelope)"
+                },
                 "schema": {
                   "$ref": "#/components/schemas/XdrResponse"
                 }
@@ -4148,7 +4616,7 @@
     },
     "/transactions/history": {
       "get": {
-        "description": "Returns payout records with optional wallet, date, and status filters. Use `cursor` with the `nextCursor` from the previous response for stable keyset pagination (recommended for large result sets); `offset` remains supported for backward compatibility. When both are supplied, `cursor` takes precedence. `limit` is capped at 100.",
+        "description": "Returns payout records scoped to the authenticated wallet with optional date and status filters. Use `cursor` with the `nextCursor` from the previous response for stable keyset pagination (recommended for large result sets); `offset` remains supported for backward compatibility. When both are supplied, `cursor` takes precedence. `limit` is capped at 100.",
         "parameters": [
           {
             "in": "query",
@@ -4320,6 +4788,23 @@
             },
             "description": "Validation error"
           },
+          "401": {
+            "content": {
+              "application/json": {
+                "example": {
+                  "code": "UNAUTHORIZED",
+                  "details": {},
+                  "error": "unauthorized",
+                  "message": "Missing or invalid bearer token / admin API key.",
+                  "requestId": "b6f1a2d4-8c3e-4a1b-9f2e-6d5c7a8b9c0d"
+                },
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            },
+            "description": "Authentication required"
+          },
           "500": {
             "content": {
               "application/json": {
@@ -4338,6 +4823,11 @@
             "description": "Internal server error"
           }
         },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
         "summary": "Query payout transaction history",
         "tags": [
           "Transactions"
@@ -4369,6 +4859,7 @@
                     },
                     "date": {
                       "format": "date-time",
+                      "nullable": true,
                       "type": "string"
                     },
                     "network": {
@@ -4633,14 +5124,14 @@
     },
     "/transactions/{txHash}": {
       "get": {
-        "description": "Returns a single payout record matching the Stellar transaction hash.",
+        "description": "Returns a single payout record matching the 64-character hex Stellar transaction hash.",
         "parameters": [
           {
             "in": "path",
             "name": "txHash",
             "required": true,
             "schema": {
-              "minLength": 1,
+              "pattern": "^[a-fA-F0-9]{64}$",
               "type": "string"
             }
           }
@@ -4750,20 +5241,28 @@
     },
     "/users/login": {
       "post": {
-        "description": "Returns a JWT for an active registered wallet. Five failed attempts within 15 minutes lock that wallet for 15 minutes. Unknown, inactive, deleted, and locked wallets receive the same 401 response. The existing per-IP limiter may also return 429.",
+        "description": "Returns a JWT (and refresh token) for an active registered account. Supports wallet-address login (with optional password if configured on the account) or email + password login. Five failed attempts within 15 minutes lock that account for 15 minutes. Unknown, inactive, deleted, and locked accounts receive the same 401 response. The per-IP limiter may also return 429.",
         "requestBody": {
           "content": {
             "application/json": {
+              "example": {
+                "walletAddress": "GBJRKIYXAAFD3NZCWJXGUTNKYUQFZC2ANS6LRMBPJCE4IZSMJJMZPQBT"
+              },
               "schema": {
                 "properties": {
+                  "email": {
+                    "format": "email",
+                    "type": "string"
+                  },
+                  "password": {
+                    "minLength": 1,
+                    "type": "string"
+                  },
                   "walletAddress": {
                     "minLength": 1,
                     "type": "string"
                   }
                 },
-                "required": [
-                  "walletAddress"
-                ],
                 "type": "object"
               }
             }
@@ -4776,12 +5275,14 @@
                 "schema": {
                   "properties": {
                     "alias": {
+                      "nullable": true,
                       "type": "string"
                     },
                     "createdAt": {
                       "type": "string"
                     },
                     "email": {
+                      "nullable": true,
                       "type": "string"
                     },
                     "id": {
@@ -4790,6 +5291,9 @@
                     },
                     "isActive": {
                       "type": "boolean"
+                    },
+                    "refreshToken": {
+                      "type": "string"
                     },
                     "role": {
                       "enum": [
@@ -4869,7 +5373,7 @@
             "description": "Internal server error"
           }
         },
-        "summary": "Log in by wallet address",
+        "summary": "Log in by wallet address or email and password",
         "tags": [
           "Users"
         ]
@@ -4973,12 +5477,14 @@
                 "schema": {
                   "properties": {
                     "alias": {
+                      "nullable": true,
                       "type": "string"
                     },
                     "createdAt": {
                       "type": "string"
                     },
                     "email": {
+                      "nullable": true,
                       "type": "string"
                     },
                     "id": {
@@ -5080,11 +5586,15 @@
         ]
       },
       "patch": {
-        "description": "Updates email or alias for the authenticated user.",
+        "description": "Updates alias (or no-op current email) for the authenticated user. Changing to a new email address requires the confirmed email-change flow (`POST /auth/email-change/request`).",
         "requestBody": {
           "content": {
             "application/json": {
+              "example": {
+                "alias": "UpdatedAlias"
+              },
               "schema": {
+                "additionalProperties": false,
                 "properties": {
                   "alias": {
                     "maxLength": 64,
@@ -5108,12 +5618,14 @@
                 "schema": {
                   "properties": {
                     "alias": {
+                      "nullable": true,
                       "type": "string"
                     },
                     "createdAt": {
                       "type": "string"
                     },
                     "email": {
+                      "nullable": true,
                       "type": "string"
                     },
                     "id": {
@@ -5231,6 +5743,12 @@
         "requestBody": {
           "content": {
             "application/json": {
+              "example": {
+                "alias": "AfroCreator",
+                "email": "creator@example.com",
+                "role": "customer",
+                "walletAddress": "GBJRKIYXAAFD3NZCWJXGUTNKYUQFZC2ANS6LRMBPJCE4IZSMJJMZPQBT"
+              },
               "schema": {
                 "additionalProperties": false,
                 "properties": {
@@ -5274,15 +5792,27 @@
           "201": {
             "content": {
               "application/json": {
+                "example": {
+                  "alias": "AfroCreator",
+                  "createdAt": "2026-04-28T12:00:00.000Z",
+                  "email": "creator@example.com",
+                  "id": "11111111-1111-4111-8111-111111111111",
+                  "isActive": true,
+                  "role": "customer",
+                  "updatedAt": "2026-04-28T12:00:00.000Z",
+                  "walletAddress": "GBJRKIYXAAFD3NZCWJXGUTNKYUQFZC2ANS6LRMBPJCE4IZSMJJMZPQBT"
+                },
                 "schema": {
                   "properties": {
                     "alias": {
+                      "nullable": true,
                       "type": "string"
                     },
                     "createdAt": {
                       "type": "string"
                     },
                     "email": {
+                      "nullable": true,
                       "type": "string"
                     },
                     "id": {
@@ -5393,12 +5923,14 @@
                 "schema": {
                   "properties": {
                     "alias": {
+                      "nullable": true,
                       "type": "string"
                     },
                     "createdAt": {
                       "type": "string"
                     },
                     "email": {
+                      "nullable": true,
                       "type": "string"
                     },
                     "id": {

@@ -90,13 +90,10 @@ export class SplitsController {
       const nextCursor = hasMore ? encodeCursor(start + projects.length) : null;
 
       return res.status(200).json(
-        serializeBigInts({
-          projects,
-          total: totalCount,
+        serializeProjectList(projects, totalCount, nextCursor, {
           start,
           limit,
           hasMore,
-          nextCursor,
         }),
       );
     } catch (error) {

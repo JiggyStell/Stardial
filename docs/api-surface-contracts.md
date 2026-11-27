@@ -187,7 +187,9 @@ checks the responses against the generated OpenAPI document:
 - every documented operation declares at least one `2xx` response,
 - representative responses only contain documented fields (a new, accidental
   field fails the test; the few known additive fields are listed explicitly in
-  the test), and
+  the test),
+- every generated request and `2xx` response example satisfies its own OpenAPI
+  schema and executes cleanly against the live Express endpoints, and
 - the unknown-route and validation-error envelopes match the documented shape
   and never leak stack traces.
 

@@ -8,6 +8,20 @@ import { generateOpenApi } from "../openapi.js";
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const committedSpecPath = join(__dirname, "..", "..", "..", "docs", "openapi.yaml");
+const committedJsonPath = join(__dirname, "..", "..", "..", "docs", "openapi.json");
+
+function sortKeysDeep(value: unknown): unknown {
+  if (Array.isArray(value)) return value.map(sortKeysDeep);
+  if (value && typeof value === "object") {
+    return Object.keys(value as Record<string, unknown>)
+      .sort()
+      .reduce((acc: Record<string, unknown>, key: string) => {
+        acc[key] = sortKeysDeep((value as Record<string, unknown>)[key]);
+        return acc;
+      }, {});
+  }
+  return value;
+}
 
 describe("OpenAPI specification", () => {
   it("generates a valid OpenAPI document without $ref errors", async () => {
@@ -30,8 +44,15 @@ describe("OpenAPI specification", () => {
   });
 
   it("matches the committed docs/openapi.yaml (run `cd backend && npm run generate:openapi` if this fails)", () => {
-    const generated = yaml.stringify(generateOpenApi());
-    const committed = readFileSync(committedSpecPath, "utf8");
+    const generated = yaml.stringify(generateOpenApi()).replace(/\r\n/g, "\n");
+    const committed = readFileSync(committedSpecPath, "utf8").replace(/\r\n/g, "\n");
     expect(generated).toBe(committed);
+  });
+
+  it("matches the committed docs/openapi.json (run `cd backend && npm run generate:openapi` if this fails)", () => {
+    const generatedYaml = yaml.stringify(generateOpenApi());
+    const generatedJson = `${JSON.stringify(sortKeysDeep(yaml.parse(generatedYaml)), null, 2)}\n`;
+    const committedJson = readFileSync(committedJsonPath, "utf8").replace(/\r\n/g, "\n");
+    expect(generatedJson).toBe(committedJson);
   });
 });

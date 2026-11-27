@@ -33,8 +33,8 @@ export const userRegistrationSchema = z.object({
 export const userResponseSchema = z.object({
   id: z.string().uuid(),
   walletAddress: z.string(),
-  email: z.string().optional(),
-  alias: z.string().optional(),
+  email: z.string().nullable().optional(),
+  alias: z.string().nullable().optional(),
   role: z.enum(USER_ROLES),
   isActive: z.boolean(),
   createdAt: z.string(),
