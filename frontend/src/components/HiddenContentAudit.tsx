@@ -25,7 +25,7 @@
  * helper so the codebase has a single consistent implementation.
  */
 
-import { ReactNode } from "react";
+import type { ElementType, ReactNode } from "react";
 
 export interface VisuallyHiddenProps {
   /**
@@ -35,7 +35,7 @@ export interface VisuallyHiddenProps {
    */
   children: ReactNode;
   /** Render as a different HTML element (default: "span"). */
-  as?: keyof JSX.IntrinsicElements;
+  as?: ElementType;
 }
 
 /**
@@ -84,7 +84,7 @@ export function AriaHidden({
   as: Tag = "span",
 }: {
   children: ReactNode;
-  as?: keyof JSX.IntrinsicElements;
+  as?: ElementType;
 }) {
   return <Tag aria-hidden="true">{children}</Tag>;
 }

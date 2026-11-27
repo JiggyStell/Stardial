@@ -1,9 +1,24 @@
-import React from "react";
+export type TransactionTimelineStepStatus =
+  | "pending"
+  | "active"
+  | "success"
+  | "failed";
 
-import type {
-  TransactionStatusTimelineProps,
-  TransactionTimelineStepStatus,
-} from "./TransactionStatusTimeline.types";
+export interface TransactionTimelineStep {
+  id: string;
+  label: string;
+  description?: string;
+  status: TransactionTimelineStepStatus;
+  explorerUrl?: string;
+}
+
+export interface TransactionStatusTimelineProps {
+  steps: TransactionTimelineStep[];
+  status?: "idle" | "loading" | "success" | "failed";
+  error?: string;
+  onRetry?: () => void;
+  className?: string;
+}
 
 const stepStatusStyles: Record<
   TransactionTimelineStepStatus,

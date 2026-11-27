@@ -78,7 +78,7 @@ export function NavDropdown({
     return () => document.removeEventListener("pointerdown", handlePointerDown);
   }, [isOpen]);
 
-  const handleKeyDown = (e: KeyboardEvent<HTMLDivElement>) => {
+  const handleKeyDown = (e: KeyboardEvent<HTMLElement>) => {
     if (e.key === "Escape" && isOpen) {
       e.preventDefault();
       setIsOpen(false);
@@ -90,9 +90,6 @@ export function NavDropdown({
     <div
       ref={containerRef}
       className="relative inline-block"
-      onMouseEnter={open}
-      onMouseLeave={scheduleClose}
-      onKeyDown={handleKeyDown}
     >
       <button
         ref={triggerRef}
@@ -100,6 +97,9 @@ export function NavDropdown({
         aria-haspopup="true"
         aria-expanded={isOpen}
         onClick={() => (isOpen ? setIsOpen(false) : open())}
+        onMouseEnter={open}
+        onMouseLeave={scheduleClose}
+        onKeyDown={handleKeyDown}
         className={clsx(
           "flex items-center gap-1.5 rounded-lg px-3 py-2 text-sm font-medium transition-colors",
           "text-[var(--brand-muted)] hover:text-[var(--brand-text)] hover:bg-white/5",
@@ -140,6 +140,7 @@ export function NavDropdown({
           )}
           onMouseEnter={cancelClose}
           onMouseLeave={scheduleClose}
+          onKeyDown={handleKeyDown}
         >
           {items.map((item) => (
             <a

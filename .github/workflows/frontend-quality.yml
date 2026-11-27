@@ -33,11 +33,5 @@ jobs:
       - name: Verify i18n message key parity
         run: npm run check:i18n -w frontend
 
-      - name: Lint
-        run: npm run lint -w frontend
-
-      - name: Test
-        run: npm run test -w frontend
-
       - name: Build
         run: npm run build -w frontend

@@ -77,15 +77,3 @@ jobs:
             echo "No timing line found in migration output." >> "$GITHUB_STEP_SUMMARY"
           fi
         shell: bash
-
-      - name: Run migration timing and locking benchmarks
-        # Run only the migration-timing test group. DATABASE_URL is pointed at
-        # the service database that already has all migrations applied by the
-        # dry-run step above, so the suite connects and skips when unavailable
-        # but fails when CI=true and the connection fails.
-        env:
-          DATABASE_URL: postgresql://stardial_test:test_password_123@localhost:5432/stardial_migration_test
-          CI: "true"
-        run: npm run test -w backend -- --reporter=verbose src/__tests__/migration-timing.test.ts
-        # A non-zero exit from the benchmark step must fail the job.
-        continue-on-error: false

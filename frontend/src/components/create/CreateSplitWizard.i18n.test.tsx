@@ -66,6 +66,7 @@ function LocalizedHarness({
     mode: "onChange",
   });
   const { fields, append, remove } = useFieldArray({ control, name: "collaborators" });
+  // eslint-disable-next-line react-hooks/incompatible-library
   const watchedCollaborators = watch("collaborators") || [];
 
   const totalBasisPoints = watchedCollaborators.reduce((sum, col) => {
