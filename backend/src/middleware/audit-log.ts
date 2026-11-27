@@ -25,7 +25,7 @@ function sanitizeObject(obj: unknown): unknown {
     if (key.startsWith("__") || key === "constructor" || key === "prototype" || key === "__proto__") {
       continue;
     }
-    if (/[\[\]\.\/\\]/.test(key)) {
+    if (/[[\]./\\]/.test(key)) {
       continue;
     }
     if (SENSITIVE_KEYS.has(key) || /key|token|password|secret/i.test(key)) {
@@ -73,13 +73,19 @@ async function persistAuditLog(
     const dataSource = getDataSource();
     const repository = dataSource.getRepository(AuditLog);
     const actorIdentity = String(req.headers["x-admin-actor"] || req.ip || "unknown");
+    const actionName = deriveAction(req);
+    const reqId = String(res.locals.requestId ?? "");
+    const ipH = hashIp(req.ip);
+    const oldVals = req.method === "PUT" || req.method === "PATCH" ? (sanitizeObject(req.body) as Record<string, unknown>) : null;
+    const payloadVal = outcome === "success" ? buildPayload(req) : buildFailureMetadata(req, res);
+
     const entry = repository.create({
-      action: deriveAction(req),
-      ipHash: hashIp(req.ip),
-      requestId: String(res.locals.requestId ?? ""),
+      action: actionName,
+      ipHash: ipH,
+      requestId: reqId,
       actorIdentity,
-      oldValues: req.method === "PUT" || req.method === "PATCH" ? (sanitizeObject(req.body) as Record<string, unknown>) : null,
-      payload: outcome === "success" ? buildPayload(req) : buildFailureMetadata(req, res)
+      oldValues: oldVals,
+      payload: payloadVal
     });
     await repository.save(entry);
   } catch (error) {

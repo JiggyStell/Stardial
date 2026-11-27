@@ -1,4 +1,4 @@
-"use client";
+"client";
 
 /**
  * TestimonialsSection — Issue #58

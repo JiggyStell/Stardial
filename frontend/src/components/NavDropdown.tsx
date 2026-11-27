@@ -168,7 +168,6 @@ export function NavDropdown({
               key={item.href}
               href={item.href}
               role="menuitem"
-              tabIndex={0}
               className={clsx(
                 "flex items-center gap-2 px-4 py-2.5 text-sm",
                 "text-[var(--brand-muted)] hover:text-[var(--brand-text)] hover:bg-white/5",
