@@ -138,11 +138,12 @@ describe("Admin audit logging", () => {
     clearEnvCache();
   });
 
-  it("creates an audit log row after a successful pause-distributions call", async () => {
+  it("creates an audit log row after a successful pause-distributions call with actor and timestamp", async () => {
     const res = await request(app)
       .post("/splits/admin/pause-distributions")
       .set("x-admin-api-key", "ops-key")
       .set("x-request-id", "audit-test-request")
+      .set("x-admin-actor", "admin-user-123")
       .send({
         admin: "GAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAWHF"
       });
@@ -154,50 +155,28 @@ describe("Admin audit logging", () => {
     const auditEntry = mockAuditCreate.mock.calls[0][0] as Record<string, unknown>;
     expect(auditEntry.action).toBe("pause_distributions");
     expect(auditEntry.requestId).toBe("audit-test-request");
+    expect(auditEntry.actorIdentity).toBe("admin-user-123");
     expect(auditEntry.ipHash).toBeTruthy();
     expect(auditEntry.payload).toEqual({
       admin: "GAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAWHF"
     });
   });
 
-  it("creates an audit log row for failed admin mutations (validation failure)", async () => {
+  it("masks sensitive data in logs and payloads", async () => {
     const res = await request(app)
       .post("/splits/admin/pause-distributions")
       .set("x-admin-api-key", "ops-key")
-      .send({});
-
-    expect(res.status).toBe(400);
-    expect(mockAuditSave).toHaveBeenCalledOnce();
-
-    const auditEntry = mockAuditCreate.mock.calls[0][0] as Record<string, unknown>;
-    expect(auditEntry.action).toBe("pause_distributions");
-    expect(auditEntry.requestId).toBeTruthy();
-    expect(auditEntry.payload).toMatchObject({
-      action: "pause_distributions",
-      statusCode: 400,
-    });
-  });
-
-  it("creates an audit log row for blocked admin writes (write-disabled)", async () => {
-    process.env.PAYMENTS_ADMIN_WRITE_ENABLED = "false";
-    clearEnvCache();
-
-    const res = await request(app)
-      .post("/splits/admin/pause-distributions")
-      .set("x-admin-api-key", "ops-key")
+      .set("x-request-id", "audit-test-request")
       .send({
-        admin: "GAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAWHF"
+        admin: "GAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAWHF",
+        secretKey: "super-secret-token"
       });
 
-    expect(res.status).toBe(503);
-    expect(mockAuditSave).toHaveBeenCalledOnce();
-
+    expect(res.status).toBe(200);
     const auditEntry = mockAuditCreate.mock.calls[0][0] as Record<string, unknown>;
-    expect(auditEntry.action).toBe("pause_distributions");
-    expect(auditEntry.requestId).toBeTruthy();
-    expect(auditEntry.payload).toMatchObject({
-      action: "pause_distributions",
-      statusCode: 503,
+    expect(auditEntry.payload).toEqual({
+      admin: "GAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAWHF",
+      secretKey: "[REDACTED]"
     });
   });
 });

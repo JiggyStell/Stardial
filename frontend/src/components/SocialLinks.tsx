@@ -1,28 +1,13 @@
 "use client";
 
-/**
- * SocialLinks — Issues #62, #69 (MatanOga01)
- *
- * Issue #62: Each icon link meets the WCAG 2.5.5 target size recommendation
- * of at least 44 × 44 CSS pixels and uses sufficient spacing so adjacent
- * targets do not overlap on touch devices.
- *
- * Issue #69: Icons are marked aria-hidden="true". Each <a> carries a
- * visually-hidden accessible name via an <span className="sr-only"> label
- * so screen readers announce the link destination without reading the SVG
- * paths twice. aria-hidden on decorative SVGs prevents double-announcements.
- */
-
 export interface SocialLink {
   platform: "twitter" | "instagram" | "linkedin" | "github" | "youtube";
   href: string;
-  /** Override the default platform label used for the accessible name. */
   label?: string;
 }
 
 export interface SocialLinksProps {
   links: SocialLink[];
-  /** Navigation landmark label (default: "Social media links"). */
   ariaLabel?: string;
 }
 
@@ -34,7 +19,6 @@ const DEFAULT_LABELS: Record<SocialLink["platform"], string> = {
   youtube: "YouTube",
 };
 
-/** Minimal SVG icons — purely decorative, hidden from AT via aria-hidden. */
 function PlatformIcon({ platform }: { platform: SocialLink["platform"] }) {
   const paths: Record<SocialLink["platform"], React.ReactNode> = {
     twitter: (
@@ -91,19 +75,11 @@ export function SocialLinks({
 
   return (
     <nav aria-label={ariaLabel} className="social-links">
-      <ul className="social-links__list" role="list">
+      <ul className="social-links__list">
         {links.map(({ platform, href, label }) => {
           const name = label ?? DEFAULT_LABELS[platform];
           return (
             <li key={platform} className="social-links__item">
-              {/*
-               * Issue #62: minimum tap-target of 44 × 44 px via inline style
-               * min-width/min-height + display:flex to centre the icon.
-               * The gap between items (8 px) prevents overlapping touch targets.
-               *
-               * Issue #69: aria-hidden on the SVG means AT reads only the
-               * sr-only label text, not the SVG's decorative paths.
-               */}
               <a
                 href={href}
                 target="_blank"
@@ -119,7 +95,6 @@ export function SocialLinks({
                 }}
               >
                 <PlatformIcon platform={platform} />
-                {/* Issue #69: visually hidden text gives AT an accessible name */}
                 <span className="sr-only">{name} (opens in new tab)</span>
               </a>
             </li>

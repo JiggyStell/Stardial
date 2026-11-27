@@ -11,6 +11,8 @@ export class AddAuditLog1760000000003 implements MigrationInterface {
         "performed_at" TIMESTAMPTZ NOT NULL DEFAULT now(),
         "ip_hash" character varying(16) NOT NULL,
         "request_id" character varying(64) NOT NULL,
+        "actor_identity" character varying(255),
+        "old_values" jsonb,
         "payload" jsonb,
         CONSTRAINT "PK_audit_log" PRIMARY KEY ("id")
       )

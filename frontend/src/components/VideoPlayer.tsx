@@ -96,6 +96,10 @@ export function VideoPlayer({
         }}
       >
         <source src={src} type={type} />
+        <track kind="captions" src="data:text/vtt,"
+          label="English"
+          default
+        />
         {/* Fallback message for browsers that do not support <video>. */}
         <p className="p-4 text-sm text-white/70">
           Your browser does not support the video element. You can{" "}

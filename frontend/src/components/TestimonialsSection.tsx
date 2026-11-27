@@ -1,12 +1,4 @@
-"use client";
-
-/**
- * TestimonialsSection — Issue #58
- *
- * Renders quote cards in a responsive grid with consistent spacing tokens.
- * Cards align uniformly across all screen sizes using standardised gap and
- * padding values derived from the design-token layer (tokens.css).
- */
+"client";
 
 interface Testimonial {
   quote: string;
@@ -51,16 +43,12 @@ export function TestimonialsSection() {
         Real royalty splits. Real results.
       </p>
 
-      {/* Responsive grid: 1 col → 2 col → 3 col.
-          gap-6 on mobile, gap-8 on md+ keeps breathing room consistent. */}
       <ul
-        role="list"
         className="grid grid-cols-1 gap-6 sm:grid-cols-2 md:gap-8 lg:grid-cols-3"
       >
         {TESTIMONIALS.map((item) => (
           <li key={item.author}>
             <figure className="glass-card flex h-full flex-col rounded-[2rem] p-6 md:p-8">
-              {/* Quote mark */}
               <span
                 aria-hidden="true"
                 className="mb-4 font-display text-4xl leading-none text-[var(--brand-accent)] opacity-60"
@@ -68,14 +56,12 @@ export function TestimonialsSection() {
                 &ldquo;
               </span>
 
-              {/* Quote body — flex-1 pushes attribution to the bottom */}
               <blockquote className="flex-1">
                 <p className="text-sm leading-relaxed text-[var(--brand-text)]">
                   {item.quote}
                 </p>
               </blockquote>
 
-              {/* Attribution */}
               <figcaption className="mt-6 border-t border-white/5 pt-5">
                 <p className="text-sm font-semibold text-[var(--brand-text)]">
                   {item.author}
