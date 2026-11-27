@@ -14,10 +14,10 @@ export class AddTransactionKeysetPaginationIndexes1760000000013 implements Migra
 
   public async up(queryRunner: QueryRunner): Promise<void> {
     await queryRunner.query(
-      `CREATE INDEX "IDX_transactions_timestamp_id" ON "transactions" ("timestamp" DESC, "id" DESC)`
+      `CREATE INDEX IF NOT EXISTS "IDX_transactions_timestamp_id" ON "transactions" ("timestamp" DESC, "id" DESC)`
     );
     await queryRunner.query(
-      `CREATE INDEX "IDX_transactions_recipient_timestamp_id" ON "transactions" ("recipient", "timestamp" DESC, "id" DESC)`
+      `CREATE INDEX IF NOT EXISTS "IDX_transactions_recipient_timestamp_id" ON "transactions" ("recipient", "timestamp" DESC, "id" DESC)`
     );
   }
 
