@@ -18,16 +18,24 @@ function sanitizeObject(obj: unknown): unknown {
     return obj.map(sanitizeObject);
   }
   const sanitized: Record<string, unknown> = {};
-  for (const [key, val] of Object.entries(obj as Record<string, unknown>)) {
-    if (typeof key !== "string" || !Object.prototype.hasOwnProperty.call(obj, key)) {
+  const rawObj = obj as Record<string, unknown>;
+  for (const key of Object.keys(rawObj)) {
+    if (typeof key !== "string") {
       continue;
     }
-    if (key.startsWith("__") || key === "constructor" || key === "prototype" || key === "__proto__") {
+    if (
+      key === "__proto__" ||
+      key === "constructor" ||
+      key === "prototype" ||
+      key.startsWith("__") ||
+      /[[\]./\\]/.test(key)
+    ) {
       continue;
     }
-    if (/[[\]./\\]/.test(key)) {
+    if (!Object.prototype.hasOwnProperty.call(rawObj, key)) {
       continue;
     }
+    const val = rawObj[key];
     if (SENSITIVE_KEYS.has(key) || /key|token|password|secret/i.test(key)) {
       sanitized[key] = "[REDACTED]";
     } else {

@@ -7,13 +7,6 @@
  * trigger. A configurable close-delay (default 200 ms) gives users time to
  * move their pointer from the trigger button into the submenu panel before the
  * menu disappears.
- *
- * Key behaviours:
- * - Open on hover OR click (accessible: works with both pointer and keyboard).
- * - Close is debounced: a pending close is cancelled if the pointer re-enters
- *   either the trigger or the panel before the delay expires.
- * - Keyboard: Escape closes the menu and returns focus to the trigger.
- * - Click outside closes the menu immediately.
  */
 
 import {
@@ -29,21 +22,13 @@ import { clsx } from "clsx";
 export interface NavDropdownItem {
   label: string;
   href: string;
-  /** Optional icon rendered before the label. */
   icon?: ReactNode;
 }
 
 export interface NavDropdownProps {
-  /** Text shown on the trigger button. */
   label: string;
   items: NavDropdownItem[];
-  /**
-   * Milliseconds to wait before closing the menu after the pointer leaves
-   * both the trigger and the panel. Increase this value if users still find
-   * the menu closes too quickly. Defaults to 200 ms.
-   */
   closeDelayMs?: number;
-  /** Additional class names for the trigger button. */
   className?: string;
 }
 
@@ -58,7 +43,6 @@ export function NavDropdown({
   const triggerRef = useRef<HTMLButtonElement | null>(null);
   const containerRef = useRef<HTMLDivElement | null>(null);
 
-  /** Cancel any pending close so the menu stays open. */
   const cancelClose = useCallback(() => {
     if (closeTimerRef.current !== null) {
       clearTimeout(closeTimerRef.current);
@@ -66,7 +50,6 @@ export function NavDropdown({
     }
   }, []);
 
-  /** Schedule the menu to close after `closeDelayMs`. */
   const scheduleClose = useCallback(() => {
     cancelClose();
     closeTimerRef.current = setTimeout(() => {
@@ -79,7 +62,6 @@ export function NavDropdown({
     setIsOpen(true);
   }, [cancelClose]);
 
-  /** Close on click outside. */
   useEffect(() => {
     if (!isOpen) return;
 
@@ -96,7 +78,6 @@ export function NavDropdown({
     return () => document.removeEventListener("pointerdown", handlePointerDown);
   }, [isOpen]);
 
-  /** Close on Escape key. */
   const handleKeyDown = (e: KeyboardEvent<HTMLDivElement>) => {
     if (e.key === "Escape" && isOpen) {
       e.preventDefault();
@@ -113,7 +94,6 @@ export function NavDropdown({
       onMouseLeave={scheduleClose}
       onKeyDown={handleKeyDown}
     >
-      {/* Trigger button */}
       <button
         ref={triggerRef}
         type="button"
@@ -128,7 +108,6 @@ export function NavDropdown({
         )}
       >
         {label}
-        {/* Chevron icon */}
         <svg
           aria-hidden="true"
           className={clsx(
@@ -148,7 +127,6 @@ export function NavDropdown({
         </svg>
       </button>
 
-      {/* Dropdown panel */}
       {isOpen && (
         <div
           role="menu"
