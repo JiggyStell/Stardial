@@ -1,6 +1,12 @@
+import type { Metadata } from "next";
+import { getTranslations, setRequestLocale } from "next-intl/server";
 import { notFound } from "next/navigation";
+
 import { ReceiptUnavailable } from "@/components/ReceiptUnavailable";
+import { createPageMetadata, isSupportedLocale } from "@/lib/metadata";
 import { PrintReceiptButton } from "./PrintReceiptButton";
+
+const RECEIPT_HASH_PATTERN = /^[a-fA-F0-9]{64}$/;
 
 interface Receipt {
   reference: string;
@@ -13,13 +19,38 @@ interface Receipt {
   projectId: string;
 }
 
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ locale: string; txHash: string }>;
+}): Promise<Metadata> {
+  const { locale, txHash } = await params;
+
+  if (!isSupportedLocale(locale)) return {};
+
+  setRequestLocale(locale);
+  const t = await getTranslations({ locale, namespace: "Metadata.receipt" });
+  const isValidHash = RECEIPT_HASH_PATTERN.test(txHash);
+  const reference = `${txHash.slice(0, 8)}…${txHash.slice(-4)}`;
+
+  return createPageMetadata({
+    locale,
+    title: isValidHash ? t("titleWithReference", { reference }) : t("title"),
+    description: isValidHash
+      ? t("descriptionWithReference", { reference })
+      : t("description"),
+    pathname: `/receipts/${txHash}`,
+    indexable: false,
+  });
+}
+
 export default async function ReceiptPage({
   params,
 }: {
   params: Promise<{ txHash: string }>;
 }) {
   const { txHash } = await params;
-  if (!/^[a-fA-F0-9]{64}$/.test(txHash)) notFound();
+  if (!RECEIPT_HASH_PATTERN.test(txHash)) notFound();
 
   const baseUrl = process.env.NEXT_PUBLIC_API_BASE_URL ?? "http://localhost:3001";
   let response: Response;
